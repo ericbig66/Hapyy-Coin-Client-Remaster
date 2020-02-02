@@ -1,8 +1,5 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +12,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
+import java.nio.charset.StandardCharsets;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,8 +38,6 @@ public class LoginAndRegister extends AppCompatActivity {
         setContentView(R.layout.layout_login_and_register);
         wcm = findViewById(R.id.wcm);
 
-//        preferences = this.getPreferences(Context.MODE_PRIVATE);
-
         Login login = new Login();
         login.execute();
     }
@@ -47,14 +46,10 @@ public class LoginAndRegister extends AppCompatActivity {
         String ip = null;
         String uuid = getUUID(getApplicationContext());
 
-//        boolean greeting = preferences.getBoolean(String.valueOf(R.bool.greet_pref),true);
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //get ip
-//            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-//            ip = Formatter.formatIpAddress(wifi.getConnectionInfo().getIpAddress());
+
         }
 
         @Override
@@ -93,14 +88,9 @@ public class LoginAndRegister extends AppCompatActivity {
                 nm = inf[1].split("nm,");
                 nm[0] = nm[0].equals("null")?"":nm[0];
                 nm[1] = nm[1].equals("null")?"":nm[1];
-//                Log.v("test",(getResources().getBoolean(R.bool.greet_pref))+"");
-//                Log.v("test",greeting+"");
 
-//                wcm.setText(((getResources().getBoolean(R.bool.greet_pref))?nm[0]:nm[1])+"您好目前您尚有$"+inf[2]);
-//                wcm.setText((greeting?nm[0]:nm[1])+"您好目前您尚有$"+inf[2]);
                 wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好目前您尚有$"+inf[2]);
             }else{wcm.setText(result);}
-//            wcm.setText(result);
         }
     }
 
@@ -110,10 +100,10 @@ public class LoginAndRegister extends AppCompatActivity {
         final String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         try {
             if (!"9774d56d682e549c".equals(androidID)) {
-                uuid = UUID.nameUUIDFromBytes(androidID.getBytes("utf8"));
+                uuid = UUID.nameUUIDFromBytes(androidID.getBytes(StandardCharsets.UTF_8));
             } else {
                 @SuppressLint("MissingPermission") final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes(StandardCharsets.UTF_8)) : UUID.randomUUID();
                 Log.v("test","info: UUID has been generated");
             }
         }catch (Exception e){
