@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">樂齡俱樂部</string>
+    <string name="title_activity_alter_member">會員中心</string>
+
+    <bool name="greet_pref">true</bool>
+
+</resources>
