@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -30,7 +31,7 @@ public class LoginAndRegister extends AppCompatActivity {
     public static final String pass = "@SAclass";
     TextView wcm;
 
-//   public static SharedPreferences preferences;
+    public static String[] nm = new String[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,7 @@ public class LoginAndRegister extends AppCompatActivity {
 
     private class Login extends AsyncTask<Void,Void,String>{
         String ip = null;
-        String uuid = getUUID(getApplicationContext());
-
+        public String uuid = getUUID(getApplicationContext());
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -80,8 +80,7 @@ public class LoginAndRegister extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            String[] inf = new String[4];
-            String[] nm = new String[2];
+             String[] inf = new String[4];
             super.onPostExecute(result);
             if(result.contains("sep,")){
                 inf = result.split("sep,");
@@ -94,8 +93,14 @@ public class LoginAndRegister extends AppCompatActivity {
         }
     }
 
+    public void member(View v){
+        Intent intent = new Intent(this,AlterMember.class);
+        startActivity(intent);
+        finish();
+    }
+//**************all public method are here**************
     //get uuid
-    public String getUUID(Context context) {
+    public static String getUUID(Context context) {
         UUID uuid = null;
         final String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         try {
@@ -112,22 +117,43 @@ public class LoginAndRegister extends AppCompatActivity {
         return uuid.toString();
     }
 
-    public void member(View v){
-        Intent intent = new Intent(this,AlterMember.class);
-        startActivity(intent);
-        finish();
-    }
-
     //access preferences
+    //set preference key and value
     public static void setPfr(String key, boolean value, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(key, value);
         editor.commit();
     }
-
+    //get preference key or set default value
     public static boolean getPfr(String key, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean(key, true);
     }
+
+    //alert dialoue with two button
+    public static boolean setAlert(String title, String msg, String pos, String nag, Context context) {
+        //建立更新資訊提示
+        boolean rs = false;
+        AlertDialog.Builder newver = new AlertDialog.Builder(context);
+        newver.setTitle(title);
+        newver.setMessage(msg);
+        // Add the buttons
+        newver.setPositiveButton(pos, (dialog, id) -> {
+            // User clicked OK button
+            setrs(true);
+        });
+        newver.setNegativeButton(nag, (dialog, id) -> {
+            // User cancelled the dialog
+            setrs(false);
+        });
+
+        return true;
+    }
+
+    public static boolean alertRS = false;
+    private static void setrs (boolean ans){
+        alertRS = ans;
+    }
+//**************all public method are above**************
 }
