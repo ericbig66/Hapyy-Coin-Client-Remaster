@@ -158,13 +158,27 @@
                     android:text="女" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/Cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="取消選取"
                     android:textSize="20sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="生日"
+                android:textSize="20sp" />
+
+            <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner" />
 
             <LinearLayout
                 android:layout_width="match_parent"

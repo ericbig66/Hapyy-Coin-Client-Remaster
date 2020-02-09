@@ -4,17 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.CallableStatement;
@@ -30,14 +35,20 @@ public class LoginAndRegister extends AppCompatActivity {
     public static final String user = "currency";
     public static final String pass = "@SAclass";
     TextView wcm;
+    CircularImageView profile;
 
     public static String[] nm = new String[2];
+    public static String[] inf = new String[9];
+    public static Bitmap pf = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login_and_register);
         wcm = findViewById(R.id.wcm);
+        profile = findViewById(R.id.profile);
+        //prevent error
+        Log.v("test", "Your greeting preference is :"+getPfr("HCgreet",getApplicationContext()));
 
         Login login = new Login();
         login.execute();
@@ -80,15 +91,18 @@ public class LoginAndRegister extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-             String[] inf = new String[4];
+            Log.v("test","Your result:\n"+result);
+
             super.onPostExecute(result);
             if(result.contains("sep,")){
                 inf = result.split("sep,");
                 nm = inf[1].split("nm,");
                 nm[0] = nm[0].equals("null")?"":nm[0];
                 nm[1] = nm[1].equals("null")?"":nm[1];
-
+                //set greeting sentence
                 wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好目前您尚有$"+inf[2]);
+                if(!inf[3].equals("null")){ConvertToBitmap();}
+                else{profile.setImageResource(R.drawable.df_profile);}
             }else{wcm.setText(result);}
         }
     }
@@ -96,7 +110,18 @@ public class LoginAndRegister extends AppCompatActivity {
     public void member(View v){
         Intent intent = new Intent(this,AlterMember.class);
         startActivity(intent);
-        finish();
+//        finish();
+    }
+
+    public void ConvertToBitmap(){
+        try{
+            byte[] imageBytes = Base64.decode(inf[3], Base64.DEFAULT);
+            pf = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            profile.setImageBitmap(pf);
+        }catch (Exception e){
+            //Log.v("test","error = "+e.toString());
+        }
+
     }
 //**************all public method are here**************
     //get uuid
@@ -131,29 +156,9 @@ public class LoginAndRegister extends AppCompatActivity {
         return preferences.getBoolean(key, true);
     }
 
-    //alert dialoue with two button
-    public static boolean setAlert(String title, String msg, String pos, String nag, Context context) {
-        //建立更新資訊提示
-        boolean rs = false;
-        AlertDialog.Builder newver = new AlertDialog.Builder(context);
-        newver.setTitle(title);
-        newver.setMessage(msg);
-        // Add the buttons
-        newver.setPositiveButton(pos, (dialog, id) -> {
-            // User clicked OK button
-            setrs(true);
-        });
-        newver.setNegativeButton(nag, (dialog, id) -> {
-            // User cancelled the dialog
-            setrs(false);
-        });
-
-        return true;
+    public static void popup(Context context, String content){
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 
-    public static boolean alertRS = false;
-    private static void setrs (boolean ans){
-        alertRS = ans;
-    }
 //**************all public method are above**************
 }
