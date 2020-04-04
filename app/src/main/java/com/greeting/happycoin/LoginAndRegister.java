@@ -13,6 +13,7 @@ import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,15 +32,36 @@ import java.sql.Types;
 import java.util.UUID;
 
 public class LoginAndRegister extends AppCompatActivity {
-    public static final String url = "jdbc:mysql://140.135.113.196:3360/happycoin";
+//    public static final String url = "jdbc:mysql://140.135.113.196:3360/happycoin";
+//    public static final String user = "currency";
+//    public static final String pass = "@SAclass";
+    //temp database for emergency will be switch back to normal when VM is ready to go (first one failed)
+//    public static final String url = "jdbc:mysql://sql12.freesqldatabase.com:3306/sql12327183";
+//    public static final String user = "sql12327183";
+//    public static final String pass = "4xcYzbRmwN";
+    ///////////////////////////////////////////////
+//    public static final String url = "jdbc:mysql://65.19.141.67:3306/ericbig6_happycoin?noAccessToProcedureBodies=true";
+//    public static final String user = "ericbig6";
+//    public static final String pass = "Ericgood0";
+    ///////////////////////////////////////////////218.161.48.27:3306
+//    public static final String url = "jdbc:mysql://140.135.112.25:3360/happycoin";
+//    public static final String url = "jdbc:mysql://218.161.48.27:3306/happycoin?noAccessToProcedureBodies=true";
+//    public static final String user = "currency";
+//    public static final String pass = "@SAclass";
+
+    ///////////////////////////////////////////////218.161.48.27:3360
+    public static final String url = "jdbc:mysql://218.161.48.27:3360/happycoin?noAccessToProcedureBodies=true";
     public static final String user = "currency";
-    public static final String pass = "@SAclass";
+    public static final String pass = "SEclassUmDb@outside";
+
     TextView wcm;
     CircularImageView profile;
 
     public static String[] nm = new String[2];
     public static String[] inf = new String[9];
     public static Bitmap pf = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +70,7 @@ public class LoginAndRegister extends AppCompatActivity {
         wcm = findViewById(R.id.wcm);
         profile = findViewById(R.id.profile);
         //prevent error
-        Log.v("test", "Your greeting preference is :"+getPfr("HCgreet",getApplicationContext()));
+//        Log.v("test", "Your greeting preference is :"+getPfr("HCgreet",getApplicationContext()));
 
         Login login = new Login();
         login.execute();
@@ -91,9 +113,10 @@ public class LoginAndRegister extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.v("test","Your result:\n"+result);
+//            Log.v("test","Your result:\n"+result);
 
             super.onPostExecute(result);
+            Log.v("test","info from mySQL ="+result);
             if(result.contains("sep,")){
                 inf = result.split("sep,");
                 nm = inf[1].split("nm,");
@@ -103,14 +126,16 @@ public class LoginAndRegister extends AppCompatActivity {
                 wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好目前您尚有$"+inf[2]);
                 if(!inf[3].equals("null")){ConvertToBitmap();}
                 else{profile.setImageResource(R.drawable.df_profile);}
-            }else{wcm.setText(result);}
+                profile.setRotation(Float.parseFloat(inf[4]));
+            }else if(result.equals("註冊成功")){recreate();}
+            else{wcm.setText(result);}
         }
     }
 
     public void member(View v){
         Intent intent = new Intent(this,AlterMember.class);
         startActivity(intent);
-//        finish();
+        finish();
     }
 
     public void ConvertToBitmap(){
@@ -134,10 +159,10 @@ public class LoginAndRegister extends AppCompatActivity {
             } else {
                 @SuppressLint("MissingPermission") final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
                 uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes(StandardCharsets.UTF_8)) : UUID.randomUUID();
-                Log.v("test","info: UUID has been generated");
+//                Log.v("test","info: UUID has been generated");
             }
         }catch (Exception e){
-            Log.v("test","Error when getting UUID:\n"+e.toString());
+//            Log.v("test","Error when getting UUID:\n"+e.toString());
         }
         return uuid.toString();
     }
@@ -158,6 +183,14 @@ public class LoginAndRegister extends AppCompatActivity {
 
     public static void popup(Context context, String content){
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+    }
+
+    public void closekeybord() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 //**************all public method are above**************

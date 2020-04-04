@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".LoginAndRegister">
 
     <com.mikhaellopez.circularimageview.CircularImageView
@@ -11,12 +12,14 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
         android:visibility="visible"
         app:civ_border_color="#3f51b5"
         app:civ_border_width="4dp"
-        app:civ_shadow="true"
+        app:civ_shadow="false"
         app:civ_shadow_color="#3f51b5"
-        app:civ_shadow_radius="10"
+        app:civ_shadow_radius="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -25,30 +28,110 @@
         app:layout_constraintVertical_bias="0.084"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-    <TextView
-        android:id="@+id/wcm"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="登入中請稍後....\n若此過程超過30秒\n請檢查您的網路連線是否正常\n或連繫客服人員"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.555" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/AlterMember"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="member"
-        android:text="會員中心"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.713" />
+        <TextView
+            android:id="@+id/wcm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="登入中請稍後....\n若此過程超過30秒\n請檢查您的網路連線是否正常\n或連繫客服人員"
+            android:textSize="18sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:text="近期\n報名" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="聯絡\n我們" />
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowWeight="0.33"
+            android:layout_column="0"
+            android:layout_columnWeight="0.5"
+            android:maxHeight="50px"
+            android:text="進入賣場" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowWeight="0.33"
+            android:layout_column="1"
+            android:layout_columnWeight="0.5"
+            android:maxHeight="50px"
+            android:text="活動報名" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_row="1"
+            android:layout_rowWeight="0.1"
+            android:layout_column="0"
+            android:layout_columnWeight="0.5"
+            android:text="收紅包/簽到\n&amp;掃描兌換" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_row="1"
+            android:layout_rowWeight="0.33"
+            android:layout_column="1"
+            android:layout_columnWeight="0.5"
+            android:text="送紅包" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_row="2"
+            android:layout_rowWeight="0.33"
+            android:layout_column="0"
+            android:layout_columnWeight="0.5"
+            android:text="交易紀錄" />
+
+        <Button
+            android:id="@+id/AlterMember"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_row="2"
+            android:layout_rowWeight="0.33"
+            android:layout_column="1"
+            android:layout_columnWeight="0.5"
+            android:onClick="member"
+            android:text="會員中心" />
+    </GridLayout>
+
+</LinearLayout>

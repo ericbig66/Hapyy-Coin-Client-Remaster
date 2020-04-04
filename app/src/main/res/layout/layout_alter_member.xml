@@ -17,196 +17,208 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="一般"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
-
-            <Switch
-                android:id="@+id/greet"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:button="@drawable/ic_greet"
-                android:checked="true"
-                android:text="　以暱稱稱呼您"
-                android:textSize="20sp" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="帳戶資訊"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/profile"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_gravity="center_horizontal"
-                android:visibility="visible"
-                app:civ_border_color="#3f51b5"
-                app:civ_border_width="4dp"
-                app:civ_shadow="true"
-                app:civ_shadow_color="#3f51b5"
-                app:civ_shadow_radius="10"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
             <LinearLayout
+                android:id="@+id/common"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="帳戶頭像"
+                    android:text="一般"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp" />
+
+                <Switch
+                    android:id="@+id/greet"
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:button="@drawable/ic_greet"
+                    android:checked="true"
+                    android:text="　以暱稱稱呼您"
                     android:textSize="20sp" />
 
-                <Button
-                    android:id="@+id/Upload"
+                <View
+                    android:id="@+id/view"
                     android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="帳戶資訊"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp" />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/profile"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#00FFFFFF"
+                    android:visibility="visible"
+                    app:civ_border_color="#3f51b5"
+                    app:civ_border_width="4dp"
+                    app:civ_shadow="false"
+                    app:civ_shadow_color="#3f51b5"
+                    app:civ_shadow_radius="1dp"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="帳戶頭像"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/Upload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="picOpen"
+                        android:text="變更頭像"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/Rotate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="profileRotater"
+                        android:text="旋轉頭像"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="姓名"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="暱稱"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/Nname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:text="性別"
+                        android:textSize="20sp" />
+
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:text="男" />
+
+                    <RadioButton
+                        android:id="@+id/female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:text="女" />
+
+                    <Button
+                        android:id="@+id/Cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:text="取消選取"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="生日"
+                    android:textSize="20sp" />
+
+                <DatePicker
+                    android:id="@+id/Birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="通訊地址"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/Address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="1"
-                    android:text="變更頭像"
-                    android:textSize="20sp" />
-
-                <Button
-                    android:id="@+id/Rotate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="旋轉頭像"
-                    android:textSize="20sp" />
+                    android:background="@android:color/darker_gray" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="姓名"
-                    android:textSize="20sp" />
-
-                <EditText
-                    android:id="@+id/Name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="暱稱"
-                    android:textSize="20sp" />
-
-                <EditText
-                    android:id="@+id/Nname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="性別"
-                    android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/male"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="男" />
-
-                <RadioButton
-                    android:id="@+id/female"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="女" />
-
-                <Button
-                    android:id="@+id/Cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="取消選取"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:text="生日"
-                android:textSize="20sp" />
-
-            <DatePicker
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="通訊地址"
-                    android:textSize="20sp" />
-
-                <EditText
-                    android:id="@+id/Address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1"
-                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -230,16 +242,35 @@
                 android:text="我是新手機(將帳號轉到這裡)"
                 android:textSize="20sp" />
 
+            <TextView
+                android:id="@+id/CDhint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1.請使用新手機掃描此QRcode\n2.等待新手機出現換機成功訊息\n3.在這支手機上按下返回鍵即可"
+                android:textSize="24sp"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/CDQR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/RDhint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1.掃描舊手機上的QRcode\n2.等待出現換機成功提示\n3.至舊手機按下返回鍵"
+                android:textSize="24sp"
+                android:visibility="gone" />
 
             <SurfaceView
                 android:id="@+id/RDCAM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_width="300dp"
+                android:layout_height="400dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
