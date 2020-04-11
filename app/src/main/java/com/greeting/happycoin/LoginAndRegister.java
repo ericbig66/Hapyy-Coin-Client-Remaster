@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
+import android.util.LogPrinter;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ public class LoginAndRegister extends AppCompatActivity {
     ///////////////////////////////////////////////
 //    public static final String url = "jdbc:mysql://65.19.141.67:3306/ericbig6_happycoin?noAccessToProcedureBodies=true";
 //    public static final String user = "ericbig6";
-//    public static final String pass = "E*******0";
+//    public static final String pass = "Ericgood0";
     ///////////////////////////////////////////////218.161.48.27:3306
 //    public static final String url = "jdbc:mysql://140.135.112.25:3360/happycoin";
 //    public static final String url = "jdbc:mysql://218.161.48.27:3306/happycoin?noAccessToProcedureBodies=true";
@@ -56,11 +57,12 @@ public class LoginAndRegister extends AppCompatActivity {
 
     TextView wcm;
     CircularImageView profile;
-
+    Intent intent ;
     public static String[] nm = new String[2];
     public static String[] inf = new String[9];
     public static Bitmap pf = null;
 
+    public static final String ver = "0.0.1";
 
 
     @Override
@@ -89,10 +91,10 @@ public class LoginAndRegister extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             String res = null;
             try{
-                //setDB connection driver連接資料庫
+                //連接資料庫
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(url, user, pass);
-                //get ip address
+                //建立查詢
                 String result ="";
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT replace(substring_index(SUBSTRING_INDEX(USER(), '@', -1),'.',1),'-','.') AS ip;");
@@ -132,12 +134,34 @@ public class LoginAndRegister extends AppCompatActivity {
         }
     }
 
-    public void member(View v){
-        Intent intent = new Intent(this,AlterMember.class);
+//    public void member(View v){
+//        Intent intent = new Intent(this,AlterMember.class);
+//        startActivity(intent);
+//        finish();
+//    }
+//
+//    public void QQ(View v){//送紅包的Qrcode 顯示
+//        Intent intent = new Intent(this,send.class);
+//        startActivity(intent);
+//        finish();
+//    }
+
+    public void execute(View v){
+        switch (v.getId()){
+            case R.id.contact:
+                intent = new Intent(LoginAndRegister.this,suggest.class);
+                break;
+            case R.id.SendRedbag:
+                intent = new Intent(LoginAndRegister.this,send.class);
+                break;
+            case R.id.AlterMember:
+                intent = new Intent(LoginAndRegister.this,AlterMember.class);
+                break;
+
+        }
         startActivity(intent);
         finish();
     }
-
     public void ConvertToBitmap(){
         try{
             byte[] imageBytes = Base64.decode(inf[3], Base64.DEFAULT);
