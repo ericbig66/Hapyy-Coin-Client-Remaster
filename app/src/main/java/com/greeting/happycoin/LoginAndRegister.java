@@ -42,7 +42,7 @@ public class LoginAndRegister extends AppCompatActivity {
     ///////////////////////////////////////////////
 //    public static final String url = "jdbc:mysql://65.19.141.67:3306/ericbig6_happycoin?noAccessToProcedureBodies=true";
 //    public static final String user = "ericbig6";
-//    public static final String pass = "Ericgood0";
+//    public static final String pass = "E*******0";
     ///////////////////////////////////////////////218.161.48.27:3306
 //    public static final String url = "jdbc:mysql://140.135.112.25:3360/happycoin";
 //    public static final String url = "jdbc:mysql://218.161.48.27:3306/happycoin?noAccessToProcedureBodies=true";
@@ -89,10 +89,10 @@ public class LoginAndRegister extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             String res = null;
             try{
-                //連接資料庫
+                //setDB connection driver連接資料庫
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(url, user, pass);
-                //建立查詢
+                //get ip address
                 String result ="";
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT replace(substring_index(SUBSTRING_INDEX(USER(), '@', -1),'.',1),'-','.') AS ip;");

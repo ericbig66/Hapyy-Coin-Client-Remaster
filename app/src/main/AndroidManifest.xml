@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".gift"></activity>
+
+        <activity android:name=".gift" />
         <activity android:name=".AlterMember" />
         <activity android:name=".LoginAndRegister">
             <intent-filter>
