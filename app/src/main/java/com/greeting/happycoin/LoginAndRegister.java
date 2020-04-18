@@ -30,6 +30,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class LoginAndRegister extends AppCompatActivity {
@@ -61,6 +62,8 @@ public class LoginAndRegister extends AppCompatActivity {
     public static String[] nm = new String[2];
     public static String[] inf = new String[9];
     public static Bitmap pf = null;
+
+
 
     public static final String ver = "0.0.1";
 
@@ -156,6 +159,12 @@ public class LoginAndRegister extends AppCompatActivity {
                 break;
             case R.id.AlterMember:
                 intent = new Intent(LoginAndRegister.this,AlterMember.class);
+                break;
+            case R.id.GetRedbag:
+                intent = new Intent(LoginAndRegister.this,scan.class);
+                break;
+            case R.id.Intoshop:
+                intent = new Intent(LoginAndRegister.this,market.class);
                 break;
 
         }

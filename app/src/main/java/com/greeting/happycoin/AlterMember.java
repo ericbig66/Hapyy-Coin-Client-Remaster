@@ -48,6 +48,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.greeting.happycoin.LoginAndRegister.getPfr;
@@ -79,6 +80,7 @@ public class AlterMember extends AppCompatActivity {
     String pwd; // pass word for change device
     LinearLayout common;
     TextView CDhint, RDhint;
+
 
     String npf = inf[3], nnm, nnn, nge, nbd = null, nad; // parameter to output
     Float npfr = Float.parseFloat(inf[4]);// parameter to output

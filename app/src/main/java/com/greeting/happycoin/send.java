@@ -58,7 +58,7 @@ public class send extends AppCompatActivity {
         BarcodeEncoder encoder = new BarcodeEncoder();
 //         Log.v("test",acc+"zpek," +amount .getText().toString());
         try{
-            Bitmap bit = encoder.encodeBitmap(getUUID(getApplicationContext())+"cj/61l,"+code+"cj/61l,"+How_much.getText().toString()+"cj/61l,"+ip , BarcodeFormat.QR_CODE,1000,1000);
+            Bitmap bit = encoder.encodeBitmap(getUUID(getApplicationContext())+"cj/61l,"+code+"cj/61l,"+How_much.getText().toString()+"cj/61l,"+ip +"cj/61l,"+"C", BarcodeFormat.QR_CODE,1000,1000);
             qrview.setImageBitmap(bit);
         }catch (WriterException e){
             e.printStackTrace();
