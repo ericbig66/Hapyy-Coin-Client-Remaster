@@ -1,7 +1,5 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -24,22 +22,21 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
-
-import static android.os.Build.ID;
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.popup;
-import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.LoginAndRegister.url;
+import static com.greeting.happycoin.LoginAndRegister.user;
 
 
 public class market extends AppCompatActivity {
@@ -149,12 +146,13 @@ public class market extends AppCompatActivity {
 ////                    return cstmt.getString("info");
                     //experiment part end
 
-                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?)}");
+                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
                     cstmt.registerOutParameter(1, Types.VARCHAR);
                     cstmt.setString(2,ProductId);
                     cstmt.setInt(3,Amount);
                     cstmt.setString(4,uuid);
                     cstmt.setString(5,FirmId);
+                    cstmt.setString(6,"N/A");
                     cstmt.executeUpdate();
                     Log.v("test","result= "+ProductId+" "+Amount+" "+uuid+" "+FirmId);
                     return cstmt.getString(1);

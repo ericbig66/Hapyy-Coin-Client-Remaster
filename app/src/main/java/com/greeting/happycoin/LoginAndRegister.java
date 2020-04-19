@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
-import android.util.LogPrinter;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class LoginAndRegister extends AppCompatActivity {
@@ -99,6 +97,7 @@ public class LoginAndRegister extends AppCompatActivity {
                 Connection con = DriverManager.getConnection(url, user, pass);
                 //建立查詢
                 String result ="";
+
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT replace(substring_index(SUBSTRING_INDEX(USER(), '@', -1),'.',1),'-','.') AS ip;");
                 rs.next();
