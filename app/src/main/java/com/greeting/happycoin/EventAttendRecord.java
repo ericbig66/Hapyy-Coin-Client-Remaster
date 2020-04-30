@@ -3,9 +3,6 @@ package com.greeting.happycoin;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,35 +11,37 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
+import androidx.fragment.app.Fragment;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.LoginAndRegister.url;
+import static com.greeting.happycoin.LoginAndRegister.user;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EventAttendRecord extends Fragment {
 
-    private ArrayList<String> Aid  = new ArrayList<>();
+//    private ArrayList<String> Aid  = new ArrayList<>();
     private ArrayList<String> Aname  = new ArrayList<>();
     private ArrayList<String> Action  = new ArrayList<>();
     private ArrayList<String> Atime  = new ArrayList<>();
 
-    private ArrayList<String> Att  = new ArrayList<>();
+//    private ArrayList<String> Att  = new ArrayList<>();
     private ArrayList<String> Asign  = new ArrayList<>();
 
-    String sign[];
+//    String sign[];
 
     TableLayout tradeData;
 
-    String acc;
+    String acc ;
     public EventAttendRecord() {
         // Required empty public constructor
     }
@@ -60,14 +59,15 @@ public class EventAttendRecord extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_record,container, false);
         clear();
+       acc = getUUID(getActivity().getApplicationContext());
         tradeData = view.findViewById(R.id.tradeData);
-        Aid.add("empty");
-        Att.add("empty");
+//        Aid.add("empty");
+//        Att.add("empty");
         Aname.add("活動名稱　　");
         Action.add("操作　　");
         Atime.add("操作時間　　");
         Asign.add("簽到時間　　");
-        Log.v("test","\nAid[0] = "+Aid.get(0)+"\nAsign[0] = "+Asign.get(0)+"\nAname[0] = "+Aname.get(0)+"\nAction[0]"+Action.get(0)+"\nAction[0] = "+Action.get(0)+"\nAtime[0] = "+Atime.get(0)+"\nAsign[0] = "+Asign.get(0));
+        Log.v("test","\nAsign[0] = "+Asign.get(0)+"\nAname[0] = "+Aname.get(0)+"\nAction[0]"+Action.get(0)+"\nAction[0] = "+Action.get(0)+"\nAtime[0] = "+Atime.get(0)+"\nAsign[0] = "+Asign.get(0));
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
         return view;
@@ -92,41 +92,51 @@ public class EventAttendRecord extends Fragment {
                 //建立查詢
                 //String result = "對方帳戶\t交易\t金額\t餘額\n";
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("select  actID, activityName, action,  actTime from activity_record left join activity on actID = activityNumber where account = '"+acc+"'");
+                ResultSet rs = st.executeQuery("SELECT a.actName, rr.type, rr.time, af.signTime from regist_record rr \n" +
+                        "LEFT JOIN application_form af ON rr.clientID = af.clientID and rr.activityID = af.activityID and rr.time = af.registTime\n" +
+                        "LEFT JOIN activity a on a.id = rr.activityID\n" +
+                        "LEFT JOIN client c on rr.clientID = c.id\n" +
+                        "where c.acc = '"+acc+"'\n" +
+                        "and rr.activityID = a.id\n" +
+                        "ORDER by rr.time");
                 //將查詢結果裝入陣列
                 while(rs.next()){
-                    Aid.add(rs.getString("actID"));
-                    Aname.add(rs.getString("activityName")+"　");
-                    Action.add(rs.getString("action")+"　");
-                    Atime.add(rs.getString("actTime").substring(0,16)+"　");
+                    Aname.add(rs.getString(1));
+                    Action.add(rs.getString(2)+"　");
+                    Atime.add(rs.getString(3).substring(0,16)+"　");
+                    String trytry = "  ";
+                    if(rs.getString(4)!= null && rs.getString(4).trim().length()>0){
+                        trytry = rs.getString(4).substring(0,16);
+                    }
+                    Asign.add(trytry);
                 }
 
 
 
-                Statement st2 = con.createStatement();
-                ResultSet rs2 = st2.executeQuery("select activity, signTime from attendlist where account = '"+acc+"'");
-//                Log.v("test", "select activity, signTime from attendlist where account = '"+acc+"'");
-                while (rs2.next()){
-                    Att.add(rs2.getString("activity"));
-                    Asign.add(rs2.getString("signTime"));
-//                    Log.v("test", "signTime[string] = "+rs2.getString("signTime"));
-//                    Log.v("test", "signTime[time] = "+rs2.getTime("signTime"));
-                }
-//                Log.v("test","Asign["+1+"] = "+Asign.get(1));
-
-                sign = new String[Aid.size()];
-                for(int i = 1 ; i< Aid.size() ; i++){sign[i] = "";}
-                sign[0] = "簽到時間";
-                Log.v("test", "Aid.size = "+Aid.size()+" / Att.size = "+Att.size()+" / sign.size = "+sign.length);
-                for(int i = 1 ; i<=Att.size() ; i++){
-
-                    Log.v("test","inside for...");
-                    Log.v("test","Asign["+i+"] = "+Asign.get(i));
-                    int ST = Aid.lastIndexOf(Att.get(i));
-                    Log.v("test","Last index of '"+Att.get(i)+"' is " + ST);
-                    sign[ST]= Asign.get(i);
-                    Log.v("test","sign["+ST+"] =  " + sign[ST]);
-                }
+//                Statement st2 = con.createStatement();
+//                ResultSet rs2 = st2.executeQuery("select activity, signTime from attendlist where account = '"+acc+"'");
+////                Log.v("test", "select activity, signTime from attendlist where account = '"+acc+"'");
+//                while (rs2.next()){
+//                    Att.add(rs2.getString("activity"));
+//                    Asign.add(rs2.getString("signTime"));
+////                    Log.v("test", "signTime[string] = "+rs2.getString("signTime"));
+////                    Log.v("test", "signTime[time] = "+rs2.getTime("signTime"));
+//                }
+////                Log.v("test","Asign["+1+"] = "+Asign.get(1));
+//
+//                sign = new String[Aid.size()];
+//                for(int i = 1 ; i< Aid.size() ; i++){sign[i] = "";}
+//                sign[0] = "簽到時間";
+//                Log.v("test", "Aid.size = "+Aid.size()+" / Att.size = "+Att.size()+" / sign.size = "+sign.length);
+//                for(int i = 1 ; i<=Att.size() ; i++){
+//
+//                    Log.v("test","inside for...");
+//                    Log.v("test","Asign["+i+"] = "+Asign.get(i));
+//                    int ST = Aid.lastIndexOf(Att.get(i));
+//                    Log.v("test","Last index of '"+Att.get(i)+"' is " + ST);
+//                    sign[ST]= Asign.get(i);
+//                    Log.v("test","sign["+ST+"] =  " + sign[ST]);
+//                }
 
                 return "0";
             }catch (Exception e){
@@ -142,7 +152,7 @@ public class EventAttendRecord extends Fragment {
             renderTable();
         }
         private void renderTable(){
-            for(int row = 0 ; row < Aid.size() ; row++ ){
+            for(int row = 0 ; row < Aname.size() ; row++ ){
 //                Toast.makeText(Diary.this,"第"+row+"列建構中",Toast.LENGTH_SHORT).show();
                 //新增一列
                 TableRow tr = new TableRow(getActivity());
@@ -156,7 +166,7 @@ public class EventAttendRecord extends Fragment {
                 t2.setText(Action.get(row));
 //                Log.v("test",trade.get(row));
                 t3.setText(Atime.get(row));
-                t4.setText(sign[row]);
+                t4.setText(Asign.get(row));
                 //將TextView放入列
                 tr.addView(t1);
                 tr.addView(t2);
@@ -171,8 +181,8 @@ public class EventAttendRecord extends Fragment {
     }
 
     public void clear(){
-        Aid.clear();
-        Att.clear();
+//        Aid.clear();
+//        Att.clear();
         Aname.clear();
         Action.clear();
         Atime.clear();
