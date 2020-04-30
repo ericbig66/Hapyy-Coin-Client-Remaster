@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".send">
+    tools:context=".send"
+    android:background="#CBE8CA">
 
     <ImageView
         android:id="@+id/QRcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         app:srcCompat="@drawable/ic_greet" />
 
     <TextView
@@ -32,5 +34,7 @@
         android:id="@+id/Intoshop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Button"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button_green"/>
 </LinearLayout>

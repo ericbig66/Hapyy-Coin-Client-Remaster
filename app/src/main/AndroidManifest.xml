@@ -14,7 +14,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".market"></activity>
+        <activity
+            android:name=".record"
+            android:label="@string/title_activity_record"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".RecentAttendEvent" />
+        <activity android:name=".eventDetail" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".event" />
+        <activity android:name=".productDetail" />
+        <activity android:name=".market" />
         <activity android:name=".scan" />
         <activity android:name=".suggest" />
         <activity android:name=".send" />

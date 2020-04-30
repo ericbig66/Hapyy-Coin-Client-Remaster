@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".suggest">
+    tools:context=".suggest"
+    android:background="#CBE8CA">
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="聯絡資訊：\nEmail : happycoin@boximail.com\nLine線上客服：@118xjmcw\n上班時間：\n周一至周五 8 : 00 ~ 21 : 00"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 
     <View
         android:id="@+id/view3"
@@ -25,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="意見反映："
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 
     <EditText
         android:id="@+id/communication"
@@ -40,5 +41,7 @@
         android:id="@+id/submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="送出" />
+        android:text="送出"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button_green"/>
 </LinearLayout>

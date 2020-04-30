@@ -137,6 +137,12 @@ public class scan extends AppCompatActivity {
                                     RDdata = qdata.split("e.4a93,");
                                     processQdata();
                                 }
+                                else if(qdata.contains("fu02l4,")){
+                                    Log.v("test","qrdata= "+qdata);
+                                    RDdata = qdata.split("fu02l4,");
+                                    Log.v("test","Rd = " + RDdata[0]);
+                                    processQdata();
+                                }
                                 else {
                                     popup(getApplicationContext(),"請確認您的條碼是否可用於交易");
                                 }
@@ -154,7 +160,7 @@ public class scan extends AppCompatActivity {
     String ID;
 
     String ProductId, FirmId;
-    int amount;
+    int amount,ActivityId;
     private void processQdata(){
         Log.v("test","data get!");
 //        ouuid = RDdata[0];
@@ -172,6 +178,13 @@ public class scan extends AppCompatActivity {
             ProductId = RDdata[0];
             amount = Integer.parseInt(RDdata[1]);
             FirmId = RDdata[2];
+            Redbag alterSQL = new Redbag();
+            alterSQL.execute();
+        }
+        else if(qdata.contains("fu02l4,")){
+            Log.v("test","suck");
+            ActivityId = Integer.parseInt(RDdata[0]);
+            Log.v("test","Acti= "+ActivityId);
             Redbag alterSQL = new Redbag();
             alterSQL.execute();
         }
@@ -214,13 +227,21 @@ public class scan extends AppCompatActivity {
                     cstmt.setString(8,password);
                 }
                 else if(qdata.contains("e.4a93,")){
-                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?)}");
+                    Log.v("test",ProductId+" "+amount+" "+uuid+" "+FirmId);
+                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
                     cstmt.registerOutParameter(1, Types.VARCHAR);
                     cstmt.setString(2,ProductId);
                     cstmt.setInt(3,amount);
                     cstmt.setString(4,uuid);
                     cstmt.setString(5,FirmId);
-
+                    cstmt.setString(6,"n/a");
+                }
+                else if(qdata.contains("fu02l4,")){
+                    cstmt = con.prepareCall("{? = call activity_sign(?,?,?)}");
+                    cstmt.registerOutParameter(1, Types.VARCHAR);
+                    cstmt.setInt(2,ActivityId);
+                    cstmt.setString(3,uuid);
+                    cstmt.setString(4,"n/a");
                 }
                 cstmt.execute();
                 res = cstmt.getString(1);
@@ -234,12 +255,20 @@ public class scan extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             Log.v("test","after deal"+result);
-            if(result.contains("錯誤")){
-                popup(getApplicationContext(),"交易失敗");
+            if(qdata.contains("cj/61l," )||qdata.contains("e.4a93,")) {
+                if(result.contains("錯誤")){
+                    popup(getApplicationContext(),"交易失敗");
+                }
+                else{
+                    popup(getApplicationContext(),"交易成功");
+                    onBackPressed();
+                }
             }
-            else{
-                popup(getApplicationContext(),"交易成功");
-                onBackPressed();
+            else if(qdata.contains("fu02l4,")){
+                popup(getApplicationContext(),result);
+            }
+            else {
+                popup(getApplicationContext(),"發生錯誤，請聯繫客服人員協助您解決:)");
             }
         }
     }

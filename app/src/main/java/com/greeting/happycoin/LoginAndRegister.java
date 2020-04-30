@@ -29,7 +29,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.UUID;
+
+import static com.greeting.happycoin.MainActivity.entryIsRecent;
+import static com.greeting.happycoin.MainActivity.isBack;
 
 public class LoginAndRegister extends AppCompatActivity {
 //    public static final String url = "jdbc:mysql://140.135.113.196:3360/happycoin";
@@ -64,7 +68,6 @@ public class LoginAndRegister extends AppCompatActivity {
 
 
     public static final String ver = "0.0.1";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +123,7 @@ public class LoginAndRegister extends AppCompatActivity {
 //            Log.v("test","Your result:\n"+result);
 
             super.onPostExecute(result);
-            Log.v("test","info from mySQL ="+result);
+//            Log.v("test","info from mySQL ="+result);
             if(result.contains("sep,")){
                 inf = result.split("sep,");
                 nm = inf[1].split("nm,");
@@ -165,7 +168,16 @@ public class LoginAndRegister extends AppCompatActivity {
             case R.id.Intoshop:
                 intent = new Intent(LoginAndRegister.this,market.class);
                 break;
-
+            case R.id.Enroll:
+                intent = new Intent(LoginAndRegister.this,event.class);
+                break;
+            case R.id.recent:
+                entryIsRecent = true;
+                intent = new Intent(LoginAndRegister.this,event.class);
+                break;
+            case R.id.Record:
+                intent = new Intent(LoginAndRegister.this,record.class);
+                break;
         }
         startActivity(intent);
         finish();
@@ -225,5 +237,11 @@ public class LoginAndRegister extends AppCompatActivity {
         }
     }
 
-//**************all public method are above**************
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBack = true;
+        finish();
+    }
+    //**************all public method are above**************
 }

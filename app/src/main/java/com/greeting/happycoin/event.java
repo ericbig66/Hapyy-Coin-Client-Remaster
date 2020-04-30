@@ -1,5 +1,7 @@
 package com.greeting.happycoin;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -8,21 +10,17 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -31,164 +29,156 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
-
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
-import static com.greeting.happycoin.MainActivity.BuyId;
-import static com.greeting.happycoin.MainActivity.PID;
-import static com.greeting.happycoin.MainActivity.PIMG;
-import static com.greeting.happycoin.MainActivity.Pamount;
-import static com.greeting.happycoin.MainActivity.Pname;
-import static com.greeting.happycoin.MainActivity.Pprice;
-import static com.greeting.happycoin.MainActivity.Vendor;
-import static com.greeting.happycoin.MainActivity.happypi;
+import static com.greeting.happycoin.MainActivity.AactDate;
+import static com.greeting.happycoin.MainActivity.AactEnd;
+import static com.greeting.happycoin.MainActivity.Aamount;
+import static com.greeting.happycoin.MainActivity.AamountLeft;
+import static com.greeting.happycoin.MainActivity.Actpic;
+import static com.greeting.happycoin.MainActivity.Adeadline_date;
+import static com.greeting.happycoin.MainActivity.Adesc;
+import static com.greeting.happycoin.MainActivity.Aid;
+import static com.greeting.happycoin.MainActivity.Aname;
+import static com.greeting.happycoin.MainActivity.Areward;
+import static com.greeting.happycoin.MainActivity.AsignEnd;
+import static com.greeting.happycoin.MainActivity.AsignStart;
+import static com.greeting.happycoin.MainActivity.Astart_date;
+import static com.greeting.happycoin.MainActivity.Avendor;
+import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.attended;
+import static com.greeting.happycoin.MainActivity.entryIsRecent;
 
 
-public class market extends AppCompatActivity {
-    //array list 已移至 main menu
+public class event extends AppCompatActivity {
 
     int function = 0;
 
-    Button addProd;
     LinearLayout ll;
     ScrollView sv;
     public static int cardCounter = 0;
+    String acc ;
 
-
-
-    String sender;
-    String password;
-    int sum;
-    String ip = "111231123";
-
-    String ProductId, FirmId;
-    public static int Amount;
+    String sql="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_market);
+        setContentView(R.layout.layout_event);
         ll = findViewById(R.id.ll);
+        sv = findViewById(R.id.sv);
+
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
+
     }
-    public void closekeybord() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
+
+    //建立連接與查詢非同步作業
     private class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
-        String uuid;
         //開始執行動作
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            Toast.makeText(market.this,"請稍後...",Toast.LENGTH_SHORT).show();
-            uuid = getUUID(getApplicationContext());
+            acc= getUUID(getApplicationContext());
+            Toast.makeText(event.this,"請稍後...",Toast.LENGTH_SHORT).show();
         }
         //查詢執行動作(不可使用與UI相關的指令)
         @Override
         protected String doInBackground(String... strings) {
-            //連接資料庫
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection(url, user, pass);
-                Statement st = con.createStatement();
-                CallableStatement cstmt = null;
-
-
-            if(function == 0) {//把所有商品資訊抓回來
+            if(function == 0) {
                 try {
+                    //連接資料庫
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection(url, user, pass);
                     //建立查詢
                     String result = "";
-                    ResultSet rs = st.executeQuery("select p.*, name from product p, vendor v where stock > 0 and vid = vendor");
-
+                    Statement st = con.createStatement();
+                    attended.clear();
+                    ResultSet rs = st.executeQuery("select activityID from application_form where clientID in (select id from client where acc = '"+acc+"')");
+                    //
+                    String att="";
+                    while(rs.next()){
+                        attended.add(rs.getString("activityID"));
+                        att += "'"+rs.getString("activityID")+"', ";
+                    }
+                    att = att.isEmpty()? "null": att.substring(0,att.length()-2);
+                    if(entryIsRecent)
+                        sql = "and id in ("+att +")";
+                    else
+                        sql = "";
+//                    Log.v("test", "query = "+"select * from activity where activityNumber in("+att +") and actDate >= curdate() or endApply >= curdate()");
+                    rs = st.executeQuery("select * from activity where actDate >= curdate() "+sql);
+                    Log.v("test",sql);
                     while (rs.next()) {
-                        PID.add(rs.getString("sku"));
-                        Pname.add(rs.getString("productName"));
-                        Pprice.add(rs.getInt("price"));
-                        Pamount.add(rs.getInt("stock"));
-                        Vendor.add(rs.getString("name"));
-                        PIMG.add(rs.getString("picture"));
-                        happypi.add(rs.getString("description"));
+                        Aid.add(rs.getString(1));
+                        Avendor.add(rs.getString(2));
+                        Aname.add(rs.getString(3));
+                        Actpic.add(rs.getString(4));
+                        AactDate.add(rs.getDate(5));
+                        AactEnd.add(rs.getDate(6));
+                        Astart_date.add(rs.getDate(7));
+                        Adeadline_date.add(rs.getDate(8));
+                        AsignStart.add(rs.getTime(9));
+                        AsignEnd.add(rs.getTime(10));
+                        Aamount.add(rs.getInt(11));
+                        Areward.add(rs.getInt(12));
+                        AamountLeft.add(rs.getInt(13));
+//                        Adesc.add(rs.getString(14));
+
                     }
 
-                    return PID.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
+
+
+
+                    return Aname.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     res = e.toString();
-                    Log.v("test","catch by query");
                 }
                 return res;
             }
             ////////////////////////////////////////////
             else if(function == 1){
                 try {
-//                    Class.forName("com.mysql.jdbc.Driver");
-////                    Connection con = DriverManager.getConnection(url, user, pass);
-////                    //建立查詢
-////                    String result ="";
-////                    //Statement st = con.createStatement();
-//////                ResultSet rs = st.executeQuery("call login(@fname, '"+account+"', '"+password+"'); select @fname;");
-////                    //experiment part start
-////                    //此處呼叫Stored procedure(call 函數名稱(?)==>問號數量代表輸出、輸入的變數數量)
-////                    CallableStatement cstmt = con.prepareCall("{call sell(?,?,?,?,?)}");
-////                    cstmt.setString(1,acc);//設定輸出變數(參數位置,參數型別)
-////                    cstmt.setString(2,PID.get(BuyId));
-////                    cstmt.setString(3,Vendor.get(BuyId));
-////                    cstmt.setInt(4,BuyAmount);
-////                    cstmt.registerOutParameter(5, Types.VARCHAR);
-////                    cstmt.executeUpdate();
-////                    return cstmt.getString("info");
-                    //experiment part end
-
-                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
+                    Log.v("test","活動報名中");
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection(url, user, pass);
+                    //建立查詢
+                    String result ="";
+                    CallableStatement cstmt = con.prepareCall("{?=call activity_regist(?,?)}");
                     cstmt.registerOutParameter(1, Types.VARCHAR);
-                    cstmt.setString(2,ProductId);
-                    cstmt.setInt(3,Amount);
-                    cstmt.setString(4,uuid);
-                    cstmt.setString(5,FirmId);
-                    cstmt.setString(6,"N/A");
+                    cstmt.setString(2,acc);//設定輸出變數(參數位置,參數型別)
+                    cstmt.setString(3,Aid.get(EventId));
                     cstmt.executeUpdate();
-                    Log.v("test","result= "+ProductId+" "+Amount+" "+uuid+" "+FirmId);
                     return cstmt.getString(1);
                 } catch (Exception e) {
                     e.printStackTrace();
                     res = e.toString();
-                    Log.v("test","error found in function1");
                 }
                 return res;
-            }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
             return null;
         }
         //查詢後的結果將回傳於此
         @Override
         protected void onPostExecute(String result) {
-            Log.v("test","result returned = "+result);
             try{
                 if(function == 0){
                     cardCounter = Integer.parseInt(result);
                     cardRenderer();
                 }
                 else if(function == 1){
-                    if(result.equals("交易成功!")){
-//                        clear();
+                    Toast.makeText(event.this, result, Toast.LENGTH_SHORT).show();
+                    if(result.contains("報名成功")||result.contains("已取消報名")){
+                        clear();
                         recreate();
+                        //Intent intent = new Intent(Event.this,)
                     }
-                    Toast.makeText(market.this, result, Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    popup(getApplicationContext(),result);
                 }
                 function = -1;
             }catch (Exception e){
@@ -197,31 +187,30 @@ public class market extends AppCompatActivity {
 
         }
     }
+
     //商品卡產生器
     public void cardRenderer(){
-        for(int i = 0 ; i < PID.size() ; i++){
+        for(int i = 0 ; i < Aname.size() ; i++){
             Log.v("test", "render card "+i);
             add(i);
         }
     }
 
 
-    //產生商品卡
+    //產生活動卡
     public void add(final int ID){
-        //商品卡片
+        //活動卡片
         LinearLayout frame = new LinearLayout(this);
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 DP(150)
-
         );
 
-
+        frame.setBackgroundColor(Color.parseColor("#D1FFDE"));
         frame.setPadding(DP(15),DP(15),DP(15),DP(15));
         framep.setMargins(0,0,0,DP(20));
         frame.setOrientation(LinearLayout.HORIZONTAL);
         frame.setLayoutParams(framep);
-        frame.setBackgroundColor(Color.parseColor("#D1FFDE"));
 
         //圖片&價格區
         LinearLayout picpri = new LinearLayout(this);
@@ -230,43 +219,24 @@ public class market extends AppCompatActivity {
         picpri.setOrientation(LinearLayout.VERTICAL);
         picpri.setLayoutParams(picprip);
 
-        //數量
-        final EditText amount = new EditText(this);
-        LinearLayout.LayoutParams amountp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        amount.setEms(3);
-        amount.setInputType(InputType.TYPE_CLASS_NUMBER);
-        amount.setLayoutParams(amountp);
-        amount.setId(5*ID+2);
-        amount.setText("1");
-
         //商品圖片
         ImageView propic = new ImageView(this);
         LinearLayout.LayoutParams propicp = new LinearLayout.LayoutParams(DP(120),DP(90));
         //propic.setImageBitmap(Bitmap.createScaledBitmap(ConvertToBitmap(ID), 120, 90, false));
         propic.setImageBitmap(ConvertToBitmap(ID));
         propic.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        try {
-//
-//        }catch (Exception e){
-//            Log.v("test", "recycle Bitmap error:\n"+e.toString());
-//        }
         propic.setLayoutParams(propicp);
         propic.setId(5*ID);
         propic.setOnClickListener(v -> {
             final int id = ID;
-            if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
-            final int quantity = Integer.parseInt(amount.getText().toString());
             closekeybord();
-            identifier("D",id,quantity);
+            identifier("D",id);
         });
 
-        //商品價格
+        //獎勵金額
         TextView price = new TextView(this);
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
-        price.setText("價格: $"+Pprice.get(ID));
+        price.setText("獎勵: $"+Areward.get(ID));
         price.setTextSize(18f);
         price.setLayoutParams(picprip);
 
@@ -279,19 +249,19 @@ public class market extends AppCompatActivity {
         proinf.setOrientation(LinearLayout.VERTICAL);
         proinf.setLayoutParams(proinfp);
 
-        //商品名稱
+        //活動名稱
         TextView proname = new TextView(this);
         LinearLayout.LayoutParams pronamep = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        proname.setText(Pname.get(ID));
+        proname.setText(Aname.get(ID));
         proname.setTextSize(18f);
         proname.setClickable(true);
         proname.setLayoutParams(pronamep);
         proname.setId(5*ID+1);
 
-        //購買資訊
+        //報名資訊
         LinearLayout buyinf = new LinearLayout(this);
         LinearLayout.LayoutParams buyinfp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -300,13 +270,13 @@ public class market extends AppCompatActivity {
         buyinf.setOrientation(LinearLayout.HORIZONTAL);
         buyinf.setLayoutParams(buyinfp);
 
-        //數量:[標籤]
+        //剩餘名額
         TextView amount_label = new TextView(this);
         LinearLayout.LayoutParams amount_labelp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        amount_label.setText("數量：");
+        amount_label.setText("剩餘名額："+AamountLeft.get(ID));
         amount_label.setTextSize(18f);
         amount_label.setLayoutParams(amount_labelp);
 
@@ -326,22 +296,20 @@ public class market extends AppCompatActivity {
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,0.5f
         );
-        detailp.setMarginEnd(20);
+        detailp.setMarginEnd(10);
+        detail.setBackgroundResource(R.drawable.rounded_button_green);
+        detail.setTextColor(Color.parseColor("#FFFFFF"));
         detail.setText("詳情");
         detail.setTextSize(18f);
         detail.setLayoutParams(detailp);
         detail.setId(5*ID+3);
-        detail.setTextColor(Color.parseColor("#FFFFFF"));
-        detail.setBackgroundResource(R.drawable.rounded_button_green);
         detail.setOnClickListener(v -> {
             final int id = ID;
-            if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
-            final int quantity = Integer.parseInt(amount.getText().toString());
             closekeybord();
-            identifier("D",id,quantity);
+            identifier("D",id);
         });
-//!!!!!!!!!
-        //訂購按鈕
+
+        //參加按鈕
         Button buybtn = new Button(this);
         LinearLayout.LayoutParams buybtnp = new LinearLayout.LayoutParams(
                 0,
@@ -349,16 +317,17 @@ public class market extends AppCompatActivity {
         );
         buybtn.setBackgroundResource(R.drawable.rounded_button_green);
         buybtn.setTextColor(Color.parseColor("#FFFFFF"));
-        buybtn.setText("訂購");
+        if(attended.contains(Aid.get(ID))){buybtn.setText("取消報名");}
+        else{buybtn.setText("參加");}
         buybtn.setTextSize(18f);
         buybtn.setLayoutParams(buybtnp);
         buybtn.setId(5*ID+4);
         buybtn.setOnClickListener(v -> {
+//            if(buybtn.getText().toString().equals("參加")){buybtn.setText("取消報名");}
+//            else{buybtn.setText("參加");}
             final int id = ID;
-            if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
-            final int quantity = Integer.parseInt(amount.getText().toString());
             closekeybord();
-            identifier("B",id,quantity);
+            identifier("B",id);
         });
 
         //將內容填入frame
@@ -374,9 +343,9 @@ public class market extends AppCompatActivity {
                     dteail
                     buybtn
         */
+
         proinf.addView(proname);
         buyinf.addView(amount_label);
-        buyinf.addView(amount);
         proinf.addView(buyinf);
         btnbox.addView(detail);
         btnbox.addView(buybtn);
@@ -385,68 +354,92 @@ public class market extends AppCompatActivity {
         picpri.addView(price);
         frame.addView(picpri);
         frame.addView(proinf);
-        Log.v("test","still alive before last one");
         ll.addView(frame);
-//        loading.setVisibility(View.GONE);
         Log.v("test","card"+ID+"rendered");
     }
+
     public static int DP(float dp){
         dp = dp * ((float) Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return (int)dp;
     }
-    public void identifier(String act, int ID,int quantity){
-        Log.v("test","act= "+act+" ID= "+ID+" quantity= "+quantity);
-        Amount = quantity;
-        ProductId=PID.get(ID);
-        FirmId=Vendor.get(ID);
-        BuyId=ID; //商品列表中的第""樣商品
-
+    /////////////////////////////////////////////
+    public void identifier(String act, int ID){
+        EventId=ID;
         if(act.equals("D")){
-            Log.v("test","您正在檢視第"+Pname.get(ID)+"的詳細資料");
-            Intent intent = new Intent(market.this, productDetail.class);
+            Log.v("test","您正在檢視第"+Aname.get(ID)+"的詳細資料");
+            Intent intent = new Intent(event.this, eventDetail.class);
             startActivity(intent);
-            finish();
         }else if(act.equals("B")){
-//            Log.v("test","您購買了"+quantity+"個"+Pname.get(ID));
+            Log.v("test","您報名了==>"+Aname.get(ID));
             function = 1;
-            if(quantity>0){
-                ConnectMySql connectMySql = new ConnectMySql();
-                connectMySql.execute("");
-            }else{
-                function = -1;
-                Toast.makeText(market.this,"請至少購買一項商品",Toast.LENGTH_SHORT).show();
-            }
+            ConnectMySql connectMySql = new ConnectMySql();
+            connectMySql.execute("");
         }
     }
-public Bitmap ConvertToBitmap(int ID){
-    try{
-//            Log.v("test",PIMG.get(ID));
-        byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
-        Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        int w = proimg.getWidth();
-        int h = proimg.getHeight();
-        Log.v("test","pic"+ID+" original = "+w+"*"+h);
-        int scale = 1;
-        if(w>h && (w/DP(120))>1 || h==w && (w/DP(120))>1){
-            scale = w/DP(120);
-            w = w/scale;
-            h = h/scale;
-        }else if(h>w && (h/DP(120))>1){
-            scale = h/DP(120);
-            w = w/scale;
-            h = h/scale;
-        }
-        Log.v("test","pic"+ID+" resized = "+w+"*"+h);
-        proimg = Bitmap.createScaledBitmap(proimg, w, h, false);
-        return proimg;
-    }catch (Exception e){
-        Log.v("test","error = "+e.toString());
-        return null;
+
+    public void clear(){
+        Aid.clear();
+        Avendor.clear();
+        Aname.clear();
+        Actpic.clear();
+        AactDate.clear();
+        AactEnd.clear();
+        Astart_date.clear();
+        Adeadline_date.clear();
+        AsignStart.clear();
+        AsignEnd.clear();
+        Aamount.clear();
+        Areward.clear();
+        AamountLeft.clear();
+        Adesc.clear();
+        attended.clear();
     }
-}
-    public void onBackPressed() {
-        Intent intent = new Intent(market.this,LoginAndRegister.class);
+
+    //隱藏鍵盤
+    public void closekeybord() {
+        View view = this.getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
+    }
+
+    public void onBackPressed(){
+        entryIsRecent = false;
+        Intent intent = new Intent(event.this, LoginAndRegister.class);
         startActivity(intent);
+        clear();
         finish();
     }
+
+
+    public Bitmap ConvertToBitmap(int ID){
+        try{
+//            Log.v("test",PIMG.get(ID));
+            byte[] imageBytes = Base64.decode(Actpic.get(ID), Base64.DEFAULT);
+            Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            int w = proimg.getWidth();
+            int h = proimg.getHeight();
+            Log.v("test","pic"+ID+" original = "+w+"*"+h);
+            int scale = 1;
+            if(w>h && (w/DP(120))>1 || h==w && (w/DP(120))>1){
+                scale = w/DP(120);
+                w = w/scale;
+                h = h/scale;
+            }else if(h>w && (h/DP(120))>1){
+                scale = h/DP(120);
+                w = w/scale;
+                h = h/scale;
+            }
+            Log.v("test","pic"+ID+" resized = "+w+"*"+h);
+            proimg = Bitmap.createScaledBitmap(proimg, w, h, false);
+            return proimg;
+        }catch (Exception e){
+            Log.v("test","error = "+e.toString());
+            return null;
+        }
+
+
+    }
+
 }
