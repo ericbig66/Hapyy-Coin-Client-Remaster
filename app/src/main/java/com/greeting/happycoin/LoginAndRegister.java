@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
@@ -54,7 +52,7 @@ public class LoginAndRegister extends AppCompatActivity {
 //    public static final String pass = "@SAclass";
 
     ///////////////////////////////////////////////218.161.48.27:3360
-    public static final String url = "jdbc:mysql://218.161.48.27:3360/happycoin?noAccessToProcedureBodies=true";
+    public static final String url = "jdbc:mysql://218.161.48.27:3360/happycoin?noAccessToProcedureBodies=true&useUnicode=yes&characterEncoding=UTF-8";
     public static final String user = "currency";
     public static final String pass = "SEclassUmDb@outside";
 

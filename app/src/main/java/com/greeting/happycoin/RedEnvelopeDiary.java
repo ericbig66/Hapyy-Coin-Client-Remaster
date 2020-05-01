@@ -33,7 +33,7 @@ public class RedEnvelopeDiary extends Fragment {
     private ArrayList<String> ioacc  = new ArrayList<>();
     private ArrayList<String> trade  = new ArrayList<>();
     private ArrayList<String> amount = new ArrayList<>();
-    private ArrayList<String> deatTime = new ArrayList<>();
+    private ArrayList<String> dealtTime = new ArrayList<>();
 
 
     TextView dt;
@@ -61,7 +61,7 @@ public class RedEnvelopeDiary extends Fragment {
         ioacc.add("對方帳戶　　");
         trade.add("交易方向　　");
         amount.add("金額　　");
-        deatTime.add("交易時間");
+        dealtTime.add("交易時間");
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
         return view;
@@ -101,8 +101,8 @@ public class RedEnvelopeDiary extends Fragment {
                         "amount, receiveDate \n" +
                         "from redenvelope_record r, client c\n" +
                         "where\n" +
-                        "(c.acc = '"+acc+"' and r.sender = c.ID)\n" +
-                        "OR (c.acc = '"+acc+"' and r.receiver = c.ID)");
+                        "(c.acc = '"+acc+"' and r.sender = c.ID and sndType = 'C')\n" +
+                        "OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'V')");
                 //將查詢結果裝入陣列
                 while(rs.next()){
                     //result += rs.getString("paccount")+"\t"+rs.getString("state")+"\t$"+rs.getString("amount")+"\t$"+rs.getString("moneyLeft")+"\n";
@@ -127,7 +127,7 @@ public class RedEnvelopeDiary extends Fragment {
                         trade.add("接收 ");
                     }
                     amount.add("$"+rs.getString("amount")+"  ");
-                    deatTime.add(rs.getString("receiveDate")==null?" ":rs.getString("receiveDate").substring(0,16));
+                    dealtTime.add(rs.getString("receiveDate")==null?" ":rs.getString("receiveDate").substring(0,16));
                 }
                 return ioacc.size()+"";
             }catch (Exception e){
@@ -159,7 +159,7 @@ public class RedEnvelopeDiary extends Fragment {
                 t2.setText(trade.get(row));
 //                Log.v("test",trade.get(row));
                 t3.setText(amount.get(row));
-                t4.setText(deatTime.get(row));
+                t4.setText(dealtTime.get(row));
                 //將TextView放入列
                 tr.addView(t1);
                 tr.addView(t2);
@@ -177,7 +177,7 @@ public class RedEnvelopeDiary extends Fragment {
         ioacc.clear();
         trade.clear();
         amount.clear();
-        deatTime.clear();
+        dealtTime.clear();
     }
 
 }
