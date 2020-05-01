@@ -34,7 +34,7 @@
         android:id="@+id/Intoshop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/rounded_button_green"/>
+        android:background="@drawable/rounded_button_green"
+        android:text="確認"
+        android:textColor="#FFFFFF" />
 </LinearLayout>
