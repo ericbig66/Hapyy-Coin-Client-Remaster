@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.LoginAndRegister.url;
+import static com.greeting.happycoin.LoginAndRegister.user;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,16 +91,15 @@ public class RedEnvelopeDiary extends Fragment {
                 //建立查詢
                 //String result = "對方帳戶\t交易\t金額\t餘額\n";
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("select \n" +
-                        "SndType, sender, \n" +
+                ResultSet rs = st.executeQuery("select\n" +
+                        "SndType,\n" +
                         "if(SndType = 'C',(select name from client where id = sender),(select name from vendor where vid = sender)) sender, if(SndType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = sender),null) sender_cid,\n" +
-                        "\n" +
-                        "receiver, recType,\n" +
+                        "                    \n" +
+                        "recType,\n" +
                         "if (recType = 'C',(select name from client where id = receiver),(select name from vendor where vid = receiver))\n" +
-                        "  receiver, if(recType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = receiver),null) receiver_cid,\n" +
-                        "amount, sendDate, receiveDate \n" +
+                        "receiver, if(recType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = receiver),null) receiver_cid,\n" +
+                        "amount, receiveDate \n" +
                         "from redenvelope_record r, client c\n" +
-                        "\n" +
                         "where\n" +
                         "(c.acc = '"+acc+"' and r.sender = c.ID)\n" +
                         "OR (c.acc = '"+acc+"' and r.receiver = c.ID)");
@@ -112,7 +111,7 @@ public class RedEnvelopeDiary extends Fragment {
                     sndCid = rs.getString("sender_cid")==null?" ":rs.getString("sender_cid");
                     sndType = rs.getString("sndType")==null?" ":rs.getString("sndType");
                     rec = rs.getString("receiver")==null?" ":rs.getString("receiver");
-                    recCid = rs.getString("recCid")==null?" ":rs.getString("recCid");
+                    recCid = rs.getString("receiver_cid")==null?" ":rs.getString("receiver_cid");
                     recType = rs.getString("recType")==null?" ":rs.getString("recType");
 
                     if (sndType.equals("C")){//客戶送的
@@ -128,9 +127,9 @@ public class RedEnvelopeDiary extends Fragment {
                         trade.add("接收 ");
                     }
                     amount.add("$"+rs.getString("amount")+"  ");
-                    deatTime.add("$"+rs.getString("receiveDate"));
+                    deatTime.add(rs.getString("receiveDate")==null?" ":rs.getString("receiveDate").substring(0,16));
                 }
-                return "0";
+                return ioacc.size()+"";
             }catch (Exception e){
                 e.printStackTrace();
                 res = e.toString();
@@ -140,6 +139,8 @@ public class RedEnvelopeDiary extends Fragment {
         //查詢後的結果將回傳於此
         @Override
         protected void onPostExecute(String result) {
+            Log.v("test","size= "+result);
+
             //dt.setText(result);
             renderTable();
         }
