@@ -1,5 +1,6 @@
 package com.greeting.happycoin;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,7 +28,14 @@ public class record extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+//        Log.v("test","u suck my XX:(");
+    }
 
-        Log.v("test","u suck my XX:(");
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(record.this, LoginAndRegister.class);
+        startActivity(intent);
+        finish();
     }
 }
