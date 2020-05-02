@@ -13,6 +13,7 @@ import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,11 +67,13 @@ public class LoginAndRegister extends AppCompatActivity {
 
 
     public static final String ver = "0.0.1";
-
+    GridLayout menu_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login_and_register);
+        menu_btn = findViewById(R.id.menu_btn);
+        menu_btn.setVisibility(View.INVISIBLE);
         wcm = findViewById(R.id.wcm);
         profile = findViewById(R.id.profile);
         //prevent error
@@ -132,8 +135,19 @@ public class LoginAndRegister extends AppCompatActivity {
                 if(!inf[3].equals("null")){ConvertToBitmap();}
                 else{profile.setImageResource(R.drawable.df_profile);}
                 profile.setRotation(Float.parseFloat(inf[4]));
-            }else if(result.equals("註冊成功")){recreate();}
-            else{wcm.setText(result);}
+                menu_btn.setVisibility(View.VISIBLE);
+            }else if(result.equals("註冊成功")){
+                recreate();
+                menu_btn.setVisibility(View.VISIBLE);
+            }
+            else{
+                wcm.setText(result);
+                if (result.contains("$")){
+                    menu_btn.setVisibility(View.VISIBLE);
+                }else{
+                    menu_btn.setVisibility(View.INVISIBLE);
+                }
+            }
         }
     }
 

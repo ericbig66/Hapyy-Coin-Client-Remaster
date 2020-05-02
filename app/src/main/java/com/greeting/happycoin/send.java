@@ -1,16 +1,18 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -49,6 +51,7 @@ public class send extends AppCompatActivity {
             public void onClick(View v) {
                 Redbag redbag = new Redbag();
                 redbag.execute();
+                closekeybord();
             }
         });
 
@@ -119,5 +122,14 @@ public class send extends AppCompatActivity {
         Intent intent = new Intent(send.this,LoginAndRegister.class);
         startActivity(intent);
         finish();
+    }
+
+    //close key bord
+    public void closekeybord() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

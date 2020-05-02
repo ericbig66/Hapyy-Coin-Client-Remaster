@@ -18,7 +18,6 @@
             android:name=".record"
             android:label="@string/title_activity_record"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".RecentAttendEvent" />
         <activity android:name=".eventDetail" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -33,7 +32,6 @@
         <activity android:name=".scan" />
         <activity android:name=".suggest" />
         <activity android:name=".send" />
-        <activity android:name=".gift" />
         <activity android:name=".AlterMember" />
         <activity android:name=".LoginAndRegister">
             <intent-filter>

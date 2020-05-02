@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CBE8CA"
     android:orientation="vertical"
-    tools:context=".send"
-    android:background="#CBE8CA">
+    android:padding="15dp"
+    tools:context=".send">
 
     <ImageView
         android:id="@+id/QRcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/ic_greet" />
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="請使用者輸入\n"
+        android:text="請輸入紅包金額\n"
         android:textSize="30sp" />
 
     <EditText
@@ -27,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="123"
+        android:hint="請輸入欲支付之金額"
         android:inputType="number" />
 
     <Button
