@@ -42,31 +42,39 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="登入中請稍後....\n若此過程超過30秒\n請檢查您的網路連線是否正常\n或連繫客服人員"
+            android:text="登入中請稍後...."
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/recent"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/submenu"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:minWidth="50dp"
-            android:onClick="execute"
-            android:text="近期\n報名"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/rounded_button_pink"
-            />
+            android:gravity="right"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="50dp"
-            android:onClick="execute"
-            android:text="聯絡\n我們"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/rounded_button_pink"/>
+            <Button
+                android:id="@+id/contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_pink"
+                android:minWidth="50dp"
+                android:onClick="execute"
+                android:text="聯絡\n我們"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/rounded_button_pink"
+                android:minWidth="50dp"
+                android:onClick="execute"
+                android:text="近期\n報名"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <GridLayout

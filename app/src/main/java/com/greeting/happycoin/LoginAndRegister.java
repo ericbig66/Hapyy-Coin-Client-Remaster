@@ -14,6 +14,7 @@ import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,137 +34,113 @@ import java.util.UUID;
 
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.isBack;
-
+//***表示待檢查
 public class LoginAndRegister extends AppCompatActivity {
-//    public static final String url = "jdbc:mysql://140.135.113.196:3360/happycoin";
-//    public static final String user = "currency";
-//    public static final String pass = "@SAclass";
-    //temp database for emergency will be switch back to normal when VM is ready to go (first one failed)
-//    public static final String url = "jdbc:mysql://sql12.freesqldatabase.com:3306/sql12327183";
-//    public static final String user = "sql12327183";
-//    public static final String pass = "4xcYzbRmwN";
-    ///////////////////////////////////////////////
-//    public static final String url = "jdbc:mysql://65.19.141.67:3306/ericbig6_happycoin?noAccessToProcedureBodies=true";
-//    public static final String user = "ericbig6";
-//    public static final String pass = "Ericgood0";
-    ///////////////////////////////////////////////218.161.48.27:3306
-//    public static final String url = "jdbc:mysql://140.135.112.25:3360/happycoin";
-//    public static final String url = "jdbc:mysql://218.161.48.27:3306/happycoin?noAccessToProcedureBodies=true";
-//    public static final String user = "currency";
-//    public static final String pass = "@SAclass";
-
-    ///////////////////////////////////////////////218.161.48.27:3360
+   //連線資料
     public static final String url = "jdbc:mysql://218.161.48.27:3360/happycoin?noAccessToProcedureBodies=true&useUnicode=yes&characterEncoding=UTF-8";
     public static final String user = "currency";
     public static final String pass = "SEclassUmDb@outside";
 
-    TextView wcm;
-    CircularImageView profile;
-    Intent intent ;
-    public static String[] nm = new String[2];
-    public static String[] inf = new String[9];
-    public static Bitmap pf = null;
+    TextView wcm;//歡迎訊息
+    CircularImageView profile;//頭像容器
+    Intent intent ;//切換畫面使用的事件
+    public static String[] nm = new String[2];//姓名[0]暱稱[1]
+    //姓名+暱稱[0] 餘額[1] 頭像(base64)[2] 頭像角度[3] 生日[4] 性別[5] 送貨地址[6] 建議***[7]
+    public static String[] inf = new String[9];//登入成功時回傳的資料^^^
+    public static Bitmap pf = null;//頭像圖片
 
-
-
-    public static final String ver = "0.0.1";
-    GridLayout menu_btn;
+    public static final String ver = "0.0.1";//版本號***
+    GridLayout menu_btn;//主功能區按鈕區
+    LinearLayout submenu;//子功能按鈕區
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login_and_register);
+        //定義區(對應主畫面物件)
         menu_btn = findViewById(R.id.menu_btn);
-        menu_btn.setVisibility(View.INVISIBLE);
+        submenu = findViewById(R.id.submenu);
         wcm = findViewById(R.id.wcm);
         profile = findViewById(R.id.profile);
-        //prevent error
-//        Log.v("test", "Your greeting preference is :"+getPfr("HCgreet",getApplicationContext()));
-
+        //設定區(登入成功前設定操作區為隱形)
+        menu_btn.setVisibility(View.INVISIBLE);
+        submenu.setVisibility(View.INVISIBLE);
+        //呼叫登入動作
         Login login = new Login();
         login.execute();
     }
-
+    //登入
     private class Login extends AsyncTask<Void,Void,String>{
-        String ip = null;
-        public String uuid = getUUID(getApplicationContext());
+        String ip = null;//須查詢ip，目前正在開發
+        public String uuid = getUUID(getApplicationContext());//自動取得此手機之UUID
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute() {//執行非同步(背景)工作前
             super.onPreExecute();
-
         }
 
         @Override
-        protected String doInBackground(Void... voids) {
-            String res = null;
+        protected String doInBackground(Void... voids) {//執行非同步工作(登入)
+            String res = null;//資料庫回傳結果容器
             try{
                 //連接資料庫
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(url, user, pass);
                 //建立查詢
                 String result ="";
-
                 Statement st = con.createStatement();
+                //查詢連線IP***
                 ResultSet rs = st.executeQuery("SELECT replace(substring_index(SUBSTRING_INDEX(USER(), '@', -1),'.',1),'-','.') AS ip;");
                 rs.next();
-                ip = rs.getString(1);
+                ip = rs.getString(1);//將ip回填到ip變數內
+                //執行MySQL function(自動註冊/登入)
                 CallableStatement cstmt = con.prepareCall("{? = call auto_login_register(?,?)}");
                 cstmt.registerOutParameter(1, Types.VARCHAR);
                 cstmt.setString(2,uuid);
                 cstmt.setString(3,ip);
                 cstmt.execute();
-                res = cstmt.getString(1);
-            }catch (Exception e){
+                res = cstmt.getString(1);//將結果裝入res
+            }catch (Exception e){//錯誤攔截
                 e.printStackTrace();
                 res = e.toString();
             }
-            return res;
+            return res;//回傳給結果處理器
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(String result) {//結果處理器
 //            Log.v("test","Your result:\n"+result);
-
             super.onPostExecute(result);
 //            Log.v("test","info from mySQL ="+result);
+            //處理資料庫回傳結果(將資料切分至陣列內)
             if(result.contains("sep,")){
                 inf = result.split("sep,");
                 nm = inf[1].split("nm,");
                 nm[0] = nm[0].equals("null")?"":nm[0];
                 nm[1] = nm[1].equals("null")?"":nm[1];
-                //set greeting sentence
+                //設定歡迎訊息
                 wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好目前您尚有$"+inf[2]);
                 if(!inf[3].equals("null")){ConvertToBitmap();}
                 else{profile.setImageResource(R.drawable.df_profile);}
                 profile.setRotation(Float.parseFloat(inf[4]));
                 menu_btn.setVisibility(View.VISIBLE);
-            }else if(result.equals("註冊成功")){
+            }else if(result.equals("註冊成功")){//如註冊成功將自動重新登入
                 recreate();
                 menu_btn.setVisibility(View.VISIBLE);
+                submenu.setVisibility(View.VISIBLE);
             }
-            else{
+            else{//否則如果有列出帳戶金額則表示可用
                 wcm.setText(result);
                 if (result.contains("$")){
                     menu_btn.setVisibility(View.VISIBLE);
+                    submenu.setVisibility(View.VISIBLE);
                 }else{
                     menu_btn.setVisibility(View.INVISIBLE);
+                    submenu.setVisibility(View.INVISIBLE);
                 }
             }
         }
     }
-
-//    public void member(View v){
-//        Intent intent = new Intent(this,AlterMember.class);
-//        startActivity(intent);
-//        finish();
-//    }
-//
-//    public void QQ(View v){//送紅包的Qrcode 顯示
-//        Intent intent = new Intent(this,send.class);
-//        startActivity(intent);
-//        finish();
-//    }
-
-    public void execute(View v){
+    //當主畫面之任意按鈕被點選時
+    public void execute(View v){//判斷所按之開關並重新引導到相對應頁面
         switch (v.getId()){
             case R.id.contact:
                 intent = new Intent(LoginAndRegister.this,suggest.class);
@@ -194,6 +171,7 @@ public class LoginAndRegister extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    //將Base64還原為點陣圖***需修改
     public void ConvertToBitmap(){
         try{
             byte[] imageBytes = Base64.decode(inf[3], Base64.DEFAULT);
@@ -204,8 +182,8 @@ public class LoginAndRegister extends AppCompatActivity {
         }
 
     }
-//**************all public method are here**************
-    //get uuid
+//**************all public method are here**************全區待移動
+    //取得客戶端裝置之UUID***待移位至固定頁面
     public static String getUUID(Context context) {
         UUID uuid = null;
         final String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -225,6 +203,7 @@ public class LoginAndRegister extends AppCompatActivity {
 
     //access preferences
     //set preference key and value
+    //設定偏好開關值及其偏好項目名稱
     public static void setPfr(String key, boolean value, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -232,15 +211,16 @@ public class LoginAndRegister extends AppCompatActivity {
         editor.commit();
     }
     //get preference key or set default value
+    //設定偏好預設值或取得偏好設定編號
     public static boolean getPfr(String key, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean(key, true);
     }
-
+    //簡化的toast提示訊息==>popup(getApplicationContext(),"訊息內容");
     public static void popup(Context context, String content){
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
-
+    //關閉鍵盤(全域情況不可用)
     public void closekeybord() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -248,11 +228,11 @@ public class LoginAndRegister extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
+    //設定按下返回鍵的動作
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        isBack = true;
+        isBack = true;//手動按下返回==>設定手動返回變數為true
         finish();
     }
     //**************all public method are above**************
