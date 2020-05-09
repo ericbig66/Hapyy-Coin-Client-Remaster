@@ -220,7 +220,7 @@ public class LoginAndRegister extends AppCompatActivity {
     public static void popup(Context context, String content){
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
-    //關閉鍵盤(全域情況不可用)
+    //關閉鍵盤***需替換
     public void closekeybord() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -228,6 +228,9 @@ public class LoginAndRegister extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+
+
     //設定按下返回鍵的動作
     @Override
     public void onBackPressed() {

@@ -1,6 +1,5 @@
 package com.greeting.happycoin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,15 +11,11 @@ import android.text.InputType;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,10 +25,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
-
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
@@ -46,51 +39,35 @@ import static com.greeting.happycoin.MainActivity.Pname;
 import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.happypi;
+import static com.greeting.happycoin.MainActivity.hideKB;
 
 
 public class market extends AppCompatActivity {
-    //array list 已移至 main menu
-
-    int function = 0;
-
-    Button addProd;
-    LinearLayout ll;
-    ScrollView sv;
-    public static int cardCounter = 0;
-
-
-
-    String sender;
-    String password;
-    int sum;
-    String ip = "111231123";
-
-    String ProductId, FirmId;
-    public static int Amount;
+    int function = 0;//功能執行，0表示從資料庫載入商品列表，1表示購買商品
+    LinearLayout ll; //商品列表顯示區
+    public static int cardCounter = 0;//商品數量計數器
+    String ip = "111231123";//容納此裝置之外連IP***目前尚在開發中
+    String ProductId, FirmId;//商品編號,公司id
+    public static int Amount;//購買數量
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_market);
-        ll = findViewById(R.id.ll);
+        ll = findViewById(R.id.ll);//指定物件
+        //連接資料庫取得商品資訊
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
     }
-    public void closekeybord() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
+
     private class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
-        String uuid;
+        String uuid;//裝載此裝置的UUID供交易使用
         //開始執行動作
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute(){//執行前
             super.onPreExecute();
-            Toast.makeText(market.this,"請稍後...",Toast.LENGTH_SHORT).show();
-            uuid = getUUID(getApplicationContext());
+            popup(getApplicationContext(),"請稍後...");//顯示提示等待下載資料
+            uuid = getUUID(getApplicationContext());//取得裝置的UUID
         }
         //查詢執行動作(不可使用與UI相關的指令)
         @Override
@@ -100,9 +77,7 @@ public class market extends AppCompatActivity {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(url, user, pass);
                 Statement st = con.createStatement();
-                CallableStatement cstmt = null;
-
-
+                CallableStatement cstmt = null;//因需多次使用故先設為null
             if(function == 0) {//把所有商品資訊抓回來
                 try {
                     //建立查詢
@@ -129,26 +104,8 @@ public class market extends AppCompatActivity {
                 return res;
             }
             ////////////////////////////////////////////
-            else if(function == 1){
+            else if(function == 1){//購買商品
                 try {
-//                    Class.forName("com.mysql.jdbc.Driver");
-////                    Connection con = DriverManager.getConnection(url, user, pass);
-////                    //建立查詢
-////                    String result ="";
-////                    //Statement st = con.createStatement();
-//////                ResultSet rs = st.executeQuery("call login(@fname, '"+account+"', '"+password+"'); select @fname;");
-////                    //experiment part start
-////                    //此處呼叫Stored procedure(call 函數名稱(?)==>問號數量代表輸出、輸入的變數數量)
-////                    CallableStatement cstmt = con.prepareCall("{call sell(?,?,?,?,?)}");
-////                    cstmt.setString(1,acc);//設定輸出變數(參數位置,參數型別)
-////                    cstmt.setString(2,PID.get(BuyId));
-////                    cstmt.setString(3,Vendor.get(BuyId));
-////                    cstmt.setInt(4,BuyAmount);
-////                    cstmt.registerOutParameter(5, Types.VARCHAR);
-////                    cstmt.executeUpdate();
-////                    return cstmt.getString("info");
-                    //experiment part end
-
                     cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
                     cstmt.registerOutParameter(1, Types.VARCHAR);
                     cstmt.setString(2,ProductId);
@@ -176,21 +133,21 @@ public class market extends AppCompatActivity {
         protected void onPostExecute(String result) {
             Log.v("test","result returned = "+result);
             try{
-                if(function == 0){
-                    cardCounter = Integer.parseInt(result);
-                    cardRenderer();
+                if(function == 0){//若取得商品列表
+                    cardCounter = Integer.parseInt(result);//回報商品數量
+                    cardRenderer();//繪製商品卡
                 }
-                else if(function == 1){
-                    if(result.equals("交易成功!")){
+                else if(function == 1){//若購買商品
+                    if(result.equals("交易成功!")){//回傳資料中包含"交易成功"
 //                        clear();
-                        recreate();
+                        recreate();//重新繪製本頁面並更新商品資料
                     }
-                    Toast.makeText(market.this, result, Toast.LENGTH_SHORT).show();
+                   popup(getApplicationContext(),result);//提示交易結果
                 }
                 else{
-                    popup(getApplicationContext(),result);
+                    popup(getApplicationContext(),result);//提示交易結果
                 }
-                function = -1;
+                function = -1;//表示程序執行完畢
             }catch (Exception e){
                 Log.v("test","錯誤: "+e.toString());
             }
@@ -199,9 +156,9 @@ public class market extends AppCompatActivity {
     }
     //商品卡產生器
     public void cardRenderer(){
-        for(int i = 0 ; i < PID.size() ; i++){
+        for(int i = 0 ; i < PID.size() ; i++){//以迴圈產生商品卡
             Log.v("test", "render card "+i);
-            add(i);
+            add(i);//增加商品卡
         }
     }
 
@@ -209,12 +166,12 @@ public class market extends AppCompatActivity {
     //產生商品卡
     public void add(final int ID){
         //商品卡片
-        LinearLayout frame = new LinearLayout(this);
-        LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                DP(150)
+        LinearLayout frame = new LinearLayout(this);//新增LinearLayout(商品卡母容器)
+        LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
+                LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
+                DP(150) //設定商品卡高度
 
-        );
+        );//LinearLayout 參數設定
 
 
         frame.setPadding(DP(15),DP(15),DP(15),DP(15));
@@ -248,18 +205,13 @@ public class market extends AppCompatActivity {
         //propic.setImageBitmap(Bitmap.createScaledBitmap(ConvertToBitmap(ID), 120, 90, false));
         propic.setImageBitmap(ConvertToBitmap(ID));
         propic.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//        try {
-//
-//        }catch (Exception e){
-//            Log.v("test", "recycle Bitmap error:\n"+e.toString());
-//        }
         propic.setLayoutParams(propicp);
         propic.setId(5*ID);
         propic.setOnClickListener(v -> {
             final int id = ID;
             if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
             final int quantity = Integer.parseInt(amount.getText().toString());
-            closekeybord();
+            hideKB(this);
             identifier("D",id,quantity);
         });
 
@@ -319,7 +271,6 @@ public class market extends AppCompatActivity {
         btnboxp.setMargins(0,20,0,0);
         btnbox.setLayoutParams(btnboxp);
 
-
         //詳情按鈕
         Button detail = new Button(this);
         LinearLayout.LayoutParams detailp = new LinearLayout.LayoutParams(
@@ -337,10 +288,10 @@ public class market extends AppCompatActivity {
             final int id = ID;
             if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
             final int quantity = Integer.parseInt(amount.getText().toString());
-            closekeybord();
+            hideKB(this);
             identifier("D",id,quantity);
         });
-//!!!!!!!!!
+
         //訂購按鈕
         Button buybtn = new Button(this);
         LinearLayout.LayoutParams buybtnp = new LinearLayout.LayoutParams(
@@ -357,7 +308,7 @@ public class market extends AppCompatActivity {
             final int id = ID;
             if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
             final int quantity = Integer.parseInt(amount.getText().toString());
-            closekeybord();
+            hideKB(this);
             identifier("B",id,quantity);
         });
 
@@ -374,6 +325,7 @@ public class market extends AppCompatActivity {
                     dteail
                     buybtn
         */
+        //將產生之物件放入卡片容器中
         proinf.addView(proname);
         buyinf.addView(amount_label);
         buyinf.addView(amount);
@@ -390,42 +342,45 @@ public class market extends AppCompatActivity {
 //        loading.setVisibility(View.GONE);
         Log.v("test","card"+ID+"rendered");
     }
-    public static int DP(float dp){
+
+    public static int DP(float dp){//寬度單位轉換器(設定值為DP)
         dp = dp * ((float) Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return (int)dp;
     }
-    public void identifier(String act, int ID,int quantity){
-        Log.v("test","act= "+act+" ID= "+ID+" quantity= "+quantity);
-        Amount = quantity;
-        ProductId=PID.get(ID);
-        FirmId=Vendor.get(ID);
-        BuyId=ID; //商品列表中的第""樣商品
 
-        if(act.equals("D")){
+    public void identifier(String act, int ID,int quantity){ //動作判定器(判斷按下的按鈕式購買或詳情)
+        Log.v("test","act= "+act+" ID= "+ID+" quantity= "+quantity);
+        Amount = quantity;//購買數量
+        ProductId=PID.get(ID);//商品ID
+        FirmId=Vendor.get(ID);//廠商ID
+        BuyId=ID; //商品列表中的第幾樣商品
+
+        if(act.equals("D")){//若按下詳情
             Log.v("test","您正在檢視第"+Pname.get(ID)+"的詳細資料");
-            Intent intent = new Intent(market.this, productDetail.class);
-            startActivity(intent);
-            finish();
-        }else if(act.equals("B")){
+            Intent intent = new Intent(market.this, productDetail.class);//準備轉跳頁面
+            startActivity(intent);//轉跳詳情頁面
+            finish();//結束本頁面
+        }else if(act.equals("B")){//若按下購買
 //            Log.v("test","您購買了"+quantity+"個"+Pname.get(ID));
-            function = 1;
-            if(quantity>0){
+            function = 1;//設定功能變數為1表示購買
+            if(quantity>0){//若數量正>0則會正常執行購買
                 ConnectMySql connectMySql = new ConnectMySql();
                 connectMySql.execute("");
-            }else{
+            }else{//否則不執行任何功能並提示其錯誤
                 function = -1;
-                Toast.makeText(market.this,"請至少購買一項商品",Toast.LENGTH_SHORT).show();
+                popup(getApplicationContext(),"請至少購買一項商品");
             }
         }
     }
-public Bitmap ConvertToBitmap(int ID){
+public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
     try{
 //            Log.v("test",PIMG.get(ID));
         byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
-        Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        int w = proimg.getWidth();
-        int h = proimg.getHeight();
+        Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);//轉換後的圖片
+        int w = proimg.getWidth();//取得寬度
+        int h = proimg.getHeight();//取得高度
         Log.v("test","pic"+ID+" original = "+w+"*"+h);
+        //圖片大小設定
         int scale = 1;
         if(w>h && (w/DP(120))>1 || h==w && (w/DP(120))>1){
             scale = w/DP(120);
@@ -437,16 +392,16 @@ public Bitmap ConvertToBitmap(int ID){
             h = h/scale;
         }
         Log.v("test","pic"+ID+" resized = "+w+"*"+h);
-        proimg = Bitmap.createScaledBitmap(proimg, w, h, false);
-        return proimg;
+        proimg = Bitmap.createScaledBitmap(proimg, w, h, false);//建立固定大小的圖片
+        return proimg;//傳回轉換後的圖片
     }catch (Exception e){
         Log.v("test","error = "+e.toString());
         return null;
     }
 }
-    public void onBackPressed() {
-        Intent intent = new Intent(market.this,LoginAndRegister.class);
-        startActivity(intent);
-        finish();
+    public void onBackPressed() {//返回鈕動作
+        Intent intent = new Intent(market.this,LoginAndRegister.class);//準備轉跳回首頁
+        startActivity(intent);//轉跳
+        finish();//結束本頁面
     }
 }

@@ -1,8 +1,12 @@
 package com.greeting.happycoin;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -70,5 +74,14 @@ public class MainActivity extends AppCompatActivity {
     //簡化Log.v語法==>lv("訊息內容");
     public static void lv(String s){
         Log.v("test",s);
+    }
+
+    //新版隱藏鍵盤方式***舊版需被替換
+    public static void hideKB(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

@@ -1,23 +1,18 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.Types;
 
-import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
@@ -33,12 +28,9 @@ public class suggest extends AppCompatActivity {
         setContentView(R.layout.layout_suggest);
         text = findViewById(R.id.communication);
         send = findViewById(R.id.submit);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bag bag = new Bag();
-                bag.execute();
-            }
+        send.setOnClickListener(v -> {
+            Bag bag = new Bag();
+            bag.execute();
         });
     }
 

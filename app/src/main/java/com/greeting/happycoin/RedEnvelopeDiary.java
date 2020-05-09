@@ -25,18 +25,11 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RedEnvelopeDiary extends Fragment {
-
-    private ArrayList<String> ioacc  = new ArrayList<>();
-    private ArrayList<String> trade  = new ArrayList<>();
-    private ArrayList<String> amount = new ArrayList<>();
-    private ArrayList<String> dealtTime = new ArrayList<>();
-
-
-    TextView dt;
+    private ArrayList<String> ioacc  = new ArrayList<>();    //
+    private ArrayList<String> trade  = new ArrayList<>();    //
+    private ArrayList<String> amount = new ArrayList<>();    //
+    private ArrayList<String> dealtTime = new ArrayList<>(); //
     TableLayout tradeData;
 
     String acc;
