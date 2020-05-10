@@ -1,8 +1,5 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,14 +10,12 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -28,11 +23,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Date;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
+import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.AactDate;
@@ -52,31 +46,28 @@ import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.EventId;
 import static com.greeting.happycoin.MainActivity.attended;
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
+import static com.greeting.happycoin.MainActivity.hideKB;
 
 
 public class event extends AppCompatActivity {
-
-    int function = 0;
-
-    LinearLayout ll;
-    ScrollView sv;
-    public static int cardCounter = 0;
-    String acc ;
-
-    String sql="";
+    int function = 0;//功能選擇器0= 自資料庫擷取活動資料集 1= 報名活動
+    LinearLayout ll;//活動列表顯示處
+    public static int cardCounter = 0;//活動數量
+    String acc ;//使用者UUID供活動報名用
+    String sql="";//當點選近期活動進來時給予SQL額外條件的指令存放處
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_event);
+        //定義區
         ll = findViewById(R.id.ll);
-        sv = findViewById(R.id.sv);
-
+        //初始化活動列表(資料擷取)
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
 
     }
 
-    //建立連接與查詢非同步作業
+    //活動資料擷取與報名
     private class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
         //開始執行動作
@@ -84,100 +75,102 @@ public class event extends AppCompatActivity {
         protected void onPreExecute(){
             super.onPreExecute();
             acc= getUUID(getApplicationContext());
-            Toast.makeText(event.this,"請稍後...",Toast.LENGTH_SHORT).show();
+            if (function==0)
+                popup(getApplicationContext(),"活動查詢中，請稍後...");
+            else
+                popup(getApplicationContext(),"報名中，請稍後...");
         }
         //查詢執行動作(不可使用與UI相關的指令)
         @Override
         protected String doInBackground(String... strings) {
-            if(function == 0) {
-                try {
-                    //連接資料庫
-                    Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection(url, user, pass);
-                    //建立查詢
-                    String result = "";
-                    Statement st = con.createStatement();
-                    attended.clear();
-                    ResultSet rs = st.executeQuery("select activityID from application_form where clientID in (select id from client where acc = '"+acc+"')");
-                    //
-                    String att="";
-                    while(rs.next()){
-                        attended.add(rs.getString("activityID"));
-                        att += "'"+rs.getString("activityID")+"', ";
-                    }
-                    att = att.isEmpty()? "null": att.substring(0,att.length()-2);
-                    if(entryIsRecent)
-                        sql = "and id in ("+att +")";
-                    else
-                        sql = "";
+            //連接資料庫
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection(url, user, pass);
+                //建立查詢
+                String result = "";
+                //取得活動資料集
+                if (function == 0) {
+                    try {
+
+                        Statement st = con.createStatement();
+                        attended.clear();
+                        ResultSet rs = st.executeQuery("select activityID from application_form where clientID in (select id from client where acc = '" + acc + "')");
+                        //
+                        String att = "";
+                        while (rs.next()) {
+                            attended.add(rs.getString("activityID"));
+                            att += "'" + rs.getString("activityID") + "', ";
+                        }
+                        att = att.isEmpty() ? "null" : att.substring(0, att.length() - 2);
+                        if (entryIsRecent)
+                            sql = "and id in (" + att + ")";
+                        else
+                            sql = "";
 //                    Log.v("test", "query = "+"select * from activity where activityNumber in("+att +") and actDate >= curdate() or endApply >= curdate()");
-                    rs = st.executeQuery("select * from activity where actDate >= curdate() "+sql);
-                    Log.v("test",sql);
-                    while (rs.next()) {
-                        Aid.add(rs.getString(1));
-                        Avendor.add(rs.getString(2));
-                        Aname.add(rs.getString(3));
-                        Actpic.add(rs.getString(4));
-                        AactDate.add(rs.getDate(5));
-                        AactEnd.add(rs.getDate(6));
-                        Astart_date.add(rs.getDate(7));
-                        Adeadline_date.add(rs.getDate(8));
-                        AsignStart.add(rs.getTime(9));
-                        AsignEnd.add(rs.getTime(10));
-                        Aamount.add(rs.getInt(11));
-                        Areward.add(rs.getInt(12));
-                        AamountLeft.add(rs.getInt(13));
-//                        Adesc.add(rs.getString(14));
+                        rs = st.executeQuery("select * from activity where actDate >= curdate() " + sql);
+                        Log.v("test", sql);
+                        //新增活動資料至陣列
+                        while (rs.next()) {
+                            Aid.add(rs.getString(1));
+                            Avendor.add(rs.getString(2));
+                            Aname.add(rs.getString(3));
+                            Actpic.add(rs.getString(4));
+                            AactDate.add(rs.getDate(5));
+                            AactEnd.add(rs.getDate(6));
+                            Astart_date.add(rs.getDate(7));
+                            Adeadline_date.add(rs.getDate(8));
+                            AsignStart.add(rs.getTime(9));
+                            AsignEnd.add(rs.getTime(10));
+                            Aamount.add(rs.getInt(11));
+                            Areward.add(rs.getInt(12));
+                            AamountLeft.add(rs.getInt(13));
+                            Adesc.add(rs.getString(14)); //待檢查***相關功能
 
+                        }
+
+                        return Aname.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        res = e.toString();
                     }
-
-
-
-
-                    return Aname.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    res = e.toString();
+                    return res;
                 }
-                return res;
-            }
-            ////////////////////////////////////////////
-            else if(function == 1){
-                try {
-                    Log.v("test","活動報名中");
-                    Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection(url, user, pass);
-                    //建立查詢
-                    String result ="";
-                    CallableStatement cstmt = con.prepareCall("{?=call activity_regist(?,?)}");
-                    cstmt.registerOutParameter(1, Types.VARCHAR);
-                    cstmt.setString(2,acc);//設定輸出變數(參數位置,參數型別)
-                    cstmt.setString(3,Aid.get(EventId));
-                    cstmt.executeUpdate();
-                    return cstmt.getString(1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    res = e.toString();
+                //活動報名
+                else if (function == 1) {
+                    try {
+                        Log.v("test", "活動報名中");
+                        CallableStatement cstmt = con.prepareCall("{?=call activity_regist(?,?)}");
+                        cstmt.registerOutParameter(1, Types.VARCHAR);
+                        cstmt.setString(2, acc);//設定輸出變數(參數位置,參數型別)
+                        cstmt.setString(3, Aid.get(EventId));
+                        cstmt.executeUpdate();
+                        return cstmt.getString(1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        res = e.toString();
+                    }
+                    return res;
                 }
-                return res;
-            }
+            }catch (Exception e){}
             return null;
         }
         //查詢後的結果將回傳於此
         @Override
         protected void onPostExecute(String result) {
             try{
+                //活動列表取得後
                 if(function == 0){
-                    cardCounter = Integer.parseInt(result);
-                    cardRenderer();
+                    cardCounter = Integer.parseInt(result);//設定活動列表大小
+                    cardRenderer();//產生列表
                 }
+                //活動報名
                 else if(function == 1){
-                    Toast.makeText(event.this, result, Toast.LENGTH_SHORT).show();
+                    popup(getApplicationContext(),result);//顯示報名結果
+                    //若成功將自動更新本頁資訊
                     if(result.contains("報名成功")||result.contains("已取消報名")){
                         clear();
                         recreate();
-                        //Intent intent = new Intent(Event.this,)
                     }
                 }
                 function = -1;
@@ -229,7 +222,7 @@ public class event extends AppCompatActivity {
         propic.setId(5*ID);
         propic.setOnClickListener(v -> {
             final int id = ID;
-            closekeybord();
+            hideKB(this);
             identifier("D",id);
         });
 
@@ -240,7 +233,7 @@ public class event extends AppCompatActivity {
         price.setTextSize(18f);
         price.setLayoutParams(picprip);
 
-        //商品訊息區
+        //活動訊息區
         LinearLayout proinf = new LinearLayout(this);
         LinearLayout.LayoutParams proinfp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -305,7 +298,7 @@ public class event extends AppCompatActivity {
         detail.setId(5*ID+3);
         detail.setOnClickListener(v -> {
             final int id = ID;
-            closekeybord();
+            hideKB(this);
             identifier("D",id);
         });
 
@@ -326,7 +319,7 @@ public class event extends AppCompatActivity {
 //            if(buybtn.getText().toString().equals("參加")){buybtn.setText("取消報名");}
 //            else{buybtn.setText("參加");}
             final int id = ID;
-            closekeybord();
+            hideKB(this);
             identifier("B",id);
         });
 
@@ -357,26 +350,30 @@ public class event extends AppCompatActivity {
         ll.addView(frame);
         Log.v("test","card"+ID+"rendered");
     }
-
+    //單位轉換器(轉換為DP)
     public static int DP(float dp){
         dp = dp * ((float) Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return (int)dp;
     }
-    /////////////////////////////////////////////
+    //報名或詳細資料檢視判斷
     public void identifier(String act, int ID){
-        EventId=ID;
+        EventId=ID;//目前檢是的活動位於列表中第幾個
+        //檢視詳細資料
         if(act.equals("D")){
             Log.v("test","您正在檢視第"+Aname.get(ID)+"的詳細資料");
+            //轉跳到詳細資訊頁
             Intent intent = new Intent(event.this, eventDetail.class);
             startActivity(intent);
+        //進入報名環節
         }else if(act.equals("B")){
             Log.v("test","您報名了==>"+Aname.get(ID));
-            function = 1;
+            function = 1;//設定功能為報名活動
+            //報名活動階段
             ConnectMySql connectMySql = new ConnectMySql();
             connectMySql.execute("");
         }
     }
-
+    //清空列表以確保活動資訊不會重複疊加
     public void clear(){
         Aid.clear();
         Avendor.clear();
@@ -395,15 +392,8 @@ public class event extends AppCompatActivity {
         attended.clear();
     }
 
-    //隱藏鍵盤
-    public void closekeybord() {
-        View view = this.getCurrentFocus();
-        if(view != null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-        }
-    }
 
+    //返回主頁並清除活動列表資料然後關閉此頁面
     public void onBackPressed(){
         entryIsRecent = false;
         Intent intent = new Intent(event.this, LoginAndRegister.class);
@@ -411,8 +401,7 @@ public class event extends AppCompatActivity {
         clear();
         finish();
     }
-
-
+    //Base64轉換為點陣圖
     public Bitmap ConvertToBitmap(int ID){
         try{
 //            Log.v("test",PIMG.get(ID));
@@ -438,8 +427,5 @@ public class event extends AppCompatActivity {
             Log.v("test","error = "+e.toString());
             return null;
         }
-
-
     }
-
 }

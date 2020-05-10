@@ -1,8 +1,5 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,13 +9,11 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -26,9 +21,10 @@ import java.sql.DriverManager;
 import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
-import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.LoginAndRegister.pass;
+import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
+import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.AactDate;
 import static com.greeting.happycoin.MainActivity.AactEnd;
 import static com.greeting.happycoin.MainActivity.Aamount;
@@ -44,10 +40,10 @@ import static com.greeting.happycoin.MainActivity.AsignStart;
 import static com.greeting.happycoin.MainActivity.Astart_date;
 import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.EventId;
-import static com.greeting.happycoin.MainActivity.PIMG;
 import static com.greeting.happycoin.MainActivity.attended;
 
 public class eventDetail extends AppCompatActivity {
+    //將Base64轉換為點陣圖
     public Bitmap ConvertToBitmap(int ID){
         try{
             Log.v("test",Actpic.get(ID));
@@ -77,38 +73,35 @@ public class eventDetail extends AppCompatActivity {
 
     }
 
-    EditText Qt;
-    Button btnBuy;
-    String acc;
+    Button btnBuy; //購買按鈕
+    String acc;//UUID(購物用)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_event_detail);
         Log.v("test","eventid="+EventId);
+        //定義區
         ImageView merPic = findViewById(R.id.merPic);
-        merPic.setImageBitmap(ConvertToBitmap(EventId));
-
         TextView txtName=findViewById(R.id.txtName);
-        txtName.setText(Aname.get(EventId));
-
         TextView txtVdrName=findViewById(R.id.txtVdrName);
-        txtVdrName.setText("主辦廠商: "+Avendor.get(EventId)+"\n活動名稱: "+Aname.get(EventId)+"\n剩餘名額: "+AamountLeft.get(EventId)+"人\n回饋金額: $"+Areward.get(EventId)+"\n活動日期: "+AactDate.get(EventId)+"\n活動時間: "+AsignStart.get(EventId)+"~"+AsignEnd.get(EventId)+"\n報名截止: "+Adeadline_date.get(EventId));
-
-
-
-
         btnBuy = findViewById(R.id.btnBuy);
+        //設定區(初始化活動資訊)
+        merPic.setImageBitmap(ConvertToBitmap(EventId));//設定活動圖片
+        txtName.setText(Aname.get(EventId));//設定活動名稱
+        txtVdrName.setText("主辦廠商: "+Avendor.get(EventId)+"\n活動名稱: "+Aname.get(EventId)+"\n剩餘名額: "+AamountLeft.get(EventId)+"人\n回饋金額: $"+Areward.get(EventId)+"\n活動日期: "+AactDate.get(EventId)+"\n活動時間: "+AsignStart.get(EventId)+"~"+AsignEnd.get(EventId)+"\n報名截止: "+Adeadline_date.get(EventId));//設定活動詳細資訊
+        //設定報名按鈕文字，若已報名將顯示取消報名，否則顯示參加
         if (attended.contains(Aid.get(EventId))){btnBuy.setText("取消報名");}
         else{btnBuy.setText("參加");}
-        btnBuy.setOnClickListener(v -> Buyer());
+        btnBuy.setOnClickListener(v -> Buyer());//按下參加鈕所執行之動作
     }
+    //進行報名或取消報名
     void Buyer() {
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
     }
 
 
-    //建立連接與查詢非同步作業
+    //報名或取消報名
     private class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
         //開始執行動作
@@ -116,12 +109,11 @@ public class eventDetail extends AppCompatActivity {
         protected void onPreExecute(){
             super.onPreExecute();
             acc = getUUID(getApplicationContext());
-            Toast.makeText(eventDetail.this,"請稍後...",Toast.LENGTH_SHORT).show();
+            popup(getApplicationContext(),"報名中，請稍後...");
         }
         //查詢執行動作(不可使用與UI相關的指令)
         @Override
         protected String doInBackground(String... strings) {
-            ////////////////////////////////////////////
             try {
                 Log.v("test","活動報名中");
                 Class.forName("com.mysql.jdbc.Driver");
@@ -140,7 +132,7 @@ public class eventDetail extends AppCompatActivity {
             }
             return res;
         }
-        //查詢後的結果將回傳於此
+        //報名/取消報名後的結果將回傳於此
         @Override
         protected void onPostExecute(String result) {
             try{
@@ -149,7 +141,8 @@ public class eventDetail extends AppCompatActivity {
                 }else if(result.equals("已取消報名")){
                     btnBuy.setText("參加");
                 }
-                Toast.makeText(eventDetail.this, result, Toast.LENGTH_SHORT).show();
+                popup(getApplicationContext(),result);
+                //報名成功後將自動清空活動列表並轉跳回活動列表
                 if(result.equals("報名成功")||result.equals("已取消報名")){
                     clear();
                     Intent intent;
@@ -164,7 +157,7 @@ public class eventDetail extends AppCompatActivity {
 
         }
     }
-
+    //清空活動列表，避免重複堆疊活動資訊
     public void clear(){
         Aid.clear();
         Avendor.clear();
@@ -182,16 +175,7 @@ public class eventDetail extends AppCompatActivity {
         Adesc.clear();
         attended.clear();
     }
-
-    //隱藏鍵盤
-    public void closekeybord() {
-        View view = this.getCurrentFocus();
-            if(view != null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-        }
-    }
-
+    //單位轉換器(轉為DP)
     public static int DP(float dp){
         dp = dp * ((float) Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return (int)dp;
