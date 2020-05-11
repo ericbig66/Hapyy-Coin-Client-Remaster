@@ -1,8 +1,5 @@
 package com.greeting.happycoin;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,8 +9,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -24,44 +23,43 @@ import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.Types;
-import java.util.UUID;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.popupL;
 
 public class scan extends AppCompatActivity {
-    SurfaceView scaner;
-    CameraSource cameraSource; // Receive Data Camera
-    BarcodeDetector barcodeDetector; // Receive Data Camera
-    String Qrcode;
+    SurfaceView scanner;//掃描畫面顯示處
+    CameraSource cameraSource; //使用相機
+    BarcodeDetector barcodeDetector; //掃描套件
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_scan);
-        scaner = findViewById(R.id.scaner);
-        //set camera
-        barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
-        cameraSource = new CameraSource.Builder(this,barcodeDetector).setRequestedPreviewSize(1080,1920).build();
-        cameraSource = new CameraSource.Builder(this,barcodeDetector).setAutoFocusEnabled(true).build();
+        //定義區
+        scanner = findViewById(R.id.scaner);
+        //設定相機
+        barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();//初始化掃描器與掃描條碼類型
+        cameraSource = new CameraSource.Builder(this,barcodeDetector).setRequestedPreviewSize(1080,1920).build();//設定預覽畫面大小
+        cameraSource = new CameraSource.Builder(this,barcodeDetector).setAutoFocusEnabled(true).build();//設定掃描器為自動對焦
+        //相機使用權限確認，若無權限則提示使用者允許
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         } else {
-            scaner.getHolder().addCallback(new SurfaceHolder.Callback() {
+            //若使用者拒絕權限獲權限無法取得時提示錯誤訊息，否則啟動相機
+            scanner.getHolder().addCallback(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-
                     try {
-                        cameraSource.start(holder);
-                        Analyzing();
+                        cameraSource.start(holder);//啟動相機
+                        Analyzing();//分析QRcode
                         Log.v("test","60");
                     } catch (IOException e) {
-                        Toast.makeText(scan.this, "無法啟動您的相機!!\n請允許使用權限!!", Toast.LENGTH_LONG).show();
+                        popupL(getApplication(),"無法啟動您的相機!!\n請允許使用權限!!");
                         e.printStackTrace();
                     }
                 }
@@ -72,24 +70,22 @@ public class scan extends AppCompatActivity {
                 }
 
                 @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    cameraSource.stop();
-                }
+                public void surfaceDestroyed(SurfaceHolder holder) {cameraSource.stop();}//畫面關閉時停止相機
             });
         }
     }
-    //QRcode scanner (data required )
-    String[] RDdata;//1,2,3
-
-    String qdata = "", tmp = "";
+    //QRcode 掃描器
+    String[] RDdata;//裝入QRcode分析後的資料
+    String qdata = "", tmp = "";//掃描到的原始資料,上一次掃描到的內容
+    //QRcode資料分析
     private void Analyzing(){
         Log.v("test","dick");
-        popup(getApplicationContext(),"請稍後...");
-
+        popup(getApplicationContext(),"請稍後...");//提示使用者等候
+        //在次確認相機權限***檢查是否需刪除重複檢查
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1);
         }else{
-            scaner.getHolder().addCallback(new SurfaceHolder.Callback() {
+            scanner.getHolder().addCallback(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
 
@@ -111,34 +107,37 @@ public class scan extends AppCompatActivity {
                     cameraSource.stop();
                 }
             });
-
+            //掃描器核心
             barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                 @Override
-                public void release() {
-
-                }
-
+                public void release() {}
+                //掃描到資料時
                 @Override
                 public void receiveDetections(Detector.Detections<Barcode> detections) {
                     final SparseArray<Barcode> qrCodes=detections.getDetectedItems();
-
-                    if(qrCodes.size()!=0){
-                        scaner.post(() -> {
+                    if(qrCodes.size()!=0){//若QRcode內有東西
+                        scanner.post(() -> {//資料處理
                             qdata=(qrCodes.valueAt(0).displayValue);
                             Log.v("test",qdata);
-                            if(!tmp.equals(qdata)){
+                            if(!tmp.equals(qdata)){//若此QRcode未重複掃描==>判斷QRcode之處理方式
                                 tmp=qdata;
 //                                RDdata = qdata.split("cj04ru,");
-                                if(qdata.contains("cj/61l," )) {
-                                    RDdata = qdata.split("cj/61l,");
-                                    processQdata();
+                                if(qdata.contains("cj/61l," )) {//若原始資料中包含該字串則視為紅包處理
+                                    RDdata = qdata.split("cj/61l,");//將原與資料切割至陣列內
+                                    processQdata();//將分析後的QRcode資料陣列資料裝入專用變數內並與資料庫溝通
                                 }
-                                else if(qdata.contains("e.4a93,")){
-                                    RDdata = qdata.split("e.4a93,");
+                                else if(qdata.contains("e.4a93,")){//若原始資料中包含該字串則視為購買處理
+                                    RDdata = qdata.split("e.4a93,");//將原與資料切割至陣列內
+                                    processQdata();//將分析後的QRcode資料陣列資料裝入專用變數內並與資料庫溝通
+                                }
+                                else if(qdata.contains("fu02l4,")){
+                                    Log.v("test","qrdata= "+qdata);
+                                    RDdata = qdata.split("fu02l4,");
+                                    Log.v("test","Rd = " + RDdata[0]);
                                     processQdata();
                                 }
                                 else {
-                                    popup(getApplicationContext(),"請確認您的條碼是否可用於交易");
+                                    popup(getApplicationContext(),"請確認您的條碼是否可用於交易");//無法識別條碼用途時提示錯誤
                                 }
                             }
                         });
@@ -147,31 +146,39 @@ public class scan extends AppCompatActivity {
             });
         }
     }
-    String sender;
-    String password;
-    int sum;
-    String ip = "111231123";
-    String ID;
-
-    String ProductId, FirmId;
-    int amount;
+    String sender;//送紅包者
+    String password;//紅包金鑰
+    int sum;//紅包金額
+    String ip = "111231123";//使用者IP***目前仍在開發中
+    String ID;//紅包發送者身分別
+    String ProductId, FirmId;//產品代碼,公司代碼
+    int amount,ActivityId;//購買商品數量,活動代碼
+    //處理QRcode資料陣列並連接資料庫
     private void processQdata(){
         Log.v("test","data get!");
 //        ouuid = RDdata[0];
 //        pwd = RDdata[1];
-        if(qdata.contains("cj/61l,")) {
-
-            sender = RDdata[0];
-            password = RDdata[1];
-            sum = Integer.parseInt(RDdata[2]);
-            ID = RDdata[4];
+        if(qdata.contains("cj/61l,")) {//處理紅包資料
+            sender = RDdata[0];//送出者
+            password = RDdata[1];//紅包金鑰
+            sum = Integer.parseInt(RDdata[2]);//紅包金額
+            ID = RDdata[4];//送出者身分別
+            //交送資料庫處理函式
             Redbag alterSQL = new Redbag();
             alterSQL.execute();
         }
-        else if(qdata.contains("e.4a93,")){
-            ProductId = RDdata[0];
-            amount = Integer.parseInt(RDdata[1]);
-            FirmId = RDdata[2];
+        else if(qdata.contains("e.4a93,")){//處理購物資料
+            ProductId = RDdata[0];//產品代碼
+            amount = Integer.parseInt(RDdata[1]);//購買數量
+            FirmId = RDdata[2];//公司代碼
+            //交送資料庫處理函式
+            Redbag alterSQL = new Redbag();
+            alterSQL.execute();
+        }
+        else if(qdata.contains("fu02l4,")){
+            Log.v("test","suck");
+            ActivityId = Integer.parseInt(RDdata[0]);
+            Log.v("test","Acti= "+ActivityId);
             Redbag alterSQL = new Redbag();
             alterSQL.execute();
         }
@@ -180,8 +187,7 @@ public class scan extends AppCompatActivity {
     }
 
     private class Redbag extends AsyncTask<Void,Void,String> {
-        String ip = null;
-        public String uuid = getUUID(getApplicationContext());
+        public String uuid = getUUID(getApplicationContext());//取得裝置UUID(交易用)
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -215,12 +221,20 @@ public class scan extends AppCompatActivity {
                     cstmt.setString(8,password);
                 }
                 else if(qdata.contains("e.4a93,")){
-                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?)}");
+                    Log.v("test",ProductId+" "+amount+" "+uuid+" "+FirmId);
+                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
                     cstmt.registerOutParameter(1, Types.VARCHAR);
                     cstmt.setString(2,ProductId);
                     cstmt.setInt(3,amount);
                     cstmt.setString(4,uuid);
-                    cstmt.setString(5,FirmId);
+                    cstmt.setString(6,"n/a");
+                }
+                else if(qdata.contains("fu02l4,")){
+                    cstmt = con.prepareCall("{? = call activity_sign(?,?,?)}");
+                    cstmt.registerOutParameter(1, Types.VARCHAR);
+                    cstmt.setInt(2,ActivityId);
+                    cstmt.setString(3,uuid);
+                    cstmt.setString(4,"n/a");
 
                 }
                 cstmt.execute();
@@ -235,9 +249,16 @@ public class scan extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             Log.v("test","after deal"+result);
-            if(result.contains("錯誤")){
-                popup(getApplicationContext(),"交易失敗");
-                Log.v("test","錯誤: "+result);
+            if(qdata.contains("cj/61l," )||qdata.contains("e.4a93,")) {
+                if(result.contains("錯誤")){
+                    popup(getApplicationContext(),"交易失敗");
+                }
+                else {
+                    popup(getApplicationContext(),"發生錯誤，請聯繫客服人員協助您解決:)");
+                }
+            }
+            else if(qdata.contains("fu02l4,")){
+                popup(getApplicationContext(),result);
             }
             else{
                 popup(getApplicationContext(),"交易成功");

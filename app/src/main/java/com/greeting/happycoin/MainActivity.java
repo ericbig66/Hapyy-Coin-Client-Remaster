@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -83,5 +84,10 @@ public class MainActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    //簡化的toast提示訊息==>popupL(getApplicationContext(),"訊息內容");==>長時間顯示
+    public static void popupL(Context context, String content){
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 }
