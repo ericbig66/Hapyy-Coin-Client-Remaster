@@ -15,7 +15,6 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -48,7 +47,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import static com.greeting.happycoin.LoginAndRegister.getPfr;
@@ -61,38 +59,34 @@ import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.setPfr;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.hideKB;
 import static java.lang.String.valueOf;
 
 public class AlterMember extends AppCompatActivity {
-
-    Switch greet;
-    CircularImageView profile; //Profile image
-    Button CD, RD, Upload, Rotate, Cancel; // changeDevice, ReceiveData, UploadProfile, ProfileRotate, CancelGenderSelect
-    RadioButton male,female;// male, female
-    EditText Name, Nname, Address; // Name, NickName, CommunicationAddress
-    DatePicker Birthday;
-    ImageView CDQR; // chamge Device QRcode
-    SurfaceView RDCAM; // Receive Data Camera
-    BarcodeDetector barcodeDetector; // Receive Data Camera
-    CameraSource cameraSource; // Receive Data Camera
-    String operate = "sav";
-    String ouuid; //uuid of old device
-    String pwd; // pass word for change device
-    LinearLayout common;
-    TextView CDhint, RDhint;
-
-
-    String npf = inf[3], nnm, nnn, nge, nbd = null, nad; // parameter to output
-    Float npfr = Float.parseFloat(inf[4]);// parameter to output
-
-    final Integer OPEN_PIC = 1021;
+    Switch greet;//稱呼方式選擇鈕
+    CircularImageView profile; //頭像
+    Button CD, RD, Upload, Rotate, Cancel; // 換機鈕, 資料繼承鈕, 上傳頭像鈕, 頭像旋轉鈕, 取消選取性別
+    RadioButton male,female;// 男, 女
+    EditText Name, Nname, Address; // 性名, 暱稱, 通訊地址
+    DatePicker Birthday;//生日
+    ImageView CDQR; //換機用QRcode顯示處
+    SurfaceView RDCAM; //資料接收時掃描畫面顯示處
+    BarcodeDetector barcodeDetector; //繼承資料掃描器
+    CameraSource cameraSource; //繼承資料時需要相機使用權限
+    String operate = "sav";//操作功能別(sav = 保存修改)***
+    String ouuid; //舊裝置的UUID
+    String pwd; //換機用密碼
+    LinearLayout common;//正常模式下的內容
+    TextView CDhint, RDhint;//換機與繼承資料的提示
+    String npf = inf[3], nnm, nnn, nge, nbd = null, nad; //待輸出的新值(頭像、姓名、暱稱、性別、生日、通訊地址)
+    Float npfr = Float.parseFloat(inf[4]);//待輸出的新值(頭像旋轉角度)
+    final Integer OPEN_PIC = 1021;//開啟頭像時須使用的程式執行序號
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_alter_member);
-
-        //initialize components
+        //定義區
         common = findViewById(R.id.common);
         greet = findViewById(R.id.greet);
         profile = findViewById(R.id.profile);
@@ -112,74 +106,73 @@ public class AlterMember extends AppCompatActivity {
         CDhint = findViewById(R.id.CDhint);
         RDhint = findViewById(R.id.RDhint);
 
-        //set camera
+        //設定相機
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
         cameraSource = new CameraSource.Builder(this,barcodeDetector).setRequestedPreviewSize(1080,1920).build();
         cameraSource = new CameraSource.Builder(this,barcodeDetector).setAutoFocusEnabled(true).build();
 
-
-        //set limit to birthday picker (Set Max Date to today)
+        //設定生日選擇器(最晚日期為今日)
         Birthday.setMaxDate(new Date().getTime());
 
-        //restore the preference of greeting on login page
+        //自動帶入稱呼偏好設定
         greet.setChecked(getPfr("HCgreet",getApplicationContext()));
-        //save preference when preference is changed
+        //當設定被改變時將自動儲存
         greet.setOnCheckedChangeListener((buttonView, isChecked) -> {
             setPfr("HCgreet",isChecked, getApplicationContext());
             greet.setText(isChecked?"以暱稱稱呼您":"以姓名稱呼您");
         });
         // 頭像[3]    頭像角度[4]      生日[5]    性別[6]   送貨地址[7]
-        //restore the personal info. into form
-        //****restore profile here (include pfr)
-        if(inf[3].equals("null")){profile.setImageResource(R.drawable.df_profile);}
-        else{profile.setImageBitmap(pf);}
-        Name.setText(nm[0].equals("null")?"":nm[0]);//Name
-        Nname.setText(nm[1].equals("null")?"":nm[1]);//Nick Name
-        if(inf[6].equals("m")){male.setChecked(true);}//Gender
+        //自動帶入舊資料
+        if(inf[3].equals("null")){profile.setImageResource(R.drawable.df_profile);}//若無頭像則使用預設提供的
+        else{profile.setImageBitmap(pf);}//若有頭像則使用設定的
+        Name.setText(nm[0].equals("null")?"":nm[0]);//姓名
+        Nname.setText(nm[1].equals("null")?"":nm[1]);//暱稱
+        if(inf[6].equals("m")){male.setChecked(true);}//性別
         else if(inf[6].equals("f")){female.setChecked(true);}
 //        Log.v("test","Your birthday is "+inf[5]);
-        if((!inf[5].equals("null")) && inf[5].length()==10){
+        if((!inf[5].equals("null")) && inf[5].length()==10){//生日
             String[] tmp;
             tmp = inf[5].split("-");
 //            Log.v("test","setting birthday...");
+            //帶入生日
             Birthday.init(Integer.parseInt(tmp[0]),Integer.parseInt(tmp[1])-1,Integer.parseInt(tmp[2]),null);
         }
-        Address.setText(inf[7].equals("null")?"":inf[7]);
-        profile.setRotation(Float.parseFloat(inf[4]));
-        //when click on change device
+        Address.setText(inf[7].equals("null")?"":inf[7]);//通訊地址
+        profile.setRotation(Float.parseFloat(inf[4]));//頭像角度
+        //點集換機時的動作
         CD.setOnClickListener(v -> {
             setAlert("換機確認", "您是否要將此帳號轉移至另一支手機?\n", "是", "否", this);
         });
 
-        //when click on receive data
+        //點選繼承資料時的動作
         RD.setOnClickListener(v -> {
             setAlert("繼承資料確認", "您是否要使用這支手機取代舊手機?\n舊手機上的資料將被刪除由這支手機繼承\n且此手機上原有之帳號將被清除且無法自行復原","確認換機", "再考慮一下", this);
         });
-
-       closekeybord();
+        hideKB(this);
     }
 
-    //update personal info and change device *********************
+    //更新會員資料、換機與資料繼承(連接資料庫)
     private class AlterSQL extends AsyncTask<Void,Void,String> {
-        String ip = null;
-        public String uuid = getUUID(getApplicationContext());
+        String ip = null;//IP功能目前開發中***
+        public String uuid = getUUID(getApplicationContext());//取得裝置UUID供資料更新使用
+        //連接資料庫前的資料轉換
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            switch (operate){
-                case "sav":
+            switch (operate){//取得轉換方式
+                case "sav"://資料儲存
                     getBirthday();
-                    popup(getApplicationContext(),"資料儲存中請稍後...");
+                    popup(getApplicationContext(),"資料儲存中，請稍後...");
                     break;
-                case "CD":
+                case "CD"://換機
                     CDQR.setVisibility(View.VISIBLE);
                     CDhint.setVisibility(View.VISIBLE);
                     CD.setVisibility(View.GONE);
                     RD.setVisibility(View.GONE);
-                    popup(getApplicationContext(),"請稍後...");
+                    popup(getApplicationContext(),"QRcode產生中，請稍後...");
                     break;
-                case "RD":
-
+                case "RD"://資料繼承
+                    popup(getApplicationContext(),"資料繼承中，請稍後...");
                     break;
                 case "back":
                     popup(getApplicationContext(),"請稍後...");
@@ -202,7 +195,7 @@ public class AlterMember extends AppCompatActivity {
                 ip = rs.getString(1);
                 CallableStatement cstmt;
                 switch (operate){
-                    case "CD":
+                    case "CD"://換機
                         cstmt = con.prepareCall("{? = call change_device(?,?,?,?)}");
                         cstmt.registerOutParameter(1, Types.VARCHAR);
                         cstmt.setString(2,ip);
@@ -213,8 +206,7 @@ public class AlterMember extends AppCompatActivity {
                         res = cstmt.getString(1);
                         break;
 
-                    case "RD":
-
+                    case "RD"://繼承資料
                         cstmt = con.prepareCall("{? = call change_device(?,?,?,?)}");
                         cstmt.registerOutParameter(1, Types.VARCHAR);
                         cstmt.setString(2,ip);
@@ -223,12 +215,11 @@ public class AlterMember extends AppCompatActivity {
                         cstmt.setString(5,pwd);
                         cstmt.execute();
                         res = cstmt.getString(1);
-
 //                        Log.v("test","your ip = "+ip+" ouuid = "+ouuid+" uuid = "+uuid+" pwd = "+pwd);
 //                        res = "暫停";
                         break;
 
-                    case "sav":
+                    case "sav"://儲存變更
                         cstmt = con.prepareCall("{? = call alter_member(?,?,?,?,?,?,?,?)}");
                         cstmt.registerOutParameter(1, Types.VARCHAR);
                         cstmt.setString(2,uuid);
@@ -243,7 +234,7 @@ public class AlterMember extends AppCompatActivity {
                         res = cstmt.getString(1);
                         break;
 
-                    case "back":
+                    case "back"://返回主畫面
 //                        Log.v("test","your sql = "+"select pwd from client where acc = '"+uuid+"'");
                         rs = st.executeQuery("select isnull(pwd), count(acc) from client where acc = '"+uuid+"'");
                         Log.v("test","your sql = "+"select isnull(pwd), count(acc) from client where acc = '"+uuid+"'");
@@ -279,11 +270,12 @@ public class AlterMember extends AppCompatActivity {
             Log.v("test","mode = "+operate+"  res = "+res);
             return res;
         }
-
+        //執行結果
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Log.v("test","mode = "+operate+"  result = "+result);
+            //轉換成功時回到主畫面，否則提示錯誤
             if(result.contains("成功")){
                 switch (operate){
                     case "sav":
@@ -297,7 +289,6 @@ public class AlterMember extends AppCompatActivity {
                         String[] tmp = result.split(",,");
                         Log.v("test","render text = "+tmp[1]);
                         renderQRcode(tmp[1]);
-                        //************************** continue here *****************************
                         break;
                     case "RD":
                         operate = "back";
@@ -320,16 +311,16 @@ public class AlterMember extends AppCompatActivity {
         }
     }
 //-------------------------------------------------------------------------------------------
-    //alert dialoue with two button
+    //訊息確認框(兩個按鈕)
     public void setAlert(String title, String msg, String pos, String nag, Context context) {
         //建立更新資訊提示
-        boolean rs = false;
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-        alert.setTitle(title);
-        alert.setMessage(msg);
-        // Add the buttons
+        boolean rs = false;//預設按下否定按鈕
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);//建立訊息框
+        alert.setTitle(title);//設定訊息框標題
+        alert.setMessage(msg);//設定訊息內容
+        //新增開關(按鈕)
         alert.setPositiveButton(pos, (dialog, id) -> {
-            // User clicked OK button
+            // 點選確認按鈕
             switch (title){
                 case "換機確認":
                     operate = "CD";
@@ -345,8 +336,7 @@ public class AlterMember extends AppCompatActivity {
 
         });
         alert.setNegativeButton(nag, (dialog, id) -> {
-            // User cancelled the dialog
-
+            // 點選否定(取消)時不須執行動作
         });
 
         // Create the AlertDialog
@@ -354,10 +344,11 @@ public class AlterMember extends AppCompatActivity {
         dialog.show();
     }
 //-----------------------------------------------------------------
-    //override onBackPressed method to reopen menu (Login) page
+    //重新定義返回鈕動作，以返回主畫面
     @Override
     public void onBackPressed() {
         switch (operate){
+            //若前次執行動作為換機、儲存、返回時
             case "CD":
             case "sav":
             case "back":
@@ -379,109 +370,109 @@ public class AlterMember extends AppCompatActivity {
     }
 //------------------------------------------------------------------
     // 頭像[3]    頭像角度[4]      生日[5]    性別[6]   送貨地址[7]
-    // to put new data into output parameter
+    // 將資料設定到參數中以插入資料庫
     private void checker(){
        nnm = Name.getText().toString();
        nnn = Nname.getText().toString();
        nge = male.isChecked()?"m":(female.isChecked()?"f":null);
        nad = Address.getText().toString();
-       // profile, profile rotate, birthday will be handle by each of their handler
+       //頭像、頭像角度、生日將個別由專用函式處理
     }
 //--------------------------------------------------------------------------------
-    //profile handler
+    //頭像處理函式
 
-    //image selector
+    //選擇頭像圖片
     public void picOpen(View v){
         ((BitmapDrawable) profile.getDrawable()).getBitmap().recycle();//一定要做否則會當機
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"請選擇您的頭像"), OPEN_PIC);
+        Intent intent = new Intent();//準備開啟檔案選擇器
+        intent.setType("image/*");//限制只能選圖片
+        intent.setAction(Intent.ACTION_GET_CONTENT);//開啟檔案選擇器
+        startActivityForResult(Intent.createChooser(intent,"請選擇您的頭像"), OPEN_PIC);//等待使用者選擇檔案或取消選取
     }
-    //get actual image
+    //取得圖片
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 //        Toast.makeText(Register.this, "hi!",Toast.LENGTH_SHORT).show();
-        if(requestCode == OPEN_PIC && RESULT_OK == resultCode){
-            Uri imgdata = data.getData();
-            profile.setImageURI(imgdata);
-            pf = ((BitmapDrawable)profile.getDrawable()).getBitmap();
+        //確認選擇或取消完畢
+        if(requestCode == OPEN_PIC && RESULT_OK == resultCode){//如果有選圖片
+            Uri imgdata = data.getData();//取得圖片資訊
+            profile.setImageURI(imgdata);//設定頭像預覽圖
+            pf = ((BitmapDrawable)profile.getDrawable()).getBitmap();//取得投向圖片
+            //將圖片轉換為Base64
             ConvertToBase64 convertToBase64 = new ConvertToBase64();
             convertToBase64.execute("");
         }
     }
 
-    //Image converter
+    //圖片轉換器(點陣圖轉Base64)
     private class ConvertToBase64 extends AsyncTask<String, Void, String> {
-
         @Override
         protected String doInBackground(String... strings) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            pf.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+            pf.compress(Bitmap.CompressFormat.JPEG, 30, baos);//設定轉換品質
             byte[] imageBytes = baos.toByteArray();
             String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            return imageString;
+            return imageString;//回傳轉換結果
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            npf = s;
+            npf = s;//設定新頭像的Base64值
         }
     }
 //---------------------------------------------------------------------------------
-    //profile rotate handler
+    //頭像旋轉處理器
     public void profileRotater(View v){
-        npfr = (npfr+90f)>=360f?0f:(npfr+90f);
-        profile.setRotation(npfr);
+        npfr = (npfr+90f)>=360f?0f:(npfr+90f);//設定角度(在0、90、180，270間循環)
+        profile.setRotation(npfr);//設定預覽圖角度
     }
 //-------------------------------------------------------------------------------------
-    //birthday handler
+    //生日處理器
 
-    //System time handler
-    Date curDate = new Date(System.currentTimeMillis());//get system date time
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");//format system date into yyyy-mm-dd
+    //系統時間處理器
+    Date curDate = new Date(System.currentTimeMillis());//取得系統時間
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");//將系統時間格式化為 年年年年-月月-日日
     //格式化出可直接使用的年月日變數
     String today = formatter.format(curDate);
-
+    //取得生日
     private void getBirthday(){
-
         String Y, M, D;
         Y = valueOf(Birthday.getYear());
         M = valueOf(Birthday.getMonth()+1);
         M = M.length()<2?"0"+M:M;
         D = valueOf(Birthday.getDayOfMonth());
         D = D.length()<2?"0"+D:D;
-
         nbd = Y+"-"+M+"-"+D;
         nbd = nbd.equals(today)?null:nbd;
     }
 //----------------------------------------------------------------------------------------
-    //QRcode generator (data required: uuid, pwd) *********************
+    //QRcode 產生器 (必要資料: uuid, 換機密碼)
     private void renderQRcode(String pwd){
         BarcodeEncoder encoder = new BarcodeEncoder();
         try{
-            common.setVisibility(View.GONE);
+            common.setVisibility(View.GONE);//隱藏資料修改區
+            //繪製QRcode
             Bitmap code = encoder.encodeBitmap(getUUID(getApplicationContext())+"cj04ru,"+pwd, BarcodeFormat.QR_CODE,1000,1000);
-            CDQR.setImageBitmap(code);
+            CDQR.setImageBitmap(code);//將換機QRcode放入容器
         }catch (Exception e){
             Log.v("test",e.toString());
         }
     }
 //--------------------------------------------------------------------------------------------
-    //QRcode scanner (data required )
+    //QRcode掃描器
     String[] RDdata;
     String qdata = "", tmp = "";
     private void inheritData(){
 
-        common.setVisibility(View.GONE);
-        RDCAM.setVisibility(View.VISIBLE);
-        RDhint.setVisibility(View.VISIBLE);
-        CD.setVisibility(View.GONE);
-        RD.setVisibility(View.GONE);
-        popup(getApplicationContext(),"請稍後...");
-
+        common.setVisibility(View.GONE);//引藏資料修改區
+        RDCAM.setVisibility(View.VISIBLE);//開啟掃描器預覽畫面
+        RDhint.setVisibility(View.VISIBLE);//顯示資料繼承提示
+        CD.setVisibility(View.GONE);//隱藏換機按鈕
+        RD.setVisibility(View.GONE);//隱藏資料接收鈕
+        popup(getApplicationContext(),"請稍後...");//請使用者等一下
+        //要求相機權限
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1);
         }else{
@@ -512,7 +503,7 @@ public class AlterMember extends AppCompatActivity {
                     cameraSource.stop();
                 }
             });
-
+            //取得權限後開始掃描條碼
             barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
                 @Override
                 public void release() {
@@ -526,10 +517,10 @@ public class AlterMember extends AppCompatActivity {
                     if(qrCodes.size()!=0){
                         RDCAM.post(() -> {
                             qdata=(qrCodes.valueAt(0).displayValue);
-                            if(!tmp.equals(qdata)){
-                                tmp=qdata;
-                                RDdata = qdata.split("cj04ru,");
-                                processQdata();
+                            if(!tmp.equals(qdata)){//若條碼尚未被掃描過則繼續執行
+                                tmp=qdata;//紀錄剛掃描的條碼
+                                RDdata = qdata.split("cj04ru,");//切分CRcode到專用陣列
+                                processQdata();//處理QRcode
                             }
                         });
                     }
@@ -537,23 +528,14 @@ public class AlterMember extends AppCompatActivity {
             });
         }
     }
-
+    //QRcode處理器
     private void processQdata(){
         Log.v("test","data get!");
-        ouuid = RDdata[0];
-        pwd = RDdata[1];
+        ouuid = RDdata[0];//舊機器UUID
+        pwd = RDdata[1];//換機金鑰
         Log.v("test","data received : acc ="+RDdata[0]+" pwd = "+RDdata[1]);
+        //執行換機
         AlterSQL alterSQL = new AlterSQL();
         alterSQL.execute();
     }
-    //---------------------------------------------------------------------------------------------
-    //close key bord
-    public void closekeybord() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
 }

@@ -185,15 +185,14 @@ public class scan extends AppCompatActivity {
 //        Log.v("test","data received : acc ="+RDdata[0]+" pwd = "+RDdata[1]);
 
     }
-
+    //紅包、購買、簽到處理中心(與資料庫溝通)
     private class Redbag extends AsyncTask<Void,Void,String> {
         public String uuid = getUUID(getApplicationContext());//取得裝置UUID(交易用)
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
         }
-
+        //開始連線
         @Override
         protected String doInBackground(Void... voids) {
             String res = null;
@@ -203,11 +202,13 @@ public class scan extends AppCompatActivity {
                 Connection con = DriverManager.getConnection(url, user, pass);
                 //建立查詢
                 String result ="";
+                //IP功能目前***開發中
 //                Statement st = con.createStatement();
 //                ResultSet rs = st.executeQuery("SELECT replace(substring_index(SUBSTRING_INDEX(USER(), '@', -1),'.',1),'-','.') AS ip;");//抓ip
 //                rs.next();
 //                ip = rs.getString(1);
                 CallableStatement cstmt = null;
+                //紅包處理
                 if(qdata.contains("cj/61l,")) {
                     Log.v("test","---------------------------\n"+sender+"\n"+ID+"\n"+uuid+"\n"+"C"+"\n"+sum+"\n"+"yee"+"\n"+password+"\n-------------------------------");
                     cstmt = con.prepareCall("{? = call redenvelope_manager(?,?,?,?,?,?,?)}");
@@ -220,6 +221,7 @@ public class scan extends AppCompatActivity {
                     cstmt.setString(7,"紅包");
                     cstmt.setString(8,password);
                 }
+                //購買商品處理
                 else if(qdata.contains("e.4a93,")){
                     Log.v("test",ProductId+" "+amount+" "+uuid+" "+FirmId);
                     cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
@@ -229,27 +231,28 @@ public class scan extends AppCompatActivity {
                     cstmt.setString(4,uuid);
                     cstmt.setString(6,"n/a");
                 }
+                //簽到處理
                 else if(qdata.contains("fu02l4,")){
                     cstmt = con.prepareCall("{? = call activity_sign(?,?,?)}");
                     cstmt.registerOutParameter(1, Types.VARCHAR);
                     cstmt.setInt(2,ActivityId);
                     cstmt.setString(3,uuid);
                     cstmt.setString(4,"n/a");
-
                 }
-                cstmt.execute();
-                res = cstmt.getString(1);
+                cstmt.execute();//送出資料
+                res = cstmt.getString(1);//取得結果
             }catch (Exception e){
                 e.printStackTrace();
                 res = e.toString();
             }
             return res;
         }
-
+        //執行後的結果
         @Override
         protected void onPostExecute(String result) {
             Log.v("test","after deal"+result);
-            if(qdata.contains("cj/61l," )||qdata.contains("e.4a93,")) {
+            //交易若出現錯誤時提示錯誤，若無錯誤則顯示成功訊息
+            if(qdata.contains("cj/61l,")||qdata.contains("e.4a93,")) {
                 if(result.contains("錯誤")){
                     popup(getApplicationContext(),"交易失敗");
                 }
@@ -266,6 +269,7 @@ public class scan extends AppCompatActivity {
             }
         }
     }
+    //返回主畫面
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(scan.this,LoginAndRegister.class);

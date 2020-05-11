@@ -128,13 +128,14 @@ public class LoginAndRegister extends AppCompatActivity {
                 submenu.setVisibility(View.VISIBLE);
             }
             else{//否則如果有列出帳戶金額則表示可用
-                wcm.setText(result);
                 if (result.contains("$")){
                     menu_btn.setVisibility(View.VISIBLE);
                     submenu.setVisibility(View.VISIBLE);
+                    wcm.setText(result);
                 }else{
                     menu_btn.setVisibility(View.INVISIBLE);
                     submenu.setVisibility(View.INVISIBLE);
+                    wcm.setText("目前無法與伺服器連線\n請檢察您的網路連線!!");
                 }
             }
         }
