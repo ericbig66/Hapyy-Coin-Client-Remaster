@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.greeting.happycoin.R;
@@ -47,6 +44,7 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_record, container, false);
+        //此區段註解前請確定已將 fregment xml中的floating action button 及 textview 刪除
 //        final TextView textView = root.findViewById(R.id.section_label);
 //        pageViewModel.getText().observe(this, new Observer<String>() {
 //            @Override
