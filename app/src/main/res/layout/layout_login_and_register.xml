@@ -64,11 +64,12 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="2.5dp"
                 android:background="@drawable/rounded_button_pink"
-                android:minWidth="50dp"
-                android:minHeight="51dp"
+                android:minWidth="55dp"
+                android:minHeight="55dp"
                 android:onClick="execute"
                 android:text="聯絡\n我們"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/recent"
@@ -77,11 +78,12 @@
                 android:layout_marginLeft="2.5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/rounded_button_pink"
-                android:minWidth="50dp"
-                android:minHeight="50dp"
+                android:minWidth="55dp"
+                android:minHeight="55dp"
                 android:onClick="execute"
                 android:text="近期\n報名"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -106,7 +108,7 @@
             android:layout_column="0"
             android:layout_columnWeight="0.5"
             android:layout_marginLeft="2.5dp"
-            android:layout_marginRight="2.5dp"
+            android:layout_marginRight="1.25dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="0.5"
             android:background="#2CBCA3"
@@ -114,7 +116,7 @@
             android:onClick="execute"
             android:text="進入賣場"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/Enroll"
@@ -124,7 +126,7 @@
             android:layout_rowWeight="0.33"
             android:layout_column="1"
             android:layout_columnWeight="0.5"
-            android:layout_marginLeft="2.5dp"
+            android:layout_marginLeft="1.25dp"
             android:layout_marginRight="2.5dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="0.5"
@@ -133,7 +135,7 @@
             android:onClick="execute"
             android:text="活動報名"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/GetRedbag"
@@ -144,14 +146,14 @@
             android:layout_column="0"
             android:layout_columnWeight="0.1"
             android:layout_marginLeft="2.5dp"
-            android:layout_marginRight="2.5dp"
+            android:layout_marginRight="1.25dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="0.1"
             android:background="#2CBCA3"
             android:onClick="execute"
             android:text="收紅包/簽到\n&amp;掃描兌換"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/SendRedbag"
@@ -161,7 +163,7 @@
             android:layout_rowWeight="0.33"
             android:layout_column="1"
             android:layout_columnWeight="0.5"
-            android:layout_marginLeft="2.5dp"
+            android:layout_marginLeft="1.25dp"
             android:layout_marginRight="2.5dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="0.5"
@@ -169,7 +171,7 @@
             android:onClick="execute"
             android:text="送紅包"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/Record"
@@ -180,14 +182,14 @@
             android:layout_column="0"
             android:layout_columnWeight="0.5"
             android:layout_marginLeft="2.5dp"
-            android:layout_marginRight="2.5dp"
+            android:layout_marginRight="1.25dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="0.5"
             android:background="#2CBCA3"
             android:onClick="execute"
             android:text="交易紀錄"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/AlterMember"
@@ -197,7 +199,7 @@
             android:layout_rowWeight="0.33"
             android:layout_column="1"
             android:layout_columnWeight="0.5"
-            android:layout_marginLeft="2.5dp"
+            android:layout_marginLeft="1.25dp"
             android:layout_marginRight="2.5dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="0.5"
@@ -205,7 +207,7 @@
             android:onClick="execute"
             android:text="會員中心"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
     </GridLayout>
 
 </LinearLayout>
