@@ -102,7 +102,7 @@ public class BuyDiary extends Fragment {
                     total.add("$"+Integer.parseInt(rs.getString(4)));
                     selldate.add(rs.getString(5).substring(0,16));
                 }
-                return null;
+                return "0";
             }catch (Exception e){
                 e.printStackTrace();
                 res = e.toString();
@@ -144,9 +144,7 @@ public class BuyDiary extends Fragment {
                 tr.addView(t5);
                 //將整列加入預先建立的TableLayout中
                 tradeData.addView(tr,new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
             }
-
         }
     }
 

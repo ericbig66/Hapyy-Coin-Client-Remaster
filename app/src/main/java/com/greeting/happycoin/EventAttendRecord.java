@@ -26,26 +26,19 @@ import static com.greeting.happycoin.LoginAndRegister.user;
 
 /**
  * A simple {@link Fragment} subclass.
+ * record.java的子檔案(子頁面)
  */
 public class EventAttendRecord extends Fragment {
-
-//    private ArrayList<String> Aid  = new ArrayList<>();
-    private ArrayList<String> Aname  = new ArrayList<>();
-    private ArrayList<String> Action  = new ArrayList<>();
-    private ArrayList<String> Atime  = new ArrayList<>();
-
-//    private ArrayList<String> Att  = new ArrayList<>();
-    private ArrayList<String> Asign  = new ArrayList<>();
-
-//    String sign[];
-
-    TableLayout tradeData;
-
-    String acc ;
+    private ArrayList<String> Aname  = new ArrayList<>(); //活動名稱
+    private ArrayList<String> Action  = new ArrayList<>();//操作(報名/取消報名)
+    private ArrayList<String> Atime  = new ArrayList<>(); //操作時間
+    private ArrayList<String> Asign  = new ArrayList<>(); //簽到時間
+    TableLayout tradeData;//表格繪製空間
+    String acc ;//用於裝載交易UUID
     public EventAttendRecord() {
         // Required empty public constructor
     }
-
+    //此行需加在每個子頁面上(instance的名稱需與java檔相同)
     public static EventAttendRecord newInstance() {
         return new EventAttendRecord();
     }
@@ -53,27 +46,30 @@ public class EventAttendRecord extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //未簡化步驟以下兩行先行保留
         TextView textView = new TextView(getActivity());
         textView.setText(R.string.hello_blank_fragment);
-//        return textView;
-
+//        return textView;  //此處將以下方的新return取代
+        //新增此行
         View view = inflater.inflate(R.layout.fragment_record,container, false);
-        clear();
-       acc = getUUID(getActivity().getApplicationContext());
+        //定義區
         tradeData = view.findViewById(R.id.tradeData);
-//        Aid.add("empty");
-//        Att.add("empty");
+        //設定區
+       acc = getUUID(getActivity().getApplicationContext());//取得UUID以取得活動報名資料
+       clear();//清除列表避免重複疊加
+        //新增表頭至陣列
         Aname.add("活動名稱　　");
         Action.add("操作　　");
         Atime.add("操作時間　　");
         Asign.add("簽到時間　　");
         Log.v("test","\nAsign[0] = "+Asign.get(0)+"\nAname[0] = "+Aname.get(0)+"\nAction[0]"+Action.get(0)+"\nAction[0] = "+Action.get(0)+"\nAtime[0] = "+Atime.get(0)+"\nAsign[0] = "+Asign.get(0));
+        //連接資料庫取得資料
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
-        return view;
+        return view;//回傳繪製後畫面
     }
 
-    //建立連接與查詢非同步作業
+    //由資料庫取出活動報名與簽到資料
     private class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
         //開始執行動作
@@ -82,7 +78,7 @@ public class EventAttendRecord extends Fragment {
             super.onPreExecute();
 //            Toast.makeText(getActivity(),"請稍後...",Toast.LENGTH_SHORT).show();
         }
-        //查詢執行動作(不可使用與UI相關的指令)
+        //開始取得資料
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -111,33 +107,6 @@ public class EventAttendRecord extends Fragment {
                     Asign.add(trytry);
                 }
 
-
-
-//                Statement st2 = con.createStatement();
-//                ResultSet rs2 = st2.executeQuery("select activity, signTime from attendlist where account = '"+acc+"'");
-////                Log.v("test", "select activity, signTime from attendlist where account = '"+acc+"'");
-//                while (rs2.next()){
-//                    Att.add(rs2.getString("activity"));
-//                    Asign.add(rs2.getString("signTime"));
-////                    Log.v("test", "signTime[string] = "+rs2.getString("signTime"));
-////                    Log.v("test", "signTime[time] = "+rs2.getTime("signTime"));
-//                }
-////                Log.v("test","Asign["+1+"] = "+Asign.get(1));
-//
-//                sign = new String[Aid.size()];
-//                for(int i = 1 ; i< Aid.size() ; i++){sign[i] = "";}
-//                sign[0] = "簽到時間";
-//                Log.v("test", "Aid.size = "+Aid.size()+" / Att.size = "+Att.size()+" / sign.size = "+sign.length);
-//                for(int i = 1 ; i<=Att.size() ; i++){
-//
-//                    Log.v("test","inside for...");
-//                    Log.v("test","Asign["+i+"] = "+Asign.get(i));
-//                    int ST = Aid.lastIndexOf(Att.get(i));
-//                    Log.v("test","Last index of '"+Att.get(i)+"' is " + ST);
-//                    sign[ST]= Asign.get(i);
-//                    Log.v("test","sign["+ST+"] =  " + sign[ST]);
-//                }
-
                 return "0";
             }catch (Exception e){
                 e.printStackTrace();
@@ -147,10 +116,13 @@ public class EventAttendRecord extends Fragment {
         }
         //查詢後的結果將回傳於此
         @Override
+        //完成查詢後
         protected void onPostExecute(String result) {
             Log.v("test","YOUR RESULT ="+result);
-            renderTable();
+            renderTable();//繪製表格
         }
+
+        //繪製報名與簽到紀錄表格
         private void renderTable(){
             for(int row = 0 ; row < Aname.size() ; row++ ){
 //                Toast.makeText(Diary.this,"第"+row+"列建構中",Toast.LENGTH_SHORT).show();
@@ -174,19 +146,15 @@ public class EventAttendRecord extends Fragment {
                 tr.addView(t4);
                 //將整列加入預先建立的TableLayout中
                 tradeData.addView(tr,new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
             }
-
         }
     }
 
+    //清除陣列資料避免重複疊加
     public void clear(){
-//        Aid.clear();
-//        Att.clear();
         Aname.clear();
         Action.clear();
         Atime.clear();
         Asign.clear();
     }
-
 }

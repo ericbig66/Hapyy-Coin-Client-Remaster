@@ -1,7 +1,6 @@
 package com.greeting.happycoin;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,18 +24,21 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * record.java的子檔案(子頁面)
+ */
 public class RedEnvelopeDiary extends Fragment {
-    private ArrayList<String> ioacc  = new ArrayList<>();    //
-    private ArrayList<String> trade  = new ArrayList<>();    //
-    private ArrayList<String> amount = new ArrayList<>();    //
-    private ArrayList<String> dealtTime = new ArrayList<>(); //
-    TableLayout tradeData;
-
-    String acc;
+    private ArrayList<String> ioacc  = new ArrayList<>();    //對方帳戶
+    private ArrayList<String> trade  = new ArrayList<>();    //交易方向
+    private ArrayList<String> amount = new ArrayList<>();    //交易金額
+    private ArrayList<String> dealtTime = new ArrayList<>(); //交易時間
+    TableLayout tradeData;//表格繪製空間
+    String acc;//用於裝載交易UUID
     public RedEnvelopeDiary() {
         // Required empty public constructor
     }
-
+    //此行需加在每個子頁面上(instance的名稱需與java檔相同)
     public static RedEnvelopeDiary newInstance() {
         return new RedEnvelopeDiary();
     }
@@ -44,27 +46,25 @@ public class RedEnvelopeDiary extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment///////////////////////////////////
+        //新增下面一行
         View view = inflater.inflate(R.layout.fragment_record, container, false);
-
+        //定義區
         tradeData = view.findViewById(R.id.tradeData);
-        clear();
-        acc = getUUID(getActivity().getApplicationContext());
+        //設定區
+        acc = getUUID(getActivity().getApplicationContext());//取得UUID以取得交易資料
+        clear();//清除列表避免重複疊加
+        //新增表頭至陣列
         ioacc.add("對方帳戶　　");
         trade.add("交易方向　　");
         amount.add("金額　　");
         dealtTime.add("交易時間");
+        //連接資料庫取得資料
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
-        return view;
-    }
-    public void onBackPressed(){
-        Intent intent = new Intent(getActivity(), LoginAndRegister.class);
-        startActivity(intent);
+        return view;//回傳繪製後畫面
     }
 
-    //建立連接與查詢非同步作業
+    //由資料庫取出交易資料
     private class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
         //開始執行動作
@@ -73,7 +73,7 @@ public class RedEnvelopeDiary extends Fragment {
             super.onPreExecute();
 //            Toast.makeText(getActivity(),"請稍後...",Toast.LENGTH_SHORT).show();
         }
-        //查詢執行動作(不可使用與UI相關的指令)
+        //開始取得資料
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -106,7 +106,7 @@ public class RedEnvelopeDiary extends Fragment {
                     rec = rs.getString("receiver")==null?" ":rs.getString("receiver");
                     recCid = rs.getString("receiver_cid")==null?" ":rs.getString("receiver_cid");
                     recType = rs.getString("recType")==null?" ":rs.getString("recType");
-
+                    //交易方向判斷
                     if (sndType.equals("C")){//客戶送的
                         if (snd.equals(acc)){//我送人的
                             ioacc.add(rec.equals(" ")?recCid+" ":rec);
@@ -119,10 +119,11 @@ public class RedEnvelopeDiary extends Fragment {
                         ioacc.add(snd+" ");
                         trade.add("接收 ");
                     }
+                    //將結果裝入陣列
                     amount.add("$"+rs.getString("amount")+"  ");
                     dealtTime.add(rs.getString("receiveDate")==null?" ":rs.getString("receiveDate").substring(0,16));
                 }
-                return ioacc.size()+"";
+                return ioacc.size()+"";//回傳陣列大小
             }catch (Exception e){
                 e.printStackTrace();
                 res = e.toString();
@@ -131,12 +132,14 @@ public class RedEnvelopeDiary extends Fragment {
         }
         //查詢後的結果將回傳於此
         @Override
+        //完成查詢後
         protected void onPostExecute(String result) {
             Log.v("test","size= "+result);
-
             //dt.setText(result);
-            renderTable();
+            renderTable();//繪製表格
         }
+
+        //繪製交易資料表格
         private void renderTable(){
             for(int row = 0 ; row < ioacc.size() ; row++ ){
 //                Toast.makeText(Diary.this,"第"+row+"列建構中",Toast.LENGTH_SHORT).show();
@@ -160,17 +163,14 @@ public class RedEnvelopeDiary extends Fragment {
                 tr.addView(t4);
                 //將整列加入預先建立的TableLayout中
                 tradeData.addView(tr,new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
             }
-
         }
     }
-
+    //清除陣列資料避免重複疊加
     public void clear(){
         ioacc.clear();
         trade.clear();
         amount.clear();
         dealtTime.clear();
     }
-
 }
