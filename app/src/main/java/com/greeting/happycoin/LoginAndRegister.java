@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,13 +33,16 @@ import java.util.UUID;
 
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.isBack;
+import static com.greeting.happycoin.MainActivity.lv;
+
 //***表示待檢查
 public class LoginAndRegister extends AppCompatActivity {
    //連線資料
     public static final String url = "jdbc:mysql://218.161.48.27:3360/happycoin?noAccessToProcedureBodies=true&useUnicode=yes&characterEncoding=UTF-8";
     public static final String user = "currency";
     public static final String pass = "SEclassUmDb@outside";
-
+    LinearLayout canvas;//底層(連線出錯時當作重試按鈕)
+    boolean ConnectionError = false;
     TextView wcm;//歡迎訊息
     CircularImageView profile;//頭像容器
     Intent intent ;//切換畫面使用的事件
@@ -61,9 +63,20 @@ public class LoginAndRegister extends AppCompatActivity {
         submenu = findViewById(R.id.submenu);
         wcm = findViewById(R.id.wcm);
         profile = findViewById(R.id.profile);
+        canvas = findViewById(R.id.canvas);
         //設定區(登入成功前設定操作區為隱形)
         menu_btn.setVisibility(View.INVISIBLE);
         submenu.setVisibility(View.INVISIBLE);
+        canvas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ConnectionError){
+                    ConnectionError = false;
+                    popup(getApplicationContext(),"登入中，請稍後...");
+                    recreate();
+                }
+            }
+        });
         //呼叫登入動作
         Login login = new Login();
         login.execute();
@@ -112,30 +125,35 @@ public class LoginAndRegister extends AppCompatActivity {
 //            Log.v("test","info from mySQL ="+result);
             //處理資料庫回傳結果(將資料切分至陣列內)
             if(result.contains("sep,")){
+                lv("sep detected!");
                 inf = result.split("sep,");
                 nm = inf[1].split("nm,");
                 nm[0] = nm[0].equals("null")?"":nm[0];
                 nm[1] = nm[1].equals("null")?"":nm[1];
                 //設定歡迎訊息
-                wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好目前您尚有$"+inf[2]);
+                wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好\n目前您有$"+inf[2]);
                 if(!inf[3].equals("null")){ConvertToBitmap();}
                 else{profile.setImageResource(R.drawable.df_profile);}
                 profile.setRotation(Float.parseFloat(inf[4]));
                 menu_btn.setVisibility(View.VISIBLE);
+                submenu.setVisibility(View.VISIBLE);
             }else if(result.equals("註冊成功")){//如註冊成功將自動重新登入
                 recreate();
                 menu_btn.setVisibility(View.VISIBLE);
                 submenu.setVisibility(View.VISIBLE);
             }
             else{//否則如果有列出帳戶金額則表示可用
+                lv("sep isn't present");
                 if (result.contains("$")){
                     menu_btn.setVisibility(View.VISIBLE);
                     submenu.setVisibility(View.VISIBLE);
                     wcm.setText(result);
                 }else{
+                    lv("error found");
                     menu_btn.setVisibility(View.INVISIBLE);
                     submenu.setVisibility(View.INVISIBLE);
-                    wcm.setText("目前無法與伺服器連線\n請檢察您的網路連線!!");
+                    wcm.setText("目前無法與伺服器連線\n請檢查您的網路連線!!\n或著\n您可以輕觸螢幕嘗試重新連線");
+                    ConnectionError = true;
                 }
             }
         }
@@ -221,16 +239,6 @@ public class LoginAndRegister extends AppCompatActivity {
     public static void popup(Context context, String content){
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
-    //關閉鍵盤***需替換
-    public void closekeybord() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-
 
     //設定按下返回鍵的動作
     @Override

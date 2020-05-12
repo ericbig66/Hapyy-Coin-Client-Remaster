@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/canvas"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CBE8CA"
     android:orientation="vertical"
-    tools:context=".LoginAndRegister"
-    android:background="#CBE8CA">
+    tools:context=".LoginAndRegister">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/profile"
@@ -39,25 +40,32 @@
 
         <TextView
             android:id="@+id/wcm"
-            android:layout_width="220dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
             android:text="登入中請稍後...."
             android:textSize="20sp" />
 
         <LinearLayout
             android:id="@+id/submenu"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:foregroundGravity="right"
             android:gravity="right"
+            android:minWidth="110dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="2.5dp"
                 android:background="@drawable/rounded_button_pink"
                 android:minWidth="50dp"
+                android:minHeight="51dp"
                 android:onClick="execute"
                 android:text="聯絡\n我們"
                 android:textColor="#FFFFFF" />
@@ -66,10 +74,11 @@
                 android:id="@+id/recent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="2.5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/rounded_button_pink"
                 android:minWidth="50dp"
+                android:minHeight="50dp"
                 android:onClick="execute"
                 android:text="近期\n報名"
                 android:textColor="#FFFFFF" />
@@ -133,7 +142,7 @@
             android:layout_row="1"
             android:layout_rowWeight="0.1"
             android:layout_column="0"
-            android:layout_columnWeight="0.5"
+            android:layout_columnWeight="0.1"
             android:layout_marginLeft="2.5dp"
             android:layout_marginRight="2.5dp"
             android:layout_marginBottom="2.5dp"
