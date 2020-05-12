@@ -168,6 +168,7 @@ public class LoginAndRegister extends AppCompatActivity {
                 intent = new Intent(LoginAndRegister.this,send.class);
                 break;
             case R.id.AlterMember:
+            case R.id.profile:
                 intent = new Intent(LoginAndRegister.this,AlterMember.class);
                 break;
             case R.id.GetRedbag:
