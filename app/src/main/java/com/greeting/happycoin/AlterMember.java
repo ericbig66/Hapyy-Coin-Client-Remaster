@@ -49,17 +49,17 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.greeting.happycoin.LoginAndRegister.getPfr;
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.inf;
 import static com.greeting.happycoin.LoginAndRegister.nm;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.pf;
-import static com.greeting.happycoin.LoginAndRegister.popup;
-import static com.greeting.happycoin.LoginAndRegister.setPfr;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.getPfr;
 import static com.greeting.happycoin.MainActivity.hideKB;
+import static com.greeting.happycoin.MainActivity.popup;
+import static com.greeting.happycoin.MainActivity.setPfr;
 import static java.lang.String.valueOf;
 
 public class AlterMember extends AppCompatActivity {
@@ -73,7 +73,7 @@ public class AlterMember extends AppCompatActivity {
     SurfaceView RDCAM; //資料接收時掃描畫面顯示處
     BarcodeDetector barcodeDetector; //繼承資料掃描器
     CameraSource cameraSource; //繼承資料時需要相機使用權限
-    String operate = "sav";//操作功能別(sav = 保存修改)***
+    String operate = "sav";//操作功能別(sav = 保存修改、CD = 換機、RD = 資料繼承、back = 返回)
     String ouuid; //舊裝置的UUID
     String pwd; //換機用密碼
     LinearLayout common;//正常模式下的內容
@@ -105,7 +105,7 @@ public class AlterMember extends AppCompatActivity {
         Birthday = findViewById(R.id.Birthday);
         CDhint = findViewById(R.id.CDhint);
         RDhint = findViewById(R.id.RDhint);
-
+        //設定區
         //設定相機
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
         cameraSource = new CameraSource.Builder(this,barcodeDetector).setRequestedPreviewSize(1080,1920).build();
@@ -139,7 +139,7 @@ public class AlterMember extends AppCompatActivity {
         }
         Address.setText(inf[7].equals("null")?"":inf[7]);//通訊地址
         profile.setRotation(Float.parseFloat(inf[4]));//頭像角度
-        //點集換機時的動作
+        //點擊換機時的動作
         CD.setOnClickListener(v -> {
             setAlert("換機確認", "您是否要將此帳號轉移至另一支手機?\n", "是", "否", this);
         });

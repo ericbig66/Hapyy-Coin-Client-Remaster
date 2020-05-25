@@ -3,7 +3,6 @@ package com.greeting.happycoin;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -15,10 +14,8 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 
@@ -32,8 +29,10 @@ import java.sql.Types;
 import java.util.UUID;
 
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
+import static com.greeting.happycoin.MainActivity.getPfr;
 import static com.greeting.happycoin.MainActivity.isBack;
 import static com.greeting.happycoin.MainActivity.lv;
+import static com.greeting.happycoin.MainActivity.popup;
 
 //***表示待檢查
 public class LoginAndRegister extends AppCompatActivity {
@@ -219,26 +218,6 @@ public class LoginAndRegister extends AppCompatActivity {
 //            Log.v("test","Error when getting UUID:\n"+e.toString());
         }
         return uuid.toString();
-    }
-
-    //access preferences
-    //set preference key and value
-    //設定偏好開關值及其偏好項目名稱
-    public static void setPfr(String key, boolean value, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(key, value);
-        editor.commit();
-    }
-    //get preference key or set default value
-    //設定偏好預設值或取得偏好設定編號
-    public static boolean getPfr(String key, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean(key, true);
-    }
-    //簡化的toast提示訊息==>popup(getApplicationContext(),"訊息內容");
-    public static void popup(Context context, String content){
-        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 
     //設定按下返回鍵的動作

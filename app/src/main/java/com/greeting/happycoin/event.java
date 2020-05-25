@@ -26,7 +26,6 @@ import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.AactDate;
@@ -47,6 +46,7 @@ import static com.greeting.happycoin.MainActivity.EventId;
 import static com.greeting.happycoin.MainActivity.attended;
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.hideKB;
+import static com.greeting.happycoin.MainActivity.popup;
 
 
 public class event extends AppCompatActivity {

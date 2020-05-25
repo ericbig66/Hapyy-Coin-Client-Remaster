@@ -3,6 +3,7 @@ package com.greeting.happycoin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +90,26 @@ public class MainActivity extends AppCompatActivity {
 
     //簡化的toast提示訊息==>popupL(getApplicationContext(),"訊息內容");==>長時間顯示
     public static void popupL(Context context, String content){
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+    }
+
+    //公用函式
+
+    //設定偏好開關值及其偏好項目名稱
+    public static void setPfr(String key, boolean value, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    //設定偏好預設值或取得偏好設定編號
+    public static boolean getPfr(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(key, true);
+    }
+    //簡化的toast提示訊息==>popup(getApplicationContext(),"訊息內容");
+    public static void popup(Context context, String content){
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 }

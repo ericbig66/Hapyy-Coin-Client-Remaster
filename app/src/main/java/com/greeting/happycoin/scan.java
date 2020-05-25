@@ -27,9 +27,9 @@ import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.MainActivity.popupL;
 
 public class scan extends AppCompatActivity {

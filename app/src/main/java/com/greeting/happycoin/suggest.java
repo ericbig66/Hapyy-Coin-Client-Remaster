@@ -14,10 +14,10 @@ import java.sql.DriverManager;
 import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.LoginAndRegister.ver;
+import static com.greeting.happycoin.MainActivity.popup;
 
 public class suggest extends AppCompatActivity {
     EditText text ;

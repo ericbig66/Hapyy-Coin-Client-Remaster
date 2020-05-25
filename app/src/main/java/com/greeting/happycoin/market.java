@@ -28,7 +28,6 @@ import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
-import static com.greeting.happycoin.LoginAndRegister.popup;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.BuyId;
@@ -40,6 +39,7 @@ import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.happypi;
 import static com.greeting.happycoin.MainActivity.hideKB;
+import static com.greeting.happycoin.MainActivity.popup;
 
 
 public class market extends AppCompatActivity {
