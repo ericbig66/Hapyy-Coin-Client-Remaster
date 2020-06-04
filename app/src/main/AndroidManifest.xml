@@ -33,7 +33,8 @@
         <activity android:name=".suggest" />
         <activity android:name=".send" />
         <activity android:name=".AlterMember" />
-        <activity android:name=".LoginAndRegister">
+        <activity android:name=".LoginAndRegister"/>
+        <activity android:name=".game">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

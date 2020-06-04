@@ -186,6 +186,9 @@ public class LoginAndRegister extends AppCompatActivity {
             case R.id.Record:
                 intent = new Intent(LoginAndRegister.this,record.class);
                 break;
+            case R.id.game:
+                intent = new Intent(LoginAndRegister.this,game.class);
+                break;
         }
         startActivity(intent);
         finish();
