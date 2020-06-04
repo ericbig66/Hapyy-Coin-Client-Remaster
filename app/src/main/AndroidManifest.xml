@@ -22,7 +22,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,14 +32,7 @@
         <activity android:name=".suggest" />
         <activity android:name=".send" />
         <activity android:name=".AlterMember" />
+        <activity android:name=".game"/>
         <activity android:name=".LoginAndRegister"/>
-        <activity android:name=".game">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
-
 </manifest>

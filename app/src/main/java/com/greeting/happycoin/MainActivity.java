@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isBack = false;//是否為手動返回
 
+    public static int LoggedIn = 0;//是否已經登入
     @Override
     //由其他頁面返回時
     protected void onResume() {

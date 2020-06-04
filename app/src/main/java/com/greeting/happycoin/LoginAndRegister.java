@@ -28,6 +28,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.UUID;
 
+import static com.greeting.happycoin.MainActivity.LoggedIn;
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.getPfr;
 import static com.greeting.happycoin.MainActivity.isBack;
@@ -37,7 +38,7 @@ import static com.greeting.happycoin.MainActivity.popup;
 //***表示待檢查
 public class LoginAndRegister extends AppCompatActivity {
    //連線資料
-    public static final String url = "jdbc:mysql://218.161.48.27:3360/happycoin?noAccessToProcedureBodies=true&useUnicode=yes&characterEncoding=UTF-8";
+    public static final String url = "jdbc:mysql://140.135.113.36:6033/happycoin?noAccessToProcedureBodies=true&useUnicode=yes&characterEncoding=UTF-8";
     public static final String user = "currency";
     public static final String pass = "SEclassUmDb@outside";
     LinearLayout canvas;//底層(連線出錯時當作重試按鈕)
@@ -104,10 +105,11 @@ public class LoginAndRegister extends AppCompatActivity {
                 rs.next();
                 ip = rs.getString(1);//將ip回填到ip變數內
                 //執行MySQL function(自動註冊/登入)
-                CallableStatement cstmt = con.prepareCall("{? = call auto_login_register(?,?)}");
+                CallableStatement cstmt = con.prepareCall("{? = call auto_login_register(?,?,?)}");
                 cstmt.registerOutParameter(1, Types.VARCHAR);
                 cstmt.setString(2,uuid);
                 cstmt.setString(3,ip);
+                cstmt.setInt(4,LoggedIn);
                 cstmt.execute();
                 res = cstmt.getString(1);//將結果裝入res
             }catch (Exception e){//錯誤攔截
@@ -136,6 +138,9 @@ public class LoginAndRegister extends AppCompatActivity {
                 profile.setRotation(Float.parseFloat(inf[4]));
                 menu_btn.setVisibility(View.VISIBLE);
                 submenu.setVisibility(View.VISIBLE);
+                if (inf[8].contains("簽到成功!")){popup(getApplicationContext(), "簽到成功!");}
+                else if (inf[8].contains("本日已完成簽到任務!")){popup(getApplicationContext(), "本日已完成簽到任務!");}
+                LoggedIn = 1;
             }else if(result.equals("註冊成功")){//如註冊成功將自動重新登入
                 recreate();
                 menu_btn.setVisibility(View.VISIBLE);
