@@ -28,6 +28,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.UUID;
 
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.LoggedIn;
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.getPfr;
@@ -131,6 +132,7 @@ public class LoginAndRegister extends AppCompatActivity {
                 nm = inf[1].split("nm,");
                 nm[0] = nm[0].equals("null")?"":nm[0];
                 nm[1] = nm[1].equals("null")?"":nm[1];
+                FONTsize = Integer.parseInt(inf[8]);
                 //設定歡迎訊息
                 wcm.setText((getPfr("HCgreet",getApplicationContext())?nm[1]:nm[0])+"您好\n目前您有$"+inf[2]);
                 if(!inf[3].equals("null")){ConvertToBitmap();}
@@ -138,8 +140,8 @@ public class LoginAndRegister extends AppCompatActivity {
                 profile.setRotation(Float.parseFloat(inf[4]));
                 menu_btn.setVisibility(View.VISIBLE);
                 submenu.setVisibility(View.VISIBLE);
-                if (inf[8].contains("簽到成功!")){popup(getApplicationContext(), "簽到成功!");}
-                else if (inf[8].contains("本日已完成簽到任務!")){popup(getApplicationContext(), "本日已完成簽到任務!");}
+                if (inf[9].contains("簽到成功!")){popup(getApplicationContext(), "簽到成功!");}
+                else if (inf[9].contains("本日已完成簽到任務!")){popup(getApplicationContext(), "本日已完成簽到任務!");}
                 LoggedIn = 1;
             }else if(result.equals("註冊成功")){//如註冊成功將自動重新登入
                 recreate();

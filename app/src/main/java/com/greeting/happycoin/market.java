@@ -139,7 +139,7 @@ public class market extends AppCompatActivity {
                 }
                 else if(function == 1){//若購買商品
                     if(result.equals("交易成功!")){//回傳資料中包含"交易成功"
-//                        clear();
+                        clear();
                         recreate();//重新繪製本頁面並更新商品資料
                     }
                    popup(getApplicationContext(),result);//提示交易結果
@@ -403,5 +403,16 @@ public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
         Intent intent = new Intent(market.this,LoginAndRegister.class);//準備轉跳回首頁
         startActivity(intent);//轉跳
         finish();//結束本頁面
+    }
+
+    //清空列表以確保活動資訊不會重複疊加
+    public void clear(){
+        PID.clear();
+        Pname.clear();
+        Pprice.clear();
+        Pamount.clear();
+        Vendor.clear();
+        PIMG.clear();
+        happypi.clear();
     }
 }

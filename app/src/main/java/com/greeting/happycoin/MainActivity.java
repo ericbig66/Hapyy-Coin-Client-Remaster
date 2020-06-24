@@ -50,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isBack = false;//是否為手動返回
 
     public static int LoggedIn = 0;//是否已經登入
+
+    public static int FONTsize =20;//字型大小
+
+    //SQL語法定義區
+
+        //待評價商品擷取
+        public static String unratedProduct = "SELECT sell_record.ID, product.productName, sell_record.price, sell_record.amount, vendor.name, sell_record.date, sell_record.rating, sell_record.msg FROM  sell_record,  product,  client,  vendor WHERE  sell_record.rating = 0  AND sell_record.PID = product.sku AND sell_record.ID = client.ID AND sell_record.VID = vendor.VID ORDER BY sell_record.date AND client.id = (SELECT ID FROM client WHERE acc = '"; //帳號');
+
     @Override
     //由其他頁面返回時
     protected void onResume() {

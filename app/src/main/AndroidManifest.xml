@@ -33,6 +33,7 @@
         <activity android:name=".send" />
         <activity android:name=".AlterMember" />
         <activity android:name=".game"/>
+        <activity android:name=".fontsize"/>
         <activity android:name=".LoginAndRegister"/>
     </application>
 </manifest>

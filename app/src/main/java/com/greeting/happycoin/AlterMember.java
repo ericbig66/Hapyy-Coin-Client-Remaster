@@ -1,6 +1,7 @@
 package com.greeting.happycoin;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.TypedValue;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -56,6 +58,7 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.pf;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.getPfr;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
@@ -148,6 +151,16 @@ public class AlterMember extends AppCompatActivity {
         RD.setOnClickListener(v -> {
             setAlert("繼承資料確認", "您是否要使用這支手機取代舊手機?\n舊手機上的資料將被刪除由這支手機繼承\n且此手機上原有之帳號將被清除且無法自行復原","確認換機", "再考慮一下", this);
         });
+
+        findViewById(R.id.FontSizeAlter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlterMember.this, fontsize.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        SetFontSize();//設定字型大小
         hideKB(this);
     }
 
@@ -477,6 +490,7 @@ public class AlterMember extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1);
         }else{
             RDCAM.getHolder().addCallback(new SurfaceHolder.Callback() {
+                @SuppressLint("MissingPermission")
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
 
@@ -537,5 +551,40 @@ public class AlterMember extends AppCompatActivity {
         //執行換機
         AlterSQL alterSQL = new AlterSQL();
         alterSQL.execute();
+    }
+    //字型大小設定
+    private void SetFontSize(){
+        TextView tv = findViewById(R.id.textView);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-2);//一般
+        greet.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//以暱稱稱呼您
+        Button FontSizeAlter = findViewById(R.id.FontSizeAlter);
+        FontSizeAlter.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//修改字型大小
+        TextView tv2 = findViewById(R.id.textview2);
+        tv2.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-2);//帳戶資訊
+        TextView tv3 = findViewById(R.id.tv3);
+        tv3.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//用戶頭像
+        Upload.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//變更頭像
+        Rotate.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//旋轉頭像
+        TextView tv4 = findViewById(R.id.tv4);
+        tv4.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//姓名
+        Name.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//姓名欄位
+        TextView tv5 = findViewById(R.id.tv5);
+        tv5.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//暱稱
+        Nname.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//暱稱欄位
+        TextView tv6 = findViewById(R.id.tv6);
+        tv6.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//性別
+        male.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-4);//男
+        female.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-4);//女
+        Cancel.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//取消選取
+        TextView tv7 = findViewById(R.id.tv7);
+        tv7.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//生日
+        TextView tv8 = findViewById(R.id.tv8);
+        tv8.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//通訊地址
+        TextView tv9 = findViewById(R.id.tv9);
+        tv9.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-2);//帳戶轉移
+        CD.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//我要換機
+        RD.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//我是新手機
+        CDhint.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//換機說明
+        RDhint.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//帳號繼承說明
     }
 }
