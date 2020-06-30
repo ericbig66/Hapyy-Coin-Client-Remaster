@@ -1,6 +1,7 @@
 package com.greeting.happycoin;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -52,6 +53,7 @@ public class scan extends AppCompatActivity {
         } else {
             //若使用者拒絕權限獲權限無法取得時提示錯誤訊息，否則啟動相機
             scanner.getHolder().addCallback(new SurfaceHolder.Callback() {
+                @SuppressLint("MissingPermission")
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
                     try {
@@ -86,6 +88,7 @@ public class scan extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},1);
         }else{
             scanner.getHolder().addCallback(new SurfaceHolder.Callback() {
+                @SuppressLint("MissingPermission")
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
 
@@ -229,6 +232,7 @@ public class scan extends AppCompatActivity {
                     cstmt.setString(2,ProductId);
                     cstmt.setInt(3,amount);
                     cstmt.setString(4,uuid);
+                    cstmt.setString(5,FirmId);
                     cstmt.setString(6,"n/a");
                 }
                 //簽到處理
