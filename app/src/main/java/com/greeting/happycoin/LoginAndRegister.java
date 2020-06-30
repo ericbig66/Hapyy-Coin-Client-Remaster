@@ -196,6 +196,9 @@ public class LoginAndRegister extends AppCompatActivity {
             case R.id.game:
                 intent = new Intent(LoginAndRegister.this,game.class);
                 break;
+            case R.id.rate:
+                intent = new Intent(LoginAndRegister.this,product_rating.class);
+                break;
         }
         startActivity(intent);
         finish();
@@ -209,7 +212,6 @@ public class LoginAndRegister extends AppCompatActivity {
         }catch (Exception e){
             //Log.v("test","error = "+e.toString());
         }
-
     }
 //**************all public method are here**************全區待移動
     //取得客戶端裝置之UUID***待移位至固定頁面

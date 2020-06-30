@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -44,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<String> Adesc = new ArrayList<>();         //活動說明
     public static ArrayList<String> attended = new ArrayList<>();      //該使用者已報名之活動
     public static int  EventId=-1;                                     //被點選之活動位於清單之第幾項
+
+    public static ArrayList<Integer> Serial = new ArrayList<>();//活動評價/產品評價 交易序號
+    public static ArrayList<String> RecDate = new ArrayList<>();// 活動日期/購買日期
+    public static ArrayList<Integer> Rating = new ArrayList<>();//評價
+    public static ArrayList<String> Comment = new ArrayList<>();//評語
 
     public static boolean entryIsRecent = false;//是否透過近期報名進入活動列表
 
@@ -120,5 +127,10 @@ public class MainActivity extends AppCompatActivity {
     //簡化的toast提示訊息==>popup(getApplicationContext(),"訊息內容");
     public static void popup(Context context, String content){
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+    }
+
+    public static int DP(float dp){//寬度單位轉換器(設定值為DP)
+        dp = dp * ((float) Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return (int)dp;
     }
 }

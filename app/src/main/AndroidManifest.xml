@@ -34,6 +34,7 @@
         <activity android:name=".AlterMember" />
         <activity android:name=".game"/>
         <activity android:name=".fontsize"/>
+        <activity android:name=".product_rating"/>
         <activity android:name=".LoginAndRegister"/>
     </application>
 </manifest>
