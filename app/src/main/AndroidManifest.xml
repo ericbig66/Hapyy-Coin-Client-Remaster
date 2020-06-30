@@ -14,14 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".eval_product"></activity>
         <activity
             android:name=".record"
             android:label="@string/title_activity_record"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".eventDetail" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,9 +34,10 @@
         <activity android:name=".suggest" />
         <activity android:name=".send" />
         <activity android:name=".AlterMember" />
-        <activity android:name=".game"/>
-        <activity android:name=".fontsize"/>
-        <activity android:name=".product_rating"/>
-        <activity android:name=".LoginAndRegister"/>
+        <activity android:name=".game" />
+        <activity android:name=".fontsize" />
+        <activity android:name=".product_rating" />
+        <activity android:name=".LoginAndRegister" />
     </application>
+
 </manifest>
