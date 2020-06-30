@@ -120,6 +120,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:minWidth="40sp"
                     android:text="您的評價："
                     android:textSize="24sp" />
@@ -129,6 +130,7 @@
                     style="@style/Widget.AppCompat.RatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:accessibilityLiveRegion="polite"
                     android:indeterminate="false"
                     android:max="5"
@@ -137,14 +139,15 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/Qt"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:ems="3"
-                android:hint="數量"
-                android:inputType="number"
-                android:textAlignment="center" />
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="在此寫下您對商品的感受..."
+                android:inputType="textMultiLine"
+                android:textSize="22sp" />
 
             <Button
                 android:id="@+id/btnBuy"
