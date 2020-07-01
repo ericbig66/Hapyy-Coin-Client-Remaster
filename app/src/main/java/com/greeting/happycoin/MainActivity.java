@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Integer> Pamount = new ArrayList<>(); //庫存數
     public static ArrayList<String> Vendor = new ArrayList<>();   //廠商
     public static ArrayList<String> PIMG = new ArrayList<>();     //商品圖
-    public static ArrayList<String> happypi = new ArrayList<>();  //商品說明
+    public static ArrayList<String> Pdescribtion = new ArrayList<>();  //商品說明
     public static int BuyId = -1;                                 //被點選之商品位於清單之第幾項
     //活動資料
     public static ArrayList<String> Aid = new ArrayList<>();           //活動編號

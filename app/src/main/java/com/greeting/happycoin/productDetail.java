@@ -100,7 +100,7 @@ public class productDetail extends AppCompatActivity {
     }
 
     //連接資料庫以完成交易
-    private class ConnectMySql extends AsyncTask<String, Void, String> {
+    class ConnectMySql extends AsyncTask<String, Void, String> {
         String res="";//錯誤信息儲存變數
         String uuid=getUUID(getApplicationContext());//取得裝置UUID供交易使用
         //準備購買

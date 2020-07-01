@@ -34,10 +34,10 @@ import static com.greeting.happycoin.MainActivity.BuyId;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.PIMG;
 import static com.greeting.happycoin.MainActivity.Pamount;
+import static com.greeting.happycoin.MainActivity.Pdescribtion;
 import static com.greeting.happycoin.MainActivity.Pname;
 import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Vendor;
-import static com.greeting.happycoin.MainActivity.happypi;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
 
@@ -91,7 +91,7 @@ public class market extends AppCompatActivity {
                         Pamount.add(rs.getInt("stock"));
                         Vendor.add(rs.getString("name"));
                         PIMG.add(rs.getString("picture"));
-                        happypi.add(rs.getString("description"));
+                        Pdescribtion.add(rs.getString("description"));
                     }
 
                     return PID.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
@@ -413,6 +413,6 @@ public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
         Pamount.clear();
         Vendor.clear();
         PIMG.clear();
-        happypi.clear();
+        Pdescribtion.clear();
     }
 }

@@ -400,6 +400,15 @@ public class game extends AppCompatActivity {
         image206 = R.drawable.ic_image206;
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(game.this,LoginAndRegister.class);
+        startActivity(intent);
+        finish();
+    }
+
     //連接資料庫
 //    private void getData() {
 //        mAuth = FirebaseAuth.getInstance();

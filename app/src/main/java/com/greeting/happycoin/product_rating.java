@@ -34,13 +34,13 @@ import static com.greeting.happycoin.MainActivity.DP;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.PIMG;
 import static com.greeting.happycoin.MainActivity.Pamount;
+import static com.greeting.happycoin.MainActivity.Pdescribtion;
 import static com.greeting.happycoin.MainActivity.Pname;
 import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Rating;
 import static com.greeting.happycoin.MainActivity.RecDate;
 import static com.greeting.happycoin.MainActivity.Serial;
 import static com.greeting.happycoin.MainActivity.Vendor;
-import static com.greeting.happycoin.MainActivity.happypi;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
@@ -48,8 +48,6 @@ import static com.greeting.happycoin.MainActivity.popupL;
 
 public class product_rating extends AppCompatActivity {
     ArrayAdapter adapter;
-//    String comment = null;//客戶輸入評價用的變數
-//    int star = 0; //客戶的評分
     private ListView listview;
     LinearLayout ll;
     ListView myListView;
@@ -90,7 +88,7 @@ public class product_rating extends AppCompatActivity {
                     Serial.add(rs.getInt(1));
                     PID.add(rs.getString(2));
                     Pname.add(rs.getString(3));
-                    happypi.add(rs.getString(4));
+                    Pdescribtion.add(rs.getString(4));
                     Pprice.add(rs.getInt(5));
                     Pamount.add(rs.getInt(6));
                     Vendor.add(rs.getString(7));
@@ -153,22 +151,26 @@ public class product_rating extends AppCompatActivity {
 
     //清空列表以確保活動資訊不會重複疊加
     public void clear(){
+        Serial.clear();
         PID.clear();
         Pname.clear();
+        Pdescribtion.clear();
         Pprice.clear();
         Pamount.clear();
         Vendor.clear();
+        RecDate.clear();
+        Rating.clear();
         PIMG.clear();
-        happypi.clear();
+        Comment.clear();
+        PIMG.clear();
     }
 
     /**移植區(由market.java移植並修改)*/
     //頁面轉跳工具
     public void identifier(int ID){ //動作判定器(判斷按下的按鈕式購買或詳情)
         BuyId=ID; //商品列表中的第幾樣商品
-
-        Log.v("test","您正在檢視第"+Pname.get(ID)+"的詳細資料");
-        Intent intent = new Intent(product_rating.this, productDetail.class);//準備轉跳頁面
+        Log.v("test","您正在評價第"+Pname.get(ID)+"的詳細資料");
+        Intent intent = new Intent(product_rating.this, eval_product.class);//準備轉跳頁面
         startActivity(intent);//轉跳詳情頁面
         finish();//結束本頁面
     }
@@ -292,7 +294,7 @@ public class product_rating extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,0.5f
         );
         detailp.setMarginEnd(20);
-        detail.setText("詳情");
+        detail.setText("評價此商品");
         detail.setTextSize(18f);
         detail.setLayoutParams(detailp);
         detail.setId(5*ID+3);
