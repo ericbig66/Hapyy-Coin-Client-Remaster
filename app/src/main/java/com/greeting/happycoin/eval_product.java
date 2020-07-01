@@ -136,7 +136,7 @@ public class eval_product extends AppCompatActivity {
                 //建立查詢
                 String result ="";
                 CallableStatement cstmt = null;
-                cstmt = con.prepareCall("{call rating(?,?,?,?,?,?)}");
+                cstmt = con.prepareCall("{call product_rating(?,?,?,?,?,?)}");
                 cstmt.setString(1,uuid);
                 cstmt.setString(2,"set");
                 cstmt.registerOutParameter(3,Types.LONGVARCHAR);
@@ -171,7 +171,7 @@ public class eval_product extends AppCompatActivity {
     //返回商品列表
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(eval_product.this, product_rating.class);
+        Intent intent = new Intent(eval_product.this, CommentCenter.class);
         startActivity(intent);
         finish();
     }

@@ -23,6 +23,7 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.lv;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,7 +96,19 @@ public class RedEnvelopeDiary extends Fragment {
                         "from redenvelope_record r, client c\n" +
                         "where\n" +
                         "(c.acc = '"+acc+"' and r.sender = c.ID and sndType = 'C')\n" +
-                        "OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'V')");
+                        "OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'C')");
+//                lv("select\n" +
+//                        "SndType,\n" +
+//                        "if(SndType = 'C',(select name from client where id = sender),(select name from vendor where vid = sender)) sender, if(SndType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = sender),null) sender_cid,\n" +
+//                        "                    \n" +
+//                        "recType,\n" +
+//                        "if (recType = 'C',(select name from client where id = receiver),(select name from vendor where vid = receiver))\n" +
+//                        "receiver, if(recType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = receiver),null) receiver_cid,\n" +
+//                        "amount, receiveDate \n" +
+//                        "from redenvelope_record r, client c\n" +
+//                        "where\n" +
+//                        "(c.acc = '"+acc+"' and r.sender = c.ID and sndType = 'C')\n" +
+//                        "OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'C')");
                 //將查詢結果裝入陣列
                 while(rs.next()){
                     //result += rs.getString("paccount")+"\t"+rs.getString("state")+"\t$"+rs.getString("amount")+"\t$"+rs.getString("moneyLeft")+"\n";
@@ -122,6 +135,7 @@ public class RedEnvelopeDiary extends Fragment {
                     //將結果裝入陣列
                     amount.add("$"+rs.getString("amount")+"  ");
                     dealtTime.add(rs.getString("receiveDate")==null?" ":rs.getString("receiveDate").substring(0,16));
+                    lv("sndType= "+sndType+"　sender= "+snd+"　sender_cid= "+sndCid+"　recType= "+recType+"　receiver= "+rec+"　receiver_cid= "+recCid+"　amount= $"+rs.getString("amount")+"　receiveDate= "+rs.getString("receiveDate"));
                 }
                 return ioacc.size()+"";//回傳陣列大小
             }catch (Exception e){

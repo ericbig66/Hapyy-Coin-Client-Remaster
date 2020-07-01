@@ -8,12 +8,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -44,23 +47,32 @@ import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.MainActivity.popupL;
 
-public class product_rating extends AppCompatActivity {
+public class ActivityRating extends Fragment {
     LinearLayout ll;
+    public ActivityRating() {
+        // Required empty public constructor
+    }
+
+    public static ActivityRating newInstance(){
+        return new ActivityRating();
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_rating);
-        ll =findViewById(R.id.ll);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_comment_center,container, false);
+        // Inflate the layout for this fragment
+        ll =view.findViewById(R.id.ll);
         lv("loading success");
-        setTitle("評價商品");
         clear();
         DataProcess getData = new DataProcess();
         getData.execute();
+        return view;
     }
 
-    private class DataProcess extends AsyncTask<String, Void, String>{
+    private class DataProcess extends AsyncTask<String, Void, String> {
         String res;
-        String uuid = getUUID(getApplicationContext());
+        String uuid = getUUID(getActivity().getApplicationContext());
         @Override
         protected String doInBackground(String... strings) {
             try {//讀取未評價商品
@@ -104,9 +116,9 @@ public class product_rating extends AppCompatActivity {
             super.onPostExecute(s);
             if (s.equals("載入成功")){
                 cardRenderer();
-                popup(getApplicationContext(),"請稍後...");
+                popup(getActivity().getApplicationContext(),"請稍後...");
             }else{
-                popupL(getApplicationContext(),"發生錯誤，請聯絡客服中心協助處理");
+                popupL(getActivity().getApplicationContext(),"發生錯誤，請聯絡客服中心協助處理");
             }
         }
     }
@@ -138,11 +150,11 @@ public class product_rating extends AppCompatActivity {
             return null;
         }
     }
-    public void onBackPressed() {//返回鈕動作
-        Intent intent = new Intent(product_rating.this,LoginAndRegister.class);//準備轉跳回首頁
-        startActivity(intent);//轉跳
-        finish();//結束本頁面
-    }
+//    public void onBackPressed() {//返回鈕動作
+//        Intent intent = new Intent(ActivityRating.this,LoginAndRegister.class);//準備轉跳回首頁
+//        startActivity(intent);//轉跳
+//        finish();//結束本頁面
+//    }
 
     //清空列表以確保活動資訊不會重複疊加
     public void clear(){
@@ -165,9 +177,9 @@ public class product_rating extends AppCompatActivity {
     public void identifier(int ID){ //動作判定器(判斷按下的按鈕式購買或詳情)
         BuyId=ID; //商品列表中的第幾樣商品
         Log.v("test","您正在評價第"+Pname.get(ID)+"的詳細資料");
-        Intent intent = new Intent(product_rating.this, eval_product.class);//準備轉跳頁面
+        Intent intent = new Intent(getActivity(), eval_product.class);//準備轉跳頁面
         startActivity(intent);//轉跳詳情頁面
-        finish();//結束本頁面
+        getActivity().finish();//結束本頁面
     }
 
     //商品卡產生器
@@ -181,7 +193,7 @@ public class product_rating extends AppCompatActivity {
     //產生商品卡
     public void add(final int ID){
         //商品卡片
-        LinearLayout frame = new LinearLayout(this);//新增LinearLayout(商品卡母容器)
+        LinearLayout frame = new LinearLayout(getActivity());//新增LinearLayout(商品卡母容器)
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                 LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
                 DP(150) //設定商品卡高度
@@ -193,26 +205,26 @@ public class product_rating extends AppCompatActivity {
         frame.setBackgroundColor(Color.parseColor("#D1FFDE"));
 
         //圖片&價格區
-        LinearLayout picpri = new LinearLayout(this);
+        LinearLayout picpri = new LinearLayout(getActivity());
         LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(120));
         picprip.setMargins(0,0,DP(5),0);
         picpri.setOrientation(LinearLayout.VERTICAL);
         picpri.setLayoutParams(picprip);
 /**
-        //數量
-        final EditText amount = new EditText(this);
-        LinearLayout.LayoutParams amountp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        amount.setEms(3);
-        amount.setInputType(InputType.TYPE_CLASS_NUMBER);
-        amount.setLayoutParams(amountp);
-        amount.setId(5*ID+2);
-        amount.setText("1");
-*/
+ //數量
+ final EditText amount = new EditText(getActivity());
+ LinearLayout.LayoutParams amountp = new LinearLayout.LayoutParams(
+ LinearLayout.LayoutParams.WRAP_CONTENT,
+ LinearLayout.LayoutParams.WRAP_CONTENT
+ );
+ amount.setEms(3);
+ amount.setInputType(InputType.TYPE_CLASS_NUMBER);
+ amount.setLayoutParams(amountp);
+ amount.setId(5*ID+2);
+ amount.setText("1");
+ */
         //商品圖片
-        ImageView propic = new ImageView(this);
+        ImageView propic = new ImageView(getActivity());
         LinearLayout.LayoutParams propicp = new LinearLayout.LayoutParams(DP(120),DP(90));
         //propic.setImageBitmap(Bitmap.createScaledBitmap(ConvertToBitmap(ID), 120, 90, false));
         propic.setImageBitmap(ConvertToBitmap(ID));
@@ -222,19 +234,19 @@ public class product_rating extends AppCompatActivity {
         propic.setOnClickListener(v -> {
             final int id = ID;
             final int quantity = Pamount.get(ID);
-            hideKB(this);
+            hideKB(getActivity());
             identifier(id);
         });
 
         //商品價格
-        TextView price = new TextView(this);
+        TextView price = new TextView(getActivity());
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
         price.setText("價格: $"+Pprice.get(ID));
         price.setTextSize(18f);
         price.setLayoutParams(picprip);
 
         //商品訊息區
-        LinearLayout proinf = new LinearLayout(this);
+        LinearLayout proinf = new LinearLayout(getActivity());
         LinearLayout.LayoutParams proinfp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,1f
@@ -243,7 +255,7 @@ public class product_rating extends AppCompatActivity {
         proinf.setLayoutParams(proinfp);
 
         //商品名稱
-        TextView proname = new TextView(this);
+        TextView proname = new TextView(getActivity());
         LinearLayout.LayoutParams pronamep = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -255,7 +267,7 @@ public class product_rating extends AppCompatActivity {
         proname.setId(5*ID+1);
 
         //購買歷史資訊
-        LinearLayout buyinf = new LinearLayout(this);
+        LinearLayout buyinf = new LinearLayout(getActivity());
         LinearLayout.LayoutParams buyinfp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
@@ -264,7 +276,7 @@ public class product_rating extends AppCompatActivity {
         buyinf.setLayoutParams(buyinfp);
 
         //購買日期
-        TextView amount_label = new TextView(this);
+        TextView amount_label = new TextView(getActivity());
         LinearLayout.LayoutParams amount_labelp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -274,7 +286,7 @@ public class product_rating extends AppCompatActivity {
         amount_label.setLayoutParams(amount_labelp);
 
         //按鈕箱
-        LinearLayout btnbox = new LinearLayout(this);
+        LinearLayout btnbox = new LinearLayout(getActivity());
         LinearLayout.LayoutParams btnboxp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
@@ -283,7 +295,7 @@ public class product_rating extends AppCompatActivity {
         btnbox.setLayoutParams(btnboxp);
 
         //詳情按鈕
-        Button detail = new Button(this);
+        Button detail = new Button(getActivity());
         LinearLayout.LayoutParams detailp = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,0.5f
@@ -298,43 +310,43 @@ public class product_rating extends AppCompatActivity {
         detail.setOnClickListener(v -> {
             final int id = ID;
             final int quantity = Pamount.get(ID);
-            hideKB(this);
+            hideKB(getActivity());
             identifier(id);
         });
 /**
-        //訂購按鈕
-        Button buybtn = new Button(this);
-        LinearLayout.LayoutParams buybtnp = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,0.5f
-        );
-        buybtn.setBackgroundResource(R.drawable.rounded_button_green);
-        buybtn.setTextColor(Color.parseColor("#FFFFFF"));
-        buybtn.setText("訂購");
-        buybtn.setTextSize(18f);
-        buybtn.setLayoutParams(buybtnp);
-        buybtn.setId(5*ID+4);
-        buybtn.setOnClickListener(v -> {
-            final int id = ID;
-            if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
-            final int quantity = Integer.parseInt(amount.getText().toString());
-            hideKB(this);
-            identifier("B",id,quantity);
-        });
-*/
+ //訂購按鈕
+ Button buybtn = new Button(getActivity());
+ LinearLayout.LayoutParams buybtnp = new LinearLayout.LayoutParams(
+ 0,
+ LinearLayout.LayoutParams.WRAP_CONTENT,0.5f
+ );
+ buybtn.setBackgroundResource(R.drawable.rounded_button_green);
+ buybtn.setTextColor(Color.parseColor("#FFFFFF"));
+ buybtn.setText("訂購");
+ buybtn.setTextSize(18f);
+ buybtn.setLayoutParams(buybtnp);
+ buybtn.setId(5*ID+4);
+ buybtn.setOnClickListener(v -> {
+ final int id = ID;
+ if(amount.getText().toString().trim().isEmpty()){amount.setText("0");}
+ final int quantity = Integer.parseInt(amount.getText().toString());
+ hideKB(getActivity());
+ identifier("B",id,quantity);
+ });
+ */
         //將內容填入frame
         /**
-        frame
-            propic
-            proinf
-                proname
-                buyinf
-                    amount_label
-                    amount
-                btnbox
-                    dteail
-                    buybtn
-        */
+         frame
+         propic
+         proinf
+         proname
+         buyinf
+         amount_label
+         amount
+         btnbox
+         dteail
+         buybtn
+         */
         //將產生之物件放入卡片容器中
         proinf.addView(proname);
         buyinf.addView(amount_label);

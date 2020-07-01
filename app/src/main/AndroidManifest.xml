@@ -14,7 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".eval_product"></activity>
+        <activity
+            android:name=".CommentCenter"
+            android:label="@string/title_activity_comment_center"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".eval_product" />
         <activity
             android:name=".record"
             android:label="@string/title_activity_record"

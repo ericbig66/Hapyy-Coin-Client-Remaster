@@ -129,6 +129,7 @@ public class LoginAndRegister extends AppCompatActivity {
             if(result.contains("sep,")){
                 lv("sep detected!");
                 inf = result.split("sep,");
+                lv("LENTH of SEPERATER= "+inf.length);
                 nm = inf[1].split("nm,");
                 nm[0] = nm[0].equals("null")?"":nm[0];
                 nm[1] = nm[1].equals("null")?"":nm[1];
@@ -197,7 +198,8 @@ public class LoginAndRegister extends AppCompatActivity {
                 intent = new Intent(LoginAndRegister.this,game.class);
                 break;
             case R.id.rate:
-                intent = new Intent(LoginAndRegister.this,product_rating.class);
+//                intent = new Intent(LoginAndRegister.this,product_rating.class);
+                intent = new Intent(LoginAndRegister.this,CommentCenter.class);
                 break;
         }
         startActivity(intent);

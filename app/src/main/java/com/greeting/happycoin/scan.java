@@ -261,7 +261,7 @@ public class scan extends AppCompatActivity {
                     popup(getApplicationContext(),"交易失敗");
                 }
                 else {
-                    popup(getApplicationContext(),"發生錯誤，請聯繫客服人員協助您解決:)");
+                    popup(getApplicationContext(),"交易成功!");
                 }
             }
             else if(qdata.contains("fu02l4,")){

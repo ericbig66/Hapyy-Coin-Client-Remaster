@@ -1,6 +1,7 @@
 package com.greeting.happycoin.ui.main;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -46,6 +47,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return EventAttendRecord.newInstance();
             default:
+                Log.e("test","page "+position+"does not exist");
                 return null;
         }
     }
