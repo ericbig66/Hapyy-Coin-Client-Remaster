@@ -262,6 +262,7 @@ public class scan extends AppCompatActivity {
                 }
                 else {
                     popup(getApplicationContext(),"交易成功!");
+                    onBackPressed();
                 }
             }
             else if(qdata.contains("fu02l4,")){
