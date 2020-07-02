@@ -29,6 +29,8 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.AComment;
+import static com.greeting.happycoin.MainActivity.ARating;
 import static com.greeting.happycoin.MainActivity.ARecDate;
 import static com.greeting.happycoin.MainActivity.ASerial;
 import static com.greeting.happycoin.MainActivity.AactDate;
@@ -39,10 +41,8 @@ import static com.greeting.happycoin.MainActivity.Aname;
 import static com.greeting.happycoin.MainActivity.Areward;
 import static com.greeting.happycoin.MainActivity.Astart_date;
 import static com.greeting.happycoin.MainActivity.Avendor;
-import static com.greeting.happycoin.MainActivity.Comment;
 import static com.greeting.happycoin.MainActivity.DP;
 import static com.greeting.happycoin.MainActivity.EventId;
-import static com.greeting.happycoin.MainActivity.Rating;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
@@ -101,8 +101,8 @@ public class ActivityRating extends Fragment {
                     AactDate.add(rs.getDate(6));
                     Avendor.add(rs.getString(7));
                     ARecDate.add(rs.getString(8));
-                    Rating.add(rs.getInt(9));
-                    Comment.add(rs.getString(10));
+                    ARating.add(rs.getInt(9));
+                    AComment.add(rs.getString(10));
                     Actpic.add(rs.getString(11));
                     Astart_date.add(rs.getDate(12));
                 }
@@ -168,9 +168,9 @@ public class ActivityRating extends Fragment {
         AactDate.clear();
         Avendor.clear();
         ARecDate.clear();
-        Rating.clear();
+        ARating.clear();
         Actpic.clear();
-        Comment.clear();
+        AComment.clear();
     }
 
     /**移植區(由market.java移植並修改)*/

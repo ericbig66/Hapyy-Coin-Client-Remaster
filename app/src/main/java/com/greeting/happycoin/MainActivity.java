@@ -51,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Integer> PSerial = new ArrayList<>();// 產品評價 交易序號
     public static ArrayList<String> ARecDate = new ArrayList<>();// 簽到時間
     public static ArrayList<String> PRecDate = new ArrayList<>();// 購買日期
-    public static ArrayList<Integer> Rating = new ArrayList<>();//評價(暫時不用動)
-    public static ArrayList<String> Comment = new ArrayList<>();//評語(暫時不用動)
+    public static ArrayList<Integer> ARating = new ArrayList<>();//活動評價
+    public static ArrayList<String> AComment = new ArrayList<>();//活動評語
+    public static ArrayList<Integer> PRating = new ArrayList<>();//商品評價
+    public static ArrayList<String> PComment = new ArrayList<>();//商品評語
 
     public static boolean entryIsRecent = false;//是否透過近期報名進入活動列表
 

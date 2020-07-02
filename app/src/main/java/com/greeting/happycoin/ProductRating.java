@@ -30,17 +30,17 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.BuyId;
-import static com.greeting.happycoin.MainActivity.Comment;
 import static com.greeting.happycoin.MainActivity.DP;
+import static com.greeting.happycoin.MainActivity.PComment;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.PIMG;
+import static com.greeting.happycoin.MainActivity.PRating;
 import static com.greeting.happycoin.MainActivity.PRecDate;
 import static com.greeting.happycoin.MainActivity.PSerial;
 import static com.greeting.happycoin.MainActivity.Pamount;
 import static com.greeting.happycoin.MainActivity.Pdescribtion;
 import static com.greeting.happycoin.MainActivity.Pname;
 import static com.greeting.happycoin.MainActivity.Pprice;
-import static com.greeting.happycoin.MainActivity.Rating;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
@@ -101,8 +101,8 @@ public class ProductRating extends Fragment {
                     Pamount.add(rs.getInt(6));
                     Vendor.add(rs.getString(7));
                     PRecDate.add(rs.getString(8));
-                    Rating.add(rs.getInt(9));
-                    Comment.add(rs.getString(10));
+                    PRating.add(rs.getInt(9));
+                    PComment.add(rs.getString(10));
                     PIMG.add(rs.getString(11));
                 }
             }catch (Exception e){
@@ -167,9 +167,9 @@ public class ProductRating extends Fragment {
         Pamount.clear();
         Vendor.clear();
         PRecDate.clear();
-        Rating.clear();
+        PRating.clear();
         PIMG.clear();
-        Comment.clear();
+        PComment.clear();
         PIMG.clear();
     }
 

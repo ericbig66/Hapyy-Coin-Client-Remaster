@@ -51,6 +51,22 @@
                 android:layout_weight="0"
                 android:textSize="24sp" />
 
+            <RatingBar
+                android:id="@+id/reputation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0"
+                android:isIndicator="true"
+                android:numStars="5" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="評價" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
