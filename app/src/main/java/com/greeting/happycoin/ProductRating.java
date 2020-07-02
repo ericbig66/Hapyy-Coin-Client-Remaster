@@ -34,13 +34,13 @@ import static com.greeting.happycoin.MainActivity.Comment;
 import static com.greeting.happycoin.MainActivity.DP;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.PIMG;
+import static com.greeting.happycoin.MainActivity.PRecDate;
+import static com.greeting.happycoin.MainActivity.PSerial;
 import static com.greeting.happycoin.MainActivity.Pamount;
 import static com.greeting.happycoin.MainActivity.Pdescribtion;
 import static com.greeting.happycoin.MainActivity.Pname;
 import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Rating;
-import static com.greeting.happycoin.MainActivity.RecDate;
-import static com.greeting.happycoin.MainActivity.Serial;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
@@ -93,14 +93,14 @@ public class ProductRating extends Fragment {
 //                lv("result out put：");
                 while(rs.next()){
 //                    lv(rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5)+" "+rs.getString(6)+" "+rs.getString(7)+" "+rs.getString(8)+" "+rs.getString(9)+" "+rs.getString(10)+" "+rs.getString(11)); //測試輸出取得的資料
-                    Serial.add(rs.getInt(1));
+                    PSerial.add(rs.getInt(1));
                     PID.add(rs.getString(2));
                     Pname.add(rs.getString(3));
                     Pdescribtion.add(rs.getString(4));
                     Pprice.add(rs.getInt(5));
                     Pamount.add(rs.getInt(6));
                     Vendor.add(rs.getString(7));
-                    RecDate.add(rs.getString(8));
+                    PRecDate.add(rs.getString(8));
                     Rating.add(rs.getInt(9));
                     Comment.add(rs.getString(10));
                     PIMG.add(rs.getString(11));
@@ -159,14 +159,14 @@ public class ProductRating extends Fragment {
 
     //清空列表以確保活動資訊不會重複疊加
     public void clear(){
-        Serial.clear();
+        PSerial.clear();
         PID.clear();
         Pname.clear();
         Pdescribtion.clear();
         Pprice.clear();
         Pamount.clear();
         Vendor.clear();
-        RecDate.clear();
+        PRecDate.clear();
         Rating.clear();
         PIMG.clear();
         Comment.clear();
@@ -282,7 +282,7 @@ public class ProductRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        amount_label.setText("購買日期："+RecDate.get(ID).substring(0,11));
+        amount_label.setText("購買日期："+PRecDate.get(ID).substring(0,11));
         amount_label.setTextSize(18f);
         amount_label.setLayoutParams(amount_labelp);
 

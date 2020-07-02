@@ -47,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<String> attended = new ArrayList<>();      //該使用者已報名之活動
     public static int  EventId=-1;                                     //被點選之活動位於清單之第幾項
 
-    public static ArrayList<Integer> Serial = new ArrayList<>();//活動評價/產品評價 交易序號
-    public static ArrayList<String> RecDate = new ArrayList<>();// 活動日期/購買日期
-    public static ArrayList<Integer> Rating = new ArrayList<>();//評價
-    public static ArrayList<String> Comment = new ArrayList<>();//評語
+    public static ArrayList<Integer> ASerial = new ArrayList<>();//活動評價 交易序號
+    public static ArrayList<Integer> PSerial = new ArrayList<>();// 產品評價 交易序號
+    public static ArrayList<String> ARecDate = new ArrayList<>();// 簽到時間
+    public static ArrayList<String> PRecDate = new ArrayList<>();// 購買日期
+    public static ArrayList<Integer> Rating = new ArrayList<>();//評價(暫時不用動)
+    public static ArrayList<String> Comment = new ArrayList<>();//評語(暫時不用動)
 
     public static boolean entryIsRecent = false;//是否透過近期報名進入活動列表
 

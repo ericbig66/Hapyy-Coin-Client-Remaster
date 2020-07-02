@@ -25,30 +25,29 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
-import static com.greeting.happycoin.MainActivity.BuyId;
-import static com.greeting.happycoin.MainActivity.PID;
-import static com.greeting.happycoin.MainActivity.PIMG;
-import static com.greeting.happycoin.MainActivity.PRecDate;
-import static com.greeting.happycoin.MainActivity.PSerial;
-import static com.greeting.happycoin.MainActivity.Pamount;
-import static com.greeting.happycoin.MainActivity.Pdescribtion;
-import static com.greeting.happycoin.MainActivity.Pname;
-import static com.greeting.happycoin.MainActivity.Pprice;
+import static com.greeting.happycoin.MainActivity.ARecDate;
+import static com.greeting.happycoin.MainActivity.ASerial;
+import static com.greeting.happycoin.MainActivity.AactDate;
+import static com.greeting.happycoin.MainActivity.Actpic;
+import static com.greeting.happycoin.MainActivity.Adesc;
+import static com.greeting.happycoin.MainActivity.Aname;
+import static com.greeting.happycoin.MainActivity.Areward;
+import static com.greeting.happycoin.MainActivity.Astart_date;
+import static com.greeting.happycoin.MainActivity.EventId;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.market.DP;
 
-public class eval_product extends AppCompatActivity {
+public class eval_activity extends AppCompatActivity {
     EditText message;
     String comment = null;//客戶輸入評價用的變數
     RatingBar ratingBar;
     float star = 0; //客戶的評分
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_eval_product);
+        setContentView(R.layout.layout_eval_activity);
         //定義區
         ImageView merPic = findViewById(R.id.merPic);
         TextView txtName=findViewById(R.id.txtName);
@@ -72,19 +71,18 @@ public class eval_product extends AppCompatActivity {
         });
 
         //初始化設定
-        merPic.setImageBitmap(ConvertToBitmap(BuyId));//設定商品圖
-        txtName.setText(Pname.get(BuyId));//設定商品名稱
+        merPic.setImageBitmap(ConvertToBitmap(EventId));//設定商品圖
+        txtName.setText(Aname.get(EventId));//設定商品名稱
         //初始化商品詳細資料區域
-        txtVdrName.setText("廠商名稱: "+Vendor.get(BuyId)+"\n商品編號: "+PID.get(BuyId)+"\n商品價格: $"+Pprice.get(BuyId)+"\n商品說明：\n"+Pdescribtion.get(BuyId));
-        detail.setText("購買數量："+Pamount.get(BuyId)+"\n 交易金額："+Pamount.get(BuyId)*Pprice.get(BuyId)+"\n 交易日期："+PRecDate.get(BuyId).substring(0,11));
+        txtVdrName.setText("活動日期："+AactDate.get(EventId)+"\n主辦廠商: "+Vendor.get(EventId)+"\n回饋獎金: $"+Areward.get(EventId)+"\n活動說明：\n"+Adesc.get(EventId));
+        detail.setText("報名日期："+Astart_date.get(EventId)+"\n簽到時間："+ARecDate.get(EventId).substring(11,16));
         btnRate.setOnClickListener(v -> Rater());//點選購買執行其相關動作
     }
-
     //將base64轉換為點陣圖
     public Bitmap ConvertToBitmap(int ID){
         try{
-//            Log.v("test",PIMG.get(ID));
-            byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
+//            Log.v("test",Actpic.get(ID));
+            byte[] imageBytes = Base64.decode(Actpic.get(ID), Base64.DEFAULT);
             Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);//裝入轉換後結果
             int w = proimg.getWidth();//取得圖片寬度
             int h = proimg.getHeight();//取得圖片高度
@@ -112,8 +110,8 @@ public class eval_product extends AppCompatActivity {
     void Rater() {
         hideKB(this);//隱藏鍵盤
         //數量驗證
-            ConnectMySql connectMySql = new ConnectMySql();
-            connectMySql.execute("");
+        ConnectMySql connectMySql = new ConnectMySql();
+        connectMySql.execute("");
     }
 
     //連接資料庫以完成交易
@@ -136,11 +134,11 @@ public class eval_product extends AppCompatActivity {
                 //建立查詢
                 String result ="";
                 CallableStatement cstmt = null;
-                cstmt = con.prepareCall("{call product_rating(?,?,?,?,?,?)}");
+                cstmt = con.prepareCall("{call activity_rating(?,?,?,?,?,?)}");
                 cstmt.setString(1,uuid);
                 cstmt.setString(2,"set");
-                cstmt.registerOutParameter(3,Types.LONGVARCHAR);
-                cstmt.setInt(4,PSerial.get(BuyId));
+                cstmt.registerOutParameter(3, Types.LONGVARCHAR);
+                cstmt.setInt(4,ASerial.get(EventId));
                 cstmt.setFloat(5,star);
                 cstmt.setString(6,comment);
                 cstmt.executeUpdate();
@@ -171,7 +169,7 @@ public class eval_product extends AppCompatActivity {
     //返回商品列表
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(eval_product.this, CommentCenter.class);
+        Intent intent = new Intent(eval_activity.this, CommentCenter.class);
         startActivity(intent);
         finish();
     }

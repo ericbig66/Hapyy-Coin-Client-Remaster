@@ -29,19 +29,20 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
-import static com.greeting.happycoin.MainActivity.BuyId;
+import static com.greeting.happycoin.MainActivity.ARecDate;
+import static com.greeting.happycoin.MainActivity.ASerial;
+import static com.greeting.happycoin.MainActivity.AactDate;
+import static com.greeting.happycoin.MainActivity.Actpic;
+import static com.greeting.happycoin.MainActivity.Adesc;
+import static com.greeting.happycoin.MainActivity.Aid;
+import static com.greeting.happycoin.MainActivity.Aname;
+import static com.greeting.happycoin.MainActivity.Areward;
+import static com.greeting.happycoin.MainActivity.Astart_date;
+import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.Comment;
 import static com.greeting.happycoin.MainActivity.DP;
-import static com.greeting.happycoin.MainActivity.PID;
-import static com.greeting.happycoin.MainActivity.PIMG;
-import static com.greeting.happycoin.MainActivity.Pamount;
-import static com.greeting.happycoin.MainActivity.Pdescribtion;
-import static com.greeting.happycoin.MainActivity.Pname;
-import static com.greeting.happycoin.MainActivity.Pprice;
+import static com.greeting.happycoin.MainActivity.EventId;
 import static com.greeting.happycoin.MainActivity.Rating;
-import static com.greeting.happycoin.MainActivity.RecDate;
-import static com.greeting.happycoin.MainActivity.Serial;
-import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
@@ -81,7 +82,7 @@ public class ActivityRating extends Fragment {
                 Statement st = con.createStatement();
                 CallableStatement cstmt = null;//因需多次使用故先設為null
                 ResultSet rs;
-                cstmt = con.prepareCall("{call rating(?,?,?,?,?,?)}");
+                cstmt = con.prepareCall("{call activity_rating(?,?,?,?,?,?)}");
                 cstmt.registerOutParameter(3, Types.LONGVARCHAR);
                 cstmt.setString(1,uuid);
                 cstmt.setString(2,"get");
@@ -92,17 +93,18 @@ public class ActivityRating extends Fragment {
 //                lv("result out put：");
                 while(rs.next()){
 //                    lv(rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5)+" "+rs.getString(6)+" "+rs.getString(7)+" "+rs.getString(8)+" "+rs.getString(9)+" "+rs.getString(10)+" "+rs.getString(11)); //測試輸出取得的資料
-                    Serial.add(rs.getInt(1));
-                    PID.add(rs.getString(2));
-                    Pname.add(rs.getString(3));
-                    Pdescribtion.add(rs.getString(4));
-                    Pprice.add(rs.getInt(5));
-                    Pamount.add(rs.getInt(6));
-                    Vendor.add(rs.getString(7));
-                    RecDate.add(rs.getString(8));
+                    ASerial.add(rs.getInt(1));
+                    Aid.add(rs.getString(2));
+                    Aname.add(rs.getString(3));
+                    Adesc.add(rs.getString(4));
+                    Areward.add(rs.getInt(5));
+                    AactDate.add(rs.getDate(6));
+                    Avendor.add(rs.getString(7));
+                    ARecDate.add(rs.getString(8));
                     Rating.add(rs.getInt(9));
                     Comment.add(rs.getString(10));
-                    PIMG.add(rs.getString(11));
+                    Actpic.add(rs.getString(11));
+                    Astart_date.add(rs.getDate(12));
                 }
             }catch (Exception e){
                 lv("ＥＲＲＯＲ：\n"+e.toString());
@@ -122,11 +124,11 @@ public class ActivityRating extends Fragment {
             }
         }
     }
-    //轉換為點陣圖(輸入值為PIMG中的陣列位置)
+    //轉換為點陣圖(輸入值為Actpic中的陣列位置)
     public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
         try{
-//            Log.v("test",PIMG.get(ID));
-            byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
+//            Log.v("test",Actpic.get(ID));
+            byte[] imageBytes = Base64.decode(Actpic.get(ID), Base64.DEFAULT);
             Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);//轉換後的圖片
             int w = proimg.getWidth();//取得寬度
             int h = proimg.getHeight();//取得高度
@@ -158,33 +160,32 @@ public class ActivityRating extends Fragment {
 
     //清空列表以確保活動資訊不會重複疊加
     public void clear(){
-        Serial.clear();
-        PID.clear();
-        Pname.clear();
-        Pdescribtion.clear();
-        Pprice.clear();
-        Pamount.clear();
-        Vendor.clear();
-        RecDate.clear();
+        ASerial.clear();
+        Aid.clear();
+        Aname.clear();
+        Adesc.clear();
+        Areward.clear();
+        AactDate.clear();
+        Avendor.clear();
+        ARecDate.clear();
         Rating.clear();
-        PIMG.clear();
+        Actpic.clear();
         Comment.clear();
-        PIMG.clear();
     }
 
     /**移植區(由market.java移植並修改)*/
     //頁面轉跳工具
     public void identifier(int ID){ //動作判定器(判斷按下的按鈕式購買或詳情)
-        BuyId=ID; //商品列表中的第幾樣商品
-        Log.v("test","您正在評價第"+Pname.get(ID)+"的詳細資料");
-        Intent intent = new Intent(getActivity(), eval_product.class);//準備轉跳頁面
+        EventId=ID; //商品列表中的第幾樣商品
+        Log.v("test","您正在評價第"+Aname.get(ID)+"的詳細資料");
+        Intent intent = new Intent(getActivity(), eval_activity.class);//準備轉跳頁面
         startActivity(intent);//轉跳詳情頁面
         getActivity().finish();//結束本頁面
     }
 
     //商品卡產生器
     public void cardRenderer(){
-        for(int i = 0 ; i < PID.size() ; i++){//以迴圈產生商品卡
+        for(int i = 0 ; i < Aid.size() ; i++){//以迴圈產生商品卡
             Log.v("test", "render card "+i);
             add(i);//增加商品卡
         }
@@ -233,7 +234,6 @@ public class ActivityRating extends Fragment {
         propic.setId(5*ID);
         propic.setOnClickListener(v -> {
             final int id = ID;
-            final int quantity = Pamount.get(ID);
             hideKB(getActivity());
             identifier(id);
         });
@@ -241,7 +241,7 @@ public class ActivityRating extends Fragment {
         //商品價格
         TextView price = new TextView(getActivity());
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
-        price.setText("價格: $"+Pprice.get(ID));
+        price.setText("價格: $"+Areward.get(ID));
         price.setTextSize(18f);
         price.setLayoutParams(picprip);
 
@@ -260,7 +260,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        proname.setText(Pname.get(ID));
+        proname.setText(Aname.get(ID));
         proname.setTextSize(18f);
         proname.setClickable(true);
         proname.setLayoutParams(pronamep);
@@ -281,7 +281,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        amount_label.setText("購買日期："+RecDate.get(ID).substring(0,11));
+        amount_label.setText("購買日期："+ARecDate.get(ID).substring(0,11));
         amount_label.setTextSize(18f);
         amount_label.setLayoutParams(amount_labelp);
 
@@ -309,7 +309,6 @@ public class ActivityRating extends Fragment {
         detail.setBackgroundResource(R.drawable.rounded_button_green);
         detail.setOnClickListener(v -> {
             final int id = ID;
-            final int quantity = Pamount.get(ID);
             hideKB(getActivity());
             identifier(id);
         });
