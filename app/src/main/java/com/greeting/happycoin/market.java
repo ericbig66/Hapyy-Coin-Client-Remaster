@@ -80,6 +80,7 @@ public class market extends AppCompatActivity {
                 CallableStatement cstmt = null;//因需多次使用故先設為null
             if(function == 0) {//把所有商品資訊抓回來
                 try {
+                    clear();
                     //建立查詢
                     String result = "";
                     ResultSet rs = st.executeQuery("select p.*, name from product p, vendor v where stock > 0 and vid = vendor");

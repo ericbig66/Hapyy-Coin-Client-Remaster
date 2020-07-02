@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
@@ -72,9 +75,12 @@ public class eventDetail extends AppCompatActivity {
 
 
     }
-
+    int function = 0;
+    float star = 0;
     Button btnBuy; //購買按鈕
     String acc;//UUID(購物用)
+    RatingBar reputation;
+    TextView ratingDetail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +99,9 @@ public class eventDetail extends AppCompatActivity {
         if (attended.contains(Aid.get(EventId))){btnBuy.setText("取消報名");}
         else{btnBuy.setText("參加");}
         btnBuy.setOnClickListener(v -> Buyer());//按下參加鈕所執行之動作
+        reputation = findViewById(R.id.reputation);
+        ratingDetail = findViewById(R.id.ratingDetail);
+        Buyer();
     }
     //進行報名或取消報名
     void Buyer() {
@@ -109,7 +118,7 @@ public class eventDetail extends AppCompatActivity {
         protected void onPreExecute(){
             super.onPreExecute();
             acc = getUUID(getApplicationContext());
-            popup(getApplicationContext(),"報名中，請稍後...");
+            if (function==0) popup(getApplicationContext(),"處理中，請稍後...");
         }
         //查詢執行動作(不可使用與UI相關的指令)
         @Override
@@ -120,12 +129,24 @@ public class eventDetail extends AppCompatActivity {
                 Connection con = DriverManager.getConnection(url, user, pass);
                 //建立查詢
                 String result ="";
-                CallableStatement cstmt = con.prepareCall("{?=call activity_regist(?,?)}");
-                cstmt.registerOutParameter(1, Types.VARCHAR);
-                cstmt.setString(2,acc);//設定輸出變數(參數位置,參數型別)
-                cstmt.setString(3,Aid.get(EventId));
-                cstmt.executeUpdate();
-                return cstmt.getString(1);
+                if(function==0){
+                    Statement st = con.createStatement();
+                    ResultSet rs = st.executeQuery("SELECT COUNT(signTime), Round(AVG(rating),1) from application_form where rating>0 and activityID = '"+Aid.get(EventId)+"'");
+                    rs.next();
+                    if(rs.getInt(1)>0){
+                        res = "目前有"+rs.getString(1)+"人評價過";
+                        star = rs.getFloat(2);
+                    }else{res ="目前沒有人評價過此活動";}
+                    return res;
+                }else if(function==1){
+                    CallableStatement cstmt = con.prepareCall("{?=call activity_regist(?,?)}");
+                    cstmt.registerOutParameter(1, Types.VARCHAR);
+                    cstmt.setString(2,acc);//設定輸出變數(參數位置,參數型別)
+                    cstmt.setString(3,Aid.get(EventId));
+                    cstmt.executeUpdate();
+                    return cstmt.getString(1);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 res = e.toString();
@@ -135,24 +156,30 @@ public class eventDetail extends AppCompatActivity {
         //報名/取消報名後的結果將回傳於此
         @Override
         protected void onPostExecute(String result) {
-            try{
-                if (result.equals("報名成功")){
-                    btnBuy.setText("取消報名");
-                }else if(result.equals("已取消報名")){
-                    btnBuy.setText("參加");
-                }
-                popup(getApplicationContext(),result);
-                //報名成功後將自動清空活動列表並轉跳回活動列表
-                if(result.equals("報名成功")||result.equals("已取消報名")){
-                    clear();
-                    Intent intent;
-                    intent = new Intent(eventDetail.this, event.class);
-                    startActivity(intent);
-                    finish();
-                }
+            if (function==0){
+                reputation.setRating(star);
+                ratingDetail.setText(result);
+                function++;
+            }else if (function==1){
+                try{
+                    if (result.equals("報名成功")){
+                        btnBuy.setText("取消報名");
+                    }else if(result.equals("已取消報名")){
+                        btnBuy.setText("參加");
+                    }
+                    popup(getApplicationContext(),result);
+                    //報名成功後將自動清空活動列表並轉跳回活動列表
+                    if(result.equals("報名成功")||result.equals("已取消報名")){
+                        clear();
+                        Intent intent;
+                        intent = new Intent(eventDetail.this, event.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
-            }catch (Exception e){
-                Log.v("test","錯誤: "+e.toString());
+                }catch (Exception e){
+                    Log.v("test","錯誤: "+e.toString());
+                }
             }
 
         }
