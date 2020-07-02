@@ -118,7 +118,7 @@ public class eventDetail extends AppCompatActivity {
         protected void onPreExecute(){
             super.onPreExecute();
             acc = getUUID(getApplicationContext());
-            if (function==0) popup(getApplicationContext(),"處理中，請稍後...");
+            if (function==1) popup(getApplicationContext(),"處理中，請稍後...");
         }
         //查詢執行動作(不可使用與UI相關的指令)
         @Override
