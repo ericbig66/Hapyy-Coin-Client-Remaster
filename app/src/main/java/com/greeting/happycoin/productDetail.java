@@ -71,6 +71,7 @@ public class productDetail extends AppCompatActivity {
     EditText Qt; //購買數量
     RatingBar reputation;//星數
     TextView ratingDetail;
+    Button show_comments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +90,11 @@ public class productDetail extends AppCompatActivity {
         //初始化商品詳細資料區域
         txtVdrName.setText("廠商名稱: "+Vendor.get(BuyId)+"\n商品編號: "+PID.get(BuyId)+"\n庫存數量: "+Pamount.get(BuyId)+"\n商品價格: $"+Pprice.get(BuyId));
         Qt.setText(Amount+"");//帶入前頁所輸入的數量
+        show_comments = findViewById(R.id.show_comments);
+        show_comments.setOnClickListener(v -> {
+            Intent intent = new Intent(productDetail.this,productComment.class);
+            startActivity(intent);
+        });
         btnBuy.setOnClickListener(v -> Buyer());//點選購買執行其相關動作
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
@@ -130,7 +136,7 @@ public class productDetail extends AppCompatActivity {
                 CallableStatement cstmt = null;
                 if(function == 0){
                     Statement st = con.createStatement();
-                    ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT ID), COUNT(PID),(AVG(rating),1) FROM sell_record WHERE PID  ='"+PID.get(BuyId)+"' AND rating>0");
+                    ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT ID), COUNT(PID),ROUND(AVG(rating),1) FROM sell_record WHERE PID  ='"+PID.get(BuyId)+"' AND rating>0");
                     rs.next();
                     if(rs.getInt(2)>0){
                        star=rs.getFloat(3);

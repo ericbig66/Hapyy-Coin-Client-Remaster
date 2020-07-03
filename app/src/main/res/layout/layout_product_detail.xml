@@ -46,15 +46,34 @@
                 android:layout_weight="0"
                 android:textSize="24sp" />
 
-            <RatingBar
-                android:id="@+id/reputation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:stepSize="0.1" />
+                android:gravity="center_horizontal|center_vertical"
+                android:orientation="horizontal">
+
+                <RatingBar
+                    android:id="@+id/reputation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:stepSize="0.1" />
+
+                <Button
+                    android:id="@+id/show_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="0"
+                    android:background="@drawable/rounded_button_green"
+                    android:text="更多..."
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/ratingDetail"
