@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.BuyId;
 import static com.greeting.happycoin.MainActivity.PID;
+import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
 
@@ -32,6 +34,15 @@ public class productComment extends AppCompatActivity {
     ArrayList<Date> RateDate = new ArrayList<>();
     ArrayList<Float> score = new ArrayList<>();
     ArrayList<String> content = new ArrayList<>();
+    ProgressBar one;
+    ProgressBar two;
+    ProgressBar three;
+    ProgressBar four;
+    ProgressBar five;
+    TextView average_score;
+    RatingBar average_star;
+    TextView rated;
+    float [] score_distribute = {0,0,0,0,0};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +50,14 @@ public class productComment extends AppCompatActivity {
         ll = findViewById(R.id.ll);
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute();
+        one = findViewById(R.id.one);
+        two = findViewById(R.id.two);
+        three = findViewById(R.id.three);
+        four = findViewById(R.id.four);
+        five = findViewById(R.id.five);
+        average_score = findViewById(R.id.average_score);
+        average_star = findViewById(R.id.average_star);
+        rated = findViewById(R.id.rated);
     }
 
     public void render(int length){//傳入長度
@@ -131,11 +150,17 @@ public class productComment extends AppCompatActivity {
                 Statement st = con.createStatement();
 //                Log.v("test","select productName, price, amount, sellDate from sellhistory where client ='"+acc+"'");
                 ResultSet rs = st.executeQuery("SELECT date, rating, msg from sell_record where rating>0 and LENGTH(msg)>0 and PID = '"+PID.get(BuyId)+"'");
-                //將查詢結果裝入陣列
+                //將評價資料裝入陣列
                 while(rs.next()){
                     RateDate.add(rs.getDate(1));
                     score.add(rs.getFloat(2));
                     content.add(rs.getString(3).replace("-","/"));
+                }
+                //取得計算平均資料
+                for(int i = 0 ; i<5 ; i++){
+                    rs = st.executeQuery("select count(rating) FROM sell_record WHERE rating = "+(i+1)+" AND PID = '"+PID.get(BuyId)+"' AND VID IN (select VID from vendor where name = '"+Vendor.get(BuyId)+"')");
+                    rs.next();
+                    score_distribute[i]=rs.getFloat(1);
                 }
                 return "完成";
             }catch (Exception e){
@@ -148,8 +173,26 @@ public class productComment extends AppCompatActivity {
         @Override
         //完成查詢後
         protected void onPostExecute(String result) {
+            lv("★"+score_distribute[0]+"\n★★"+score_distribute[1]+"\n★★★"+score_distribute[2]+"\n★★★★"+score_distribute[3]+"\n★★★★★"+score_distribute[4]);
             if (result.equals("完成")){
                 render(RateDate.size());
+                int total_rated = (int)(score_distribute[0]+score_distribute[1]+score_distribute[2]+score_distribute[3]+score_distribute[4]);
+                rated.setText(""+total_rated);
+                String avsc = "";
+                if(total_rated>0){
+                    float average = ((score_distribute[0]+2*score_distribute[1]+3*score_distribute[2])+4*score_distribute[3]+5*score_distribute[4])/(score_distribute[0]+score_distribute[1]+score_distribute[2]+score_distribute[3]+score_distribute[4]);
+                    if((""+average).length()>3){
+                       avsc = (""+average).substring(0,3);
+                    }else{avsc = ""+average;}
+
+                    average_score.setText(""+avsc);
+                    average_star.setRating(average);
+                    one.setProgress((int)score_distribute[0]);
+                    two.setProgress((int)score_distribute[1]);
+                    three.setProgress((int)score_distribute[2]);
+                    four.setProgress((int)score_distribute[3]);
+                    five.setProgress((int)score_distribute[4]);
+                }
             }else{
                 popup(getApplicationContext(),"發生錯誤，請稍後重試");
                 lv(result);

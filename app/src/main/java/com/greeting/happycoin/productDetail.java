@@ -136,7 +136,7 @@ public class productDetail extends AppCompatActivity {
                 CallableStatement cstmt = null;
                 if(function == 0){
                     Statement st = con.createStatement();
-                    ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT ID), COUNT(PID),ROUND(AVG(rating),1) FROM sell_record WHERE PID  ='"+PID.get(BuyId)+"' AND rating>0");
+                    ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT ID), COUNT(PID),ROUND(AVG(rating),1) FROM sell_record WHERE PID  ='"+PID.get(BuyId)+"' AND rating>0 AND VID IN (SELECT VID FROM vendor WHERE name = '"+Vendor.get(BuyId)+"')");
                     rs.next();
                     if(rs.getInt(2)>0){
                        star=rs.getFloat(3);
