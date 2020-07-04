@@ -75,7 +75,7 @@ public class activity_feedback extends Fragment {
                 Connection con = DriverManager.getConnection(url, user, pass);
                 Statement st = con.createStatement();
                 CallableStatement cstmt = null;//因需多次使用故先設為null
-                ResultSet rs = st.executeQuery("select id, actName, actDate, reward, actPic from activity where DATE(actDate) < DATE(now())");
+                ResultSet rs = st.executeQuery("select id, actName, actDate, reward, actPic from activity where DATE(actDate) < DATE(now()) order by actDate DESC");
 //                lv("result out put：");
                 while(rs.next()){
 //                    lv(rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5)+" "+rs.getString(6)+" "+rs.getString(7)+" "+rs.getString(8)+" "+rs.getString(9)+" "+rs.getString(10)+" "+rs.getString(11)); //測試輸出取得的資料

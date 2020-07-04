@@ -39,14 +39,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="活動地點："
+                android:text="主辦廠商："
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/place"
+                android:id="@+id/host"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="地點"
+                android:text="廠商"
                 android:textSize="20sp" />
 
             <TextView
