@@ -31,6 +31,7 @@
         <activity android:name=".productComment" />
         <activity android:name=".suggest" />
         <activity android:name=".AlterMember" />
+         <activity android:name=".productComment" />
         <activity android:name=".game" />
         <activity android:name=".fontsize" />
         <activity android:name=".LoginAndRegister" />
