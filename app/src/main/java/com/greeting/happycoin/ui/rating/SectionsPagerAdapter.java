@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.greeting.happycoin.ActivityRating;
 import com.greeting.happycoin.ProductRating;
 import com.greeting.happycoin.R;
+import com.greeting.happycoin.activity_feedback;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -22,7 +23,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
     //TAB_TITLES 為頁籤標題，如需新增請在string.xml中新增相對應的字串再將其名稱加入至下方陣列中
-    private static final int[] TAB_TITLES = new int[]{R.string.eval_product, R.string.eval_activity};
+    private static final int[] TAB_TITLES = new int[]{R.string.eval_product, R.string.eval_activity,R.string.activity_feedback};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -43,6 +44,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return ProductRating.newInstance();
             case 1:
                 return ActivityRating.newInstance();
+            case 2:
+                return activity_feedback.newInstance();
             default:
                 Log.e("test","page "+position+"does not exist");
                 return ProductRating.newInstance();
@@ -57,8 +60,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
+        // Show 3 total pages.
         //此處的return數量表示子頁面(頁籤)數量
-        return 2;
+        return 3;
     }
 }

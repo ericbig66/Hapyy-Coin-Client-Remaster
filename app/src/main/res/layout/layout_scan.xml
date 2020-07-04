@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".scan"
     android:background="#CBE8CA">
 
     <SurfaceView
         android:id="@+id/scaner"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_gravity="center_horizontal"
         android:foregroundGravity="center"
         tools:layout_editor_absoluteX="55dp"
@@ -19,10 +20,9 @@
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical"
-        android:padding="20dp"
-        android:text="您可以透過掃描QRcode\n完成活動簽到、收取紅包\n或兌換現場商品"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="您可以透過掃描QRcode，\n完成活動簽到、收取紅包\n或兌換現場商品。"
         android:textSize="25sp" />
 </LinearLayout>

@@ -23,45 +23,39 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Types;
 
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
-import static com.greeting.happycoin.MainActivity.AComment;
-import static com.greeting.happycoin.MainActivity.ARating;
-import static com.greeting.happycoin.MainActivity.ARecDate;
-import static com.greeting.happycoin.MainActivity.ASerial;
-import static com.greeting.happycoin.MainActivity.AactDate;
-import static com.greeting.happycoin.MainActivity.Actpic;
-import static com.greeting.happycoin.MainActivity.Adesc;
-import static com.greeting.happycoin.MainActivity.Aid;
-import static com.greeting.happycoin.MainActivity.Aname;
-import static com.greeting.happycoin.MainActivity.Areward;
-import static com.greeting.happycoin.MainActivity.Astart_date;
-import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.DP;
 import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.HAactDate;
+import static com.greeting.happycoin.MainActivity.HActpic;
+import static com.greeting.happycoin.MainActivity.HAid;
+import static com.greeting.happycoin.MainActivity.HAname;
+import static com.greeting.happycoin.MainActivity.HAreward;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.MainActivity.popupL;
 
-public class ActivityRating extends Fragment {
+
+public class activity_feedback extends Fragment {
     LinearLayout ll;
-    public ActivityRating() {
+    public activity_feedback() {
         // Required empty public constructor
     }
 
-    public static ActivityRating newInstance(){
-        return new ActivityRating();
+    public static activity_feedback newInstance(){
+        return new activity_feedback();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_center,container, false);
+        //因layout結構相同故共用
         // Inflate the layout for this fragment
         ll =view.findViewById(R.id.ll);
         lv("loading success");
@@ -81,33 +75,18 @@ public class ActivityRating extends Fragment {
                 Connection con = DriverManager.getConnection(url, user, pass);
                 Statement st = con.createStatement();
                 CallableStatement cstmt = null;//因需多次使用故先設為null
-                ResultSet rs;
-                cstmt = con.prepareCall("{call activity_rating(?,?,?,?,?,?)}");
-                cstmt.registerOutParameter(3, Types.LONGVARCHAR);
-                cstmt.setString(1,uuid);
-                cstmt.setString(2,"get");
-                cstmt.setInt(4,-1);
-                cstmt.setInt(5,-1);
-                cstmt.setString(6,"");
-                rs = cstmt.executeQuery();
+                ResultSet rs = st.executeQuery("select id, actName, actDate, reward, actPic from activity where DATE(actDate) < DATE(now())");
 //                lv("result out put：");
                 while(rs.next()){
 //                    lv(rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5)+" "+rs.getString(6)+" "+rs.getString(7)+" "+rs.getString(8)+" "+rs.getString(9)+" "+rs.getString(10)+" "+rs.getString(11)); //測試輸出取得的資料
-                    ASerial.add(rs.getInt(1));
-                    Aid.add(rs.getString(2));
-                    Aname.add(rs.getString(3));
-                    Adesc.add(rs.getString(4));
-                    Areward.add(rs.getInt(5));
-                    AactDate.add(rs.getDate(6));
-                    Avendor.add(rs.getString(7));
-                    ARecDate.add(rs.getString(8));
-                    ARating.add(rs.getInt(9));
-                    AComment.add(rs.getString(10));
-                    Actpic.add(rs.getString(11));
-                    Astart_date.add(rs.getDate(12));
+                    HAid.add(rs.getString(1));
+                    HAname.add(rs.getString(2));
+                    HAreward.add(rs.getInt(4));
+                    HAactDate.add(rs.getDate(3));
+                    HActpic.add(rs.getString(5));
                 }
             }catch (Exception e){
-                lv("ＥＲＲＯＲ：\n"+e.toString());
+                lv("ＥＲＲＯＲ　feedback：\n"+e.toString());
                 return "發生錯誤";
             }
             return "載入成功";
@@ -124,11 +103,11 @@ public class ActivityRating extends Fragment {
             }
         }
     }
-    //轉換為點陣圖(輸入值為Actpic中的陣列位置)
+    //轉換為點陣圖(輸入值為HActpic中的陣列位置)
     public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
         try{
-//            Log.v("test",Actpic.get(ID));
-            byte[] imageBytes = Base64.decode(Actpic.get(ID), Base64.DEFAULT);
+//            Log.v("test",HActpic.get(ID));
+            byte[] imageBytes = Base64.decode(HActpic.get(ID), Base64.DEFAULT);
             Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);//轉換後的圖片
             int w = proimg.getWidth();//取得寬度
             int h = proimg.getHeight();//取得高度
@@ -152,41 +131,29 @@ public class ActivityRating extends Fragment {
             return null;
         }
     }
-//    public void onBackPressed() {//返回鈕動作
-//        Intent intent = new Intent(ActivityRating.this,LoginAndRegister.class);//準備轉跳回首頁
-//        startActivity(intent);//轉跳
-//        finish();//結束本頁面
-//    }
 
     //清空列表以確保活動資訊不會重複疊加
     public void clear(){
-        ASerial.clear();
-        Aid.clear();
-        Aname.clear();
-        Adesc.clear();
-        Areward.clear();
-        AactDate.clear();
-        Avendor.clear();
-        ARecDate.clear();
-        ARating.clear();
-        Actpic.clear();
-        AComment.clear();
+        HAid.clear();
+        HAname.clear();
+        HAreward.clear();
+        HAactDate.clear();
+        HActpic.clear();
     }
 
     /**移植區(由market.java移植並修改)*/
     //頁面轉跳工具
     public void identifier(int ID){ //動作判定器(判斷按下的按鈕式購買或詳情)
         EventId=ID; //商品列表中的第幾樣商品
-        Log.v("test","您正在評價第"+Aname.get(ID)+"的詳細資料");
-        Intent intent = new Intent(getActivity(), eval_activity.class);//準備轉跳頁面
+        Log.v("test","您正在檢視"+HAname.get(ID)+"的評價詳細資料");
+        Intent intent = new Intent(getActivity(), activity_feedback_detail.class);//準備轉跳頁面
         startActivity(intent);//轉跳詳情頁面
         getActivity().finish();//結束本頁面
     }
 
     //商品卡產生器
     public void cardRenderer(){
-        lv("-------------------------------------");
-        for(int i = 0 ; i < Aid.size() ; i++){//以迴圈產生商品卡
+        for(int i = 0 ; i < HAid.size() ; i++){//以迴圈產生商品卡
             Log.v("test", "render card "+i);
             add(i);//增加商品卡
         }
@@ -242,7 +209,7 @@ public class ActivityRating extends Fragment {
         //商品價格
         TextView price = new TextView(getActivity());
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
-        price.setText("回饋金: $"+Areward.get(ID));
+        price.setText("價格: $"+HAreward.get(ID));
         price.setTextSize(18f);
         price.setLayoutParams(picprip);
 
@@ -261,7 +228,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        proname.setText(Aname.get(ID));
+        proname.setText(HAname.get(ID));
         proname.setTextSize(18f);
         proname.setClickable(true);
         proname.setLayoutParams(pronamep);
@@ -282,7 +249,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        amount_label.setText("活動日期："+ARecDate.get(ID).substring(0,11));
+        amount_label.setText("活動日期："+HAactDate.get(ID));
         amount_label.setTextSize(18f);
         amount_label.setLayoutParams(amount_labelp);
 
@@ -302,7 +269,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,0.5f
         );
         detailp.setMarginEnd(20);
-        detail.setText("評價此活動");
+        detail.setText("詳情");
         detail.setTextSize(18f);
         detail.setLayoutParams(detailp);
         detail.setId(5*ID+3);
@@ -364,4 +331,5 @@ public class ActivityRating extends Fragment {
 //        loading.setVisibility(View.GONE);
         Log.v("test","card"+ID+"rendered");
     }
+
 }

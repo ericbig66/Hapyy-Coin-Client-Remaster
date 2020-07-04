@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#CBE8CA"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp"
     tools:context=".suggest">
@@ -12,13 +13,30 @@
         android:id="@+id/textView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="聯絡資訊：\nEmail : happycoin@boximail.com\nLine線上客服：@118xjmcw\n上班時間：\n周一至周五 8 : 00 ~ 21 : 00"
+        android:text="聯絡資訊：\nEmail : happycoin@boximail.com\nLine線上客服：@118xjmcw"
         android:textSize="25sp" />
 
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="#009688" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上班時間：\n周一至周五 8 : 00 ~ 21 : 00"
+        android:textSize="25sp" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:background="#009688" />
 
     <TextView
@@ -35,13 +53,15 @@
         android:ems="10"
         android:hint="您可以在此留下您寶貴的意見，\n以提供我們進步的空間。"
         android:inputType="textPersonName"
-        android:textSize="22sp" />
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_button_green"
+        android:layout_marginTop="20dp"
         android:text="送出"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textSize="25sp" />
 </LinearLayout>

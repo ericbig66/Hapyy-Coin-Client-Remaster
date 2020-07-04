@@ -26,55 +26,18 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:text="一般"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="18sp" />
-
-                <Switch
-                    android:id="@+id/greet"
-                    android:layout_width="match_parent"
-                    android:layout_height="53dp"
-                    android:button="@drawable/ic_greet"
-                    android:checked="true"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
-                    android:text="　以暱稱稱呼您"
-                    android:textSize="20sp" />
-
-                <Button
-                    android:id="@+id/FontSizeAlter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_button_green"
-                    android:text="修改字型大小"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray" />
-
-                <TextView
-                    android:id="@+id/textview2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="帳戶資訊"
+                    android:text="個人檔案"
                     android:textColor="@color/colorAccent"
                     android:textSize="18sp" />
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profile"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="15dp"
                     android:background="#00FFFFFF"
@@ -86,43 +49,50 @@
                     app:civ_shadow_color="#2CBCA3"
                     app:civ_shadow_radius="1dp"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/tv3"
+                    <Button
+                        android:id="@+id/Rotate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="帳戶頭像"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_button_green"
+                        android:onClick="profileRotater"
+                        android:text="旋轉頭像"
+                        android:textColor="#FFFFFF"
                         android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/Upload"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_marginRight="2.5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/rounded_button_green"
                         android:onClick="picOpen"
                         android:text="變更頭像"
-                        android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="2.5dp"
-                        android:textSize="20sp"
                         android:textColor="#FFFFFF"
-                        android:background="@drawable/rounded_button_green"/>
+                        android:textSize="20sp" />
+                </LinearLayout>
 
-                    <Button
-                        android:id="@+id/Rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="profileRotater"
-                        android:text="旋轉頭像"
-                        android:layout_marginLeft="2.5dp"
-                        android:layout_marginRight="2.5dp"
-                        android:textSize="20sp"
-                        android:textColor="#FFFFFF"
-                        android:background="@drawable/rounded_button_green"/>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                 </LinearLayout>
 
@@ -135,7 +105,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="姓名"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
 
                     <EditText
                         android:id="@+id/Name"
@@ -145,7 +117,9 @@
                         android:focusable="false"
                         android:focusableInTouchMode="true"
                         android:inputType="textPersonName"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -157,7 +131,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="暱稱"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
 
                     <EditText
                         android:id="@+id/Nname"
@@ -167,7 +143,9 @@
                         android:focusable="false"
                         android:focusableInTouchMode="true"
                         android:inputType="textPersonName"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
 
                 </LinearLayout>
 
@@ -182,21 +160,27 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
                         android:text="性別"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
 
                     <RadioButton
                         android:id="@+id/male"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:text="男" />
+                        android:text="男"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
 
                     <RadioButton
                         android:id="@+id/female"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:text="女" />
+                        android:text="女"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
 
                     <Button
                         android:id="@+id/Cancel"
@@ -206,7 +190,9 @@
                         android:text="取消選取"
                         android:textSize="20sp"
                         android:textColor="#FFFFFF"
-                        android:background="@drawable/rounded_button_green"/>
+                        android:background="@drawable/rounded_button_green"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
                 </LinearLayout>
 
                 <TextView
@@ -233,7 +219,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="通訊地址"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
 
                     <EditText
                         android:id="@+id/Address"
@@ -243,7 +231,9 @@
                         android:focusable="false"
                         android:focusableInTouchMode="true"
                         android:inputType="textPersonName"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
                 </LinearLayout>
 
                 <View
@@ -255,7 +245,54 @@
                     android:layout_weight="1"
                     android:background="#009688" />
 
+
+
+
             </LinearLayout>
+            <TextView
+                android:id="@+id/tv10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="偏好設定"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <Switch
+                android:id="@+id/greet"
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:button="@drawable/ic_greet"
+                android:checked="true"
+                android:focusable="false"
+                android:focusableInTouchMode="true"
+                android:text="  使用暱稱 稱呼您"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <Button
+                android:id="@+id/FontSizeAlter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button_green"
+                android:text="修改字型大小"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="#009688"
+                />
+
 
             <TextView
                 android:id="@+id/tv9"
@@ -263,7 +300,9 @@
                 android:layout_height="wrap_content"
                 android:text="帳戶轉移"
                 android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <Button
                 android:id="@+id/CD"
@@ -273,7 +312,8 @@
                 android:layout_marginBottom="2.5dp"
                 android:textSize="20sp"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/rounded_button_green"/>
+                android:background="@drawable/rounded_button_green"
+                />
 
             <Button
                 android:id="@+id/RD"

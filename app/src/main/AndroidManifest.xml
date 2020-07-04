@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.greeting.happycoin">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.greeting.happycoin"
+    android:icon="@drawable/icon">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -14,17 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".productComment"></activity>
-        <activity android:name=".eval_activity" />
-        <activity
-            android:name=".CommentCenter"
-            android:label="@string/title_activity_comment_center"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".eval_activity"/>
+        <activity android:name=".activity_feedback_detail"/>
         <activity android:name=".eval_product" />
-        <activity
-            android:name=".record"
-            android:label="@string/title_activity_record"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".eventDetail" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -33,16 +27,78 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".event" />
         <activity android:name=".productDetail" />
-        <activity android:name=".market" />
-        <activity android:name=".scan" />
         <activity android:name=".suggest" />
-        <activity android:name=".send" />
         <activity android:name=".AlterMember" />
         <activity android:name=".game" />
         <activity android:name=".fontsize" />
         <activity android:name=".LoginAndRegister" />
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
+        <activity
+            android:name=".scan"
+            android:icon="@drawable/paymoney"
+            android:label="收代幣">
+            <intent-filter>
+                <action android:name="send_or_receive" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".send"
+            android:icon="@drawable/paymoney"
+            android:label="送代幣">
+            <intent-filter>
+                <action android:name="send_or_receive" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".event"
+            android:icon="@drawable/paymoney"
+            android:label="參加活動">
+            <intent-filter>
+                <action android:name="shop_or_activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".market"
+            android:icon="@drawable/paymoney"
+            android:label="商城">
+            <intent-filter>
+                <action android:name="shop_or_activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".record"
+            android:icon="@drawable/paymoney"
+            android:label="交易紀錄"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="record_or_rate" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CommentCenter"
+            android:icon="@drawable/paymoney"
+            android:label="評價"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="record_or_rate" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

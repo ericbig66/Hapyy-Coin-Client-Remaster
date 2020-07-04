@@ -56,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Integer> PRating = new ArrayList<>();//商品評價
     public static ArrayList<String> PComment = new ArrayList<>();//商品評語
 
+    public static ArrayList<String> HAid = new ArrayList<>();           //(歷史)活動編號
+    public static ArrayList<String> HAname = new ArrayList<>();         //(歷史)活動名稱
+    public static ArrayList<String> HActpic = new ArrayList<>();        //(歷史)活動封面照
+    public static ArrayList<Date> HAactDate = new ArrayList<>();        //(歷史)活動開始日期
+    public static ArrayList<Integer> HAreward = new ArrayList<>();      //(歷史)回饋獎金
+
     public static boolean entryIsRecent = false;//是否透過近期報名進入活動列表
 
     public static boolean isBack = false;//是否為手動返回

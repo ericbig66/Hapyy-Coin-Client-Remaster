@@ -15,5 +15,6 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="eval_product">評價商品</string>
     <string name="eval_activity">評價活動</string>
+    <string name="activity_feedback">活動評價歷史</string>
 
 </resources>
