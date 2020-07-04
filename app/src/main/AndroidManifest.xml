@@ -20,6 +20,7 @@
         <activity android:name=".activity_feedback_detail"/>
         <activity android:name=".eval_product" />
         <activity android:name=".eventDetail" />
+        <activity android:name=".productDetail"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".productDetail" />
+        <activity android:name=".productComment" />
         <activity android:name=".suggest" />
         <activity android:name=".AlterMember" />
         <activity android:name=".game" />
