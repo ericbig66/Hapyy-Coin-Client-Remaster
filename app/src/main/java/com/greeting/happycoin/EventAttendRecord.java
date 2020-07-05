@@ -222,11 +222,11 @@ public class EventAttendRecord extends Fragment {
         acc = getUUID(getActivity().getApplicationContext());//取得UUID以取得活動報名資料
         clear();//清除列表避免重複疊加
         //新增表頭至陣列
-        Aname.add("活動名稱　　");
-        Action.add("操作　　");
-        Atime.add("操作時間　　");
-        Asign.add("簽到時間　　");
-        Log.v("test","\nAsign[0] = "+Asign.get(0)+"\nAname[0] = "+Aname.get(0)+"\nAction[0]"+Action.get(0)+"\nAction[0] = "+Action.get(0)+"\nAtime[0] = "+Atime.get(0)+"\nAsign[0] = "+Asign.get(0));
+//        Aname.add("活動名稱　　");
+//        Action.add("操作　　");
+//        Atime.add("操作時間　　");
+//        Asign.add("簽到時間　　");
+//        Log.v("test","\nAsign[0] = "+Asign.get(0)+"\nAname[0] = "+Aname.get(0)+"\nAction[0]"+Action.get(0)+"\nAction[0] = "+Action.get(0)+"\nAtime[0] = "+Atime.get(0)+"\nAsign[0] = "+Asign.get(0));
         //連接資料庫取得資料
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute("");
@@ -252,19 +252,13 @@ public class EventAttendRecord extends Fragment {
                 //建立查詢
                 //String result = "對方帳戶\t交易\t金額\t餘額\n";
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("SELECT a.actName, rr.type, rr.time, af.signTime from regist_record rr \n" +
-                        "LEFT JOIN application_form af ON rr.clientID = af.clientID and rr.activityID = af.activityID and rr.time = af.registTime\n" +
-                        "LEFT JOIN activity a on a.id = rr.activityID\n" +
-                        "LEFT JOIN client c on rr.clientID = c.id\n" +
-                        "where c.acc = '"+acc+"'\n" +
-                        "and rr.activityID = a.id\n" +
-                        "ORDER by rr.time");
+                ResultSet rs = st.executeQuery("SELECT a.actName, rr.type, rr.time, af.signTime from regist_record rr LEFT JOIN application_form af ON rr.clientID = af.clientID and rr.activityID = af.activityID and rr.time = af.registTime LEFT JOIN activity a on a.id = rr.activityID LEFT JOIN client c on rr.clientID = c.id where c.acc = '"+acc+"' and rr.activityID = a.id ORDER by rr.time DESC");
                 //將查詢結果裝入陣列
                 while(rs.next()){
                     Aname.add(rs.getString(1));
-                    Action.add(rs.getString(2)+"　");
-                    Atime.add(rs.getString(3).substring(0,16)+"　");
-                    String trytry = "  ";
+                    Action.add(rs.getString(2));
+                    Atime.add(rs.getString(3).substring(0,16));
+                    String trytry = " -";
                     if(rs.getString(4)!= null && rs.getString(4).trim().length()>0){
                         trytry = rs.getString(4).substring(0,16);
                     }
@@ -302,85 +296,36 @@ public class EventAttendRecord extends Fragment {
 
         //產生商品卡
         public void add(final int ID) {
-            //商品卡片
+            //資訊卡片
             LinearLayout frame = new LinearLayout(getActivity());//新增LinearLayout(商品卡母容器)
             LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                     LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
-                    DP(100)//設定商品卡高度
+                    DP(125)//設定商品卡高度
             );//LinearLayout 參數設定
-
-
             frame.setPadding(DP(15), DP(15), DP(15), DP(15));
-            framep.setMargins(0, DP(20), 0, DP(20));
-            frame.setOrientation(LinearLayout.HORIZONTAL);
+            framep.setMargins(0, 0, 0, DP(20));
+            frame.setOrientation(LinearLayout.VERTICAL);
             frame.setLayoutParams(framep);
             frame.setBackgroundColor(Color.parseColor("#D1FFDE"));
-            //商品訊息區
-            LinearLayout proinf = new LinearLayout(getActivity());
-            LinearLayout.LayoutParams proinfp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f
-            );
-            proinf.setOrientation(LinearLayout.VERTICAL);
-            proinf.setLayoutParams(proinfp);
 
-            //商品名稱
-            TextView proname = new TextView(getActivity());
-            LinearLayout.LayoutParams pronamep = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            proname.setText("活動名稱：\n"+Aname.get(ID));
-            proname.setTextSize(18f);
-            proname.setClickable(true);
-            proname.setLayoutParams(pronamep);
-            proname.setId(5 * ID + 1);
+            //活動名稱
+            TextView actname = new TextView(getActivity());
+            actname.setText("活動名稱："+Aname.get(ID));
+            actname.setTextSize(18f);
 
-            //商品數量
-            TextView pronmount = new TextView(getActivity());
-            pronmount.setText("操作："+Action.get(ID));
-            pronmount.setTextSize(18f);
-            pronmount.setClickable(true);
-            pronmount.setLayoutParams(pronamep);
-            pronmount.setId(5 * ID + 1);
-
-
-
-            //圖片&價格區
-            LinearLayout picpri = new LinearLayout(getActivity());
-            LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(  LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-            picprip.setMargins( DP(5), 0, DP(5), 0);
-            picpri.setOrientation(LinearLayout.VERTICAL);
-            picpri.setLayoutParams(picprip);
-            //商品價格
-            TextView price = new TextView(getActivity());
-            LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120), DP(120));
-            price.setText("操作時間:\n"+ Atime.get(ID));
-            price.setTextSize(18f);
-            price.setLayoutParams(pricep);
-
-
-            //圖片&價格區
-            LinearLayout date = new LinearLayout(getActivity());
-            LinearLayout.LayoutParams date1 = new LinearLayout.LayoutParams(DP(120), DP(120));
-            date1.setMargins( DP(5), 0, DP(5), 0);
-            date.setOrientation(LinearLayout.VERTICAL);
-            date.setLayoutParams(date1);
+            //操作項目及時間
+            TextView operate = new TextView(getActivity());
+            operate.setText("操作："+Action.get(ID)+"\n操作時間："+Atime.get(ID));
+            operate.setTextSize(18f);
 
             //商品價格
-            TextView data = new TextView(getActivity());
-            data.setText("簽到時間:\n " + Asign.get(ID));
-            data.setTextSize(18f);
-            data.setLayoutParams(date1);
+            TextView date = new TextView(getActivity());
+            date.setText("簽到時間：" + Asign.get(ID));
+            date.setTextSize(18f);
 
             //將產生之物件放入卡片容器中
-            proinf.addView(proname);
-            proinf.addView(pronmount);
-            picpri.addView(price);
-            date.addView(data);
-            frame.addView(proinf);
-            frame.addView(picpri);
+            frame.addView(actname);
+            frame.addView(operate);
             frame.addView(date);
             Log.v("test", "still alive before last one");
             ll.addView(frame);

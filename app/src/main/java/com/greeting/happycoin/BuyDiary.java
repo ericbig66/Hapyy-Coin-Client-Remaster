@@ -2,7 +2,6 @@ package com.greeting.happycoin;
 
 
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -21,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static android.graphics.Color.parseColor;
 import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
@@ -97,13 +97,13 @@ public class BuyDiary extends Fragment {
                 //String result = "對方帳戶\t交易\t金額\t餘額\n";
                 Statement st = con.createStatement();
 //                Log.v("test","select productName, price, amount, sellDate from sellhistory where client ='"+acc+"'");
-                ResultSet rs = st.executeQuery("SELECT productName, price, amount, price*amount, date from sell_record,client where client.id = sell_record.id and acc = '" + acc + "';");
+                ResultSet rs = st.executeQuery("SELECT productName, price, amount, price*amount, date from sell_record,client where client.id = sell_record.id and acc = '" + acc + "' order by date DESC;");
                 //將查詢結果裝入陣列
                 while (rs.next()) {
                     //result += rs.getString("paccount")+"\t"+rs.getString("state")+"\t$"+rs.getString("amount")+"\t$"+rs.getString("moneyLeft")+"\n";
-                    pname.add(rs.getString(1) + "  ");
+                    pname.add(rs.getString(1));
                     pprice.add("$" + rs.getString(2));
-                    pamount.add(rs.getString(3) + "  ");
+                    pamount.add(rs.getString(3));
                     total.add("$" + Integer.parseInt(rs.getString(4)));
                     selldate.add(rs.getString(5).substring(0, 16));
 
@@ -141,23 +141,13 @@ public class BuyDiary extends Fragment {
         LinearLayout frame = new LinearLayout(getActivity());//新增LinearLayout(商品卡母容器)
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                 LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
-                DP(100)//設定商品卡高度
+                DP(110)//設定商品卡高度
         );//LinearLayout 參數設定
-
-
         frame.setPadding(DP(15), DP(15), DP(15), DP(15));
-        framep.setMargins(0, DP(20), 0, DP(20));
-        frame.setOrientation(LinearLayout.HORIZONTAL);
+        framep.setMargins(0, 0, 0, DP(20));
+        frame.setOrientation(LinearLayout.VERTICAL);
         frame.setLayoutParams(framep);
-        frame.setBackgroundColor(Color.parseColor("#D1FFDE"));
-        //商品訊息區
-        LinearLayout proinf = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams proinfp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1f
-        );
-        proinf.setOrientation(LinearLayout.VERTICAL);
-        proinf.setLayoutParams(proinfp);
+        frame.setBackgroundColor(parseColor("#D1FFDE"));
 
         //商品名稱
         TextView proname = new TextView(getActivity());
@@ -167,61 +157,31 @@ public class BuyDiary extends Fragment {
         );
         proname.setText(pname.get(ID));
         proname.setTextSize(18f);
-        proname.setClickable(true);
         proname.setLayoutParams(pronamep);
-        proname.setId(5 * ID + 1);
 
-        //商品數量
-        TextView pronmount = new TextView(getActivity());
-        pronmount.setText("數量："+pamount.get(ID));
-        pronmount.setTextSize(18f);
-        pronmount.setClickable(true);
-        pronmount.setLayoutParams(pronamep);
-        pronmount.setId(5 * ID + 1);
+        //商品計價區
+        TextView procounter = new TextView(getActivity());
+        procounter.setText("單價"+pprice.get(ID)+" × "+pamount.get(ID)+"件 = 總價"+total.get(ID));
+        procounter.setTextSize(18f);
+        procounter.setLayoutParams(pronamep);
 
-
-
-        //圖片&價格區
-        LinearLayout picpri = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(  LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        picprip.setMargins(0, 0, DP(5), 0);
-        picpri.setOrientation(LinearLayout.VERTICAL);
-        picpri.setLayoutParams(picprip);
-        //商品價格
-        TextView price = new TextView(getActivity());
-        LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120), DP(30));
-        price.setText("價格: " + pprice.get(ID));
-        price.setTextSize(18f);
-        price.setLayoutParams(pricep);
-
-        TextView petal = new TextView(getActivity());
-        petal.setText("總額: " + total.get(ID));
-        petal.setTextSize(18f);
-        petal.setLayoutParams(pricep);
-
-        //圖片&價格區
-        LinearLayout date = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams date1 = new LinearLayout.LayoutParams(DP(120), DP(120));
-        date1.setMargins(0, 0, DP(5), 0);
-        date.setOrientation(LinearLayout.VERTICAL);
+        //購買時間
+        TextView date = new TextView(getActivity());
+        date.setText("日期: " + selldate.get(ID));
+        date.setTextSize(18f);
+        LinearLayout.LayoutParams date1 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+                );
         date.setLayoutParams(date1);
 
-        //商品價格
-        TextView data = new TextView(getActivity());
-        data.setText("日期: " + selldate.get(ID));
-        data.setTextSize(18f);
-        data.setLayoutParams(date1);
 
         //將產生之物件放入卡片容器中
-        proinf.addView(proname);
-        proinf.addView(pronmount);
-        picpri.addView(price);
-        picpri.addView(petal);
-        date.addView(data);
-        frame.addView(proinf);
-        frame.addView(picpri);
+        frame.addView(proname);
+        frame.addView(procounter);
         frame.addView(date);
+
+
         Log.v("test", "still alive before last one");
         ll.addView(frame);
 //        loading.setVisibility(View.GONE);
