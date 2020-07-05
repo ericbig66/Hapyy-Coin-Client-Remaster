@@ -71,7 +71,6 @@ public class LoginAndRegister extends AppCompatActivity {
         menu_btn.setVisibility(View.INVISIBLE);
         submenu.setVisibility(View.INVISIBLE);
         profile_frame = findViewById(R.id.profile_frame);
-        SetFontSize();
         canvas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +84,6 @@ public class LoginAndRegister extends AppCompatActivity {
         //呼叫登入動作
         Login login = new Login();
         login.execute();
-
     }
     //登入
     private class Login extends AsyncTask<Void,Void,String>{
@@ -170,6 +168,7 @@ public class LoginAndRegister extends AppCompatActivity {
                     ConnectionError = true;
                 }
             }
+            SetFontSize();
         }
     }
     //當主畫面之任意按鈕被點選時
