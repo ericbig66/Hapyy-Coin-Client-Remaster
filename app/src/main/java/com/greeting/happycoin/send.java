@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +28,7 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.hideKB;
 
 public class send extends AppCompatActivity {
@@ -51,6 +54,7 @@ public class send extends AppCompatActivity {
             redbag.execute();
             hideKB(this);
         });
+        SetFontSize();
     }
 
     //產生QRcode
@@ -120,4 +124,12 @@ public class send extends AppCompatActivity {
         finish();
     }
 
+    private void SetFontSize(){
+        TextView textView7 = findViewById(R.id.textView7);
+        textView7.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        EditText input = findViewById(R.id.input);
+        input.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-2);//一般
+        Button Intoshop = findViewById(R.id.Intoshop);
+        Intoshop.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//聯絡我們
+    }
 }

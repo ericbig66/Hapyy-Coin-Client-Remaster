@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -42,12 +43,14 @@ import static com.greeting.happycoin.MainActivity.AsignStart;
 import static com.greeting.happycoin.MainActivity.Astart_date;
 import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.attended;
 import static com.greeting.happycoin.MainActivity.popup;
 
 public class eventDetail extends AppCompatActivity {
     //將Base64轉換為點陣圖
     public Bitmap ConvertToBitmap(int ID){
+        SetFontSize();
         try{
             Log.v("test",Actpic.get(ID));
             byte[] imageBytes = Base64.decode(Actpic.get(ID), Base64.DEFAULT);
@@ -72,6 +75,7 @@ public class eventDetail extends AppCompatActivity {
             Log.v("test","error = "+e.toString());
             return null;
         }
+
 
 
     }
@@ -206,5 +210,16 @@ public class eventDetail extends AppCompatActivity {
     public static int DP(float dp){
         dp = dp * ((float) Resources.getSystem().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return (int)dp;
+    }
+    //字型大小設定
+    private void SetFontSize(){
+        TextView ratingDetail = findViewById(R.id.ratingDetail);
+        ratingDetail.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//ratingDetail
+        TextView text1 = findViewById(R.id.text1);
+        text1.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//帳戶資訊
+        TextView txtVdrName = findViewById(R.id.txtVdrName);
+        txtVdrName.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//姓名
+        Button btnBuy = findViewById(R.id.btnBuy);
+        btnBuy.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//修改字型大小
     }
 }

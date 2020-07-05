@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -27,6 +28,7 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.HAid;
 import static com.greeting.happycoin.MainActivity.HAname;
 import static com.greeting.happycoin.MainActivity.lv;
@@ -72,6 +74,7 @@ public class activity_feedback_detail extends AppCompatActivity {
         activityName.setText(HAname.get(EventId));
         ConnectMySql connectMySql = new ConnectMySql();
         connectMySql.execute();
+        SetFontSize();
     }
 
     @Override
@@ -247,5 +250,18 @@ public class activity_feedback_detail extends AppCompatActivity {
         }catch (Exception e){
             lv("error = "+e.toString());
         }
+    }
+    //字型大小設定
+    private void SetFontSize(){
+        TextView activityName = findViewById(R.id.activityName);
+        activityName.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//activityName
+        TextView host_com = findViewById(R.id.host_com);
+        host_com.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//place
+        TextView host = findViewById(R.id.host);
+        host.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//host
+        TextView act_detail = findViewById(R.id.act_detail);
+        act_detail.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//act_detail
+        TextView activityDescription = findViewById(R.id.activityDescription);
+        activityDescription.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//activityDescription
     }
 }

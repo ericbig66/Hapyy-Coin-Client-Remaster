@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.BuyId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.PIMG;
 import static com.greeting.happycoin.MainActivity.Pamount;
@@ -38,9 +40,11 @@ import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.market.Amount;
 import static com.greeting.happycoin.market.DP;
 
+
 public class productDetail extends AppCompatActivity {
     //將base64轉換為點陣圖
     public Bitmap ConvertToBitmap(int ID){
+        SetFontSize();
         try{
 //            Log.v("test",PIMG.get(ID));
             byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
@@ -123,7 +127,7 @@ public class productDetail extends AppCompatActivity {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-           if (function==1) popup(getApplicationContext(),"購買中...");//顯示提示等待交易完成
+            if (function==1) popup(getApplicationContext(),"購買中...");//顯示提示等待交易完成
         }
         //購買
         @Override
@@ -139,8 +143,8 @@ public class productDetail extends AppCompatActivity {
                     ResultSet rs = st.executeQuery("SELECT COUNT(DISTINCT ID), COUNT(PID),ROUND(AVG(rating),1) FROM sell_record WHERE PID  ='"+PID.get(BuyId)+"' AND rating>0 AND VID IN (SELECT VID FROM vendor WHERE name = '"+Vendor.get(BuyId)+"')");
                     rs.next();
                     if(rs.getInt(2)>0){
-                       star=rs.getFloat(3);
-                       res = "目前已有"+rs.getString(1)+"人評價過，共計"+rs.getString(2)+"次";
+                        star=rs.getFloat(3);
+                        res = "目前已有"+rs.getString(1)+"人評價過，共計"+rs.getString(2)+"次";
                     }else{res = "目前還沒有人評價過此商品";}
                     return res;
                 }else if(function == 1){
@@ -195,6 +199,22 @@ public class productDetail extends AppCompatActivity {
         Intent intent = new Intent(productDetail.this, market.class);
         startActivity(intent);
         finish();
+    }
+
+    //字型大小設定
+    private void SetFontSize(){
+        TextView ratingDetail = findViewById(R.id.ratingDetail);
+        ratingDetail.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView text1 = findViewById(R.id.text1);
+        text1.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView txtVdrName = findViewById(R.id.txtVdrName);
+        txtVdrName.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView textView4 = findViewById(R.id.textView4);
+        textView4.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-5);//一般
+        EditText Qt = findViewById(R.id.Qt);
+        Qt.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize-5);//一般
+        Button btnBuy = findViewById(R.id.btnBuy);
+        btnBuy.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//每日遊戲
     }
 
     //清除商品列表避免堆疊舊商品資訊***待修改

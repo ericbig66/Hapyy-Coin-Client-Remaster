@@ -8,8 +8,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.TypedValue;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.MainActivity.popupL;
 
@@ -41,6 +44,7 @@ public class scan extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_scan);
+        SetFontSize();
         //定義區
         scanner = findViewById(R.id.scaner);
         //設定相機
@@ -280,5 +284,9 @@ public class scan extends AppCompatActivity {
         Intent intent = new Intent(scan.this,LoginAndRegister.class);
         startActivity(intent);
         finish();
+    }
+    private void SetFontSize(){
+        TextView textView10 = findViewById(R.id.textView10);
+        textView10.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
     }
 }

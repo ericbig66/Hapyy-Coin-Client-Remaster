@@ -3,8 +3,10 @@ package com.greeting.happycoin;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +19,7 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.LoginAndRegister.ver;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.popup;
 
 public class suggest extends AppCompatActivity {
@@ -32,6 +35,7 @@ public class suggest extends AppCompatActivity {
             Bag bag = new Bag();
             bag.execute();
         });
+        SetFontSize();
     }
 
     private class Bag extends AsyncTask<Void,Void,String> {
@@ -83,5 +87,18 @@ public class suggest extends AppCompatActivity {
         Intent intent = new Intent(suggest.this,LoginAndRegister.class);
         startActivity(intent);
         finish();
+    }
+    //字型大小設定
+    private void SetFontSize(){
+        TextView tv = findViewById(R.id.textView8);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView textView10 = findViewById(R.id.textView10);
+        textView10.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView textView9 = findViewById(R.id.textView9);
+        textView9.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        EditText communication = findViewById(R.id.communication);
+        communication.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        Button submit = findViewById(R.id.submit);
+        submit.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//每日遊戲
     }
 }

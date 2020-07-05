@@ -37,6 +37,7 @@
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <TextView
+                android:id="@+id/host_com"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="主辦廠商："
@@ -50,6 +51,7 @@
                 android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/act_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="活動說明："

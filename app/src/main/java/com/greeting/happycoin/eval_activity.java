@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ import static com.greeting.happycoin.MainActivity.Aname;
 import static com.greeting.happycoin.MainActivity.Areward;
 import static com.greeting.happycoin.MainActivity.Astart_date;
 import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
@@ -56,6 +58,7 @@ public class eval_activity extends AppCompatActivity {
         message = findViewById(R.id.comment);
         Button btnRate = findViewById(R.id.btnBuy);
         ratingBar = findViewById(R.id.ratingBar);
+        SetFontSize();
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -172,5 +175,20 @@ public class eval_activity extends AppCompatActivity {
         Intent intent = new Intent(eval_activity.this, CommentCenter.class);
         startActivity(intent);
         finish();
+    }
+    //字型大小設定
+    private void SetFontSize(){
+        TextView text1 = findViewById(R.id.text1);
+        text1.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView txtVdrName = findViewById(R.id.txtVdrName);
+        txtVdrName.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView text3 = findViewById(R.id.text3);
+        text3.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView detail = findViewById(R.id.detail);
+        detail.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        TextView textView4 = findViewById(R.id.textView4);
+        textView4.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//一般
+        Button btnBuy = findViewById(R.id.btnBuy);
+        btnBuy.setTextSize(TypedValue.COMPLEX_UNIT_SP,FONTsize);//每日遊戲
     }
 }
