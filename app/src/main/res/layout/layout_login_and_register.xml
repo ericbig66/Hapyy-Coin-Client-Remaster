@@ -62,7 +62,31 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="登入中請稍後...."
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:minHeight="30dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="3"
+                    android:inputType="numberDecimal" />
+
+                <Button
+                    android:id="@+id/change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="變更" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/submenu"
@@ -104,6 +128,7 @@
                     android:text="近期\n報名"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -168,7 +193,7 @@
                 android:layout_weight="1"
                 android:background="#2CBCA3"
                 android:onClick="execute"
-                android:text="交易紀錄/評價"
+                android:text="交易紀錄\n及評價專區"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 

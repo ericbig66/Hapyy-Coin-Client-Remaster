@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    public static int test = 150;//******測試用變數
 
     //賣場資料(market)
     public static ArrayList<String> PID = new ArrayList<>();      //商品編號

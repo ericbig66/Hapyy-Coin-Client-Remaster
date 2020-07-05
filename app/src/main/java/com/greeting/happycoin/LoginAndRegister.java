@@ -13,6 +13,7 @@ import android.util.Base64;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,9 +37,14 @@ import static com.greeting.happycoin.MainActivity.getPfr;
 import static com.greeting.happycoin.MainActivity.isBack;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
+import static com.greeting.happycoin.MainActivity.test;
 
 //***表示待檢查
 public class LoginAndRegister extends AppCompatActivity {
+    ///
+    Button change;
+    EditText ts;
+    ///
     //連線資料
     public static final String url = "jdbc:mysql://140.135.113.36:6033/happycoin?noAccessToProcedureBodies=true&useUnicode=yes&characterEncoding=UTF-8";
     public static final String user = "currency";
@@ -71,19 +77,22 @@ public class LoginAndRegister extends AppCompatActivity {
         menu_btn.setVisibility(View.INVISIBLE);
         submenu.setVisibility(View.INVISIBLE);
         profile_frame = findViewById(R.id.profile_frame);
-        canvas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ConnectionError){
-                    ConnectionError = false;
-                    popup(getApplicationContext(),"登入中，請稍後...");
-                    recreate();
-                }
+        canvas.setOnClickListener(v -> {
+            if (ConnectionError){
+                ConnectionError = false;
+                popup(getApplicationContext(),"登入中，請稍後...");
+                recreate();
             }
         });
         //呼叫登入動作
         Login login = new Login();
         login.execute();
+        ///
+        change = findViewById(R.id.change);
+        ts = findViewById(R.id.ts);
+        ts.setText(""+test);
+        change.setOnClickListener(v -> {test = Integer.parseInt(ts.getText().toString());});
+        ///
     }
     //登入
     private class Login extends AsyncTask<Void,Void,String>{

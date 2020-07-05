@@ -43,10 +43,13 @@ import static com.greeting.happycoin.MainActivity.Astart_date;
 import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.DP;
 import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.MainActivity.popupL;
+import static com.greeting.happycoin.MainActivity.test;
+
 
 public class ActivityRating extends Fragment {
     LinearLayout ll;
@@ -198,7 +201,8 @@ public class ActivityRating extends Fragment {
         LinearLayout frame = new LinearLayout(getActivity());//新增LinearLayout(商品卡母容器)
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                 LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
-                DP(150) //設定商品卡高度
+//                DP((FONTsize*7)+30) //設定商品卡高度
+                DP(test)
         );//LinearLayout 參數設定
         frame.setPadding(DP(15),DP(15),DP(15),DP(15));
         framep.setMargins(0,0,0,DP(20));
@@ -208,7 +212,7 @@ public class ActivityRating extends Fragment {
 
         //圖片&價格區
         LinearLayout picpri = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(120));
+        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(200));
         picprip.setMargins(0,0,DP(5),0);
         picpri.setOrientation(LinearLayout.VERTICAL);
         picpri.setLayoutParams(picprip);
@@ -242,8 +246,8 @@ public class ActivityRating extends Fragment {
         //商品價格
         TextView price = new TextView(getActivity());
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
-        price.setText("回饋金: $"+Areward.get(ID));
-        price.setTextSize(18f);
+        price.setText("獎勵: $"+Areward.get(ID));
+        price.setTextSize(FONTsize-3);
         price.setLayoutParams(picprip);
 
         //商品訊息區
@@ -262,7 +266,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         proname.setText(Aname.get(ID));
-        proname.setTextSize(18f);
+        proname.setTextSize(FONTsize-3);
         proname.setClickable(true);
         proname.setLayoutParams(pronamep);
         proname.setId(5*ID+1);
@@ -283,7 +287,7 @@ public class ActivityRating extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         amount_label.setText("活動日期："+ARecDate.get(ID).substring(0,11));
-        amount_label.setTextSize(18f);
+        amount_label.setTextSize(FONTsize-3);
         amount_label.setLayoutParams(amount_labelp);
 
         //按鈕箱
@@ -303,7 +307,7 @@ public class ActivityRating extends Fragment {
         );
         detailp.setMarginEnd(20);
         detail.setText("評價此活動");
-        detail.setTextSize(18f);
+        detail.setTextSize(FONTsize-3);
         detail.setLayoutParams(detailp);
         detail.setId(5*ID+3);
         detail.setTextColor(Color.parseColor("#FFFFFF"));

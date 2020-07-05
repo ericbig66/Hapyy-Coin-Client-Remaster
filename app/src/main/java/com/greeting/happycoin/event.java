@@ -43,10 +43,12 @@ import static com.greeting.happycoin.MainActivity.AsignStart;
 import static com.greeting.happycoin.MainActivity.Astart_date;
 import static com.greeting.happycoin.MainActivity.Avendor;
 import static com.greeting.happycoin.MainActivity.EventId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.attended;
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
+import static com.greeting.happycoin.MainActivity.test;
 
 
 public class event extends AppCompatActivity {
@@ -194,9 +196,11 @@ public class event extends AppCompatActivity {
     public void add(final int ID){
         //活動卡片
         LinearLayout frame = new LinearLayout(this);
+        frame.setMinimumHeight(DP(140));
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                DP(150)
+//                DP((FONTsize*6)+15)
+                DP(test)
         );
 
         frame.setBackgroundColor(Color.parseColor("#D1FFDE"));
@@ -207,7 +211,7 @@ public class event extends AppCompatActivity {
 
         //圖片&價格區
         LinearLayout picpri = new LinearLayout(this);
-        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(120));
+        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(200));
         picprip.setMargins(0,0,DP(5),0);
         picpri.setOrientation(LinearLayout.VERTICAL);
         picpri.setLayoutParams(picprip);
@@ -230,7 +234,7 @@ public class event extends AppCompatActivity {
         TextView price = new TextView(this);
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
         price.setText("獎勵: $"+Areward.get(ID));
-        price.setTextSize(18f);
+        price.setTextSize(FONTsize);
         price.setLayoutParams(picprip);
 
         //活動訊息區
@@ -249,7 +253,7 @@ public class event extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         proname.setText(Aname.get(ID));
-        proname.setTextSize(18f);
+        proname.setTextSize(FONTsize);
         proname.setClickable(true);
         proname.setLayoutParams(pronamep);
         proname.setId(5*ID+1);
@@ -270,7 +274,7 @@ public class event extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         amount_label.setText("剩餘名額："+AamountLeft.get(ID));
-        amount_label.setTextSize(18f);
+        amount_label.setTextSize(FONTsize);
         amount_label.setLayoutParams(amount_labelp);
 
         //按鈕箱
@@ -293,7 +297,7 @@ public class event extends AppCompatActivity {
         detail.setBackgroundResource(R.drawable.rounded_button_green);
         detail.setTextColor(Color.parseColor("#FFFFFF"));
         detail.setText("詳情");
-        detail.setTextSize(18f);
+        detail.setTextSize(FONTsize);
         detail.setLayoutParams(detailp);
         detail.setId(5*ID+3);
         detail.setOnClickListener(v -> {
@@ -312,7 +316,7 @@ public class event extends AppCompatActivity {
         buybtn.setTextColor(Color.parseColor("#FFFFFF"));
         if(attended.contains(Aid.get(ID))){buybtn.setText("取消報名");}
         else{buybtn.setText("參加");}
-        buybtn.setTextSize(18f);
+        buybtn.setTextSize(FONTsize);
         buybtn.setLayoutParams(buybtnp);
         buybtn.setId(5*ID+4);
         buybtn.setOnClickListener(v -> {

@@ -31,6 +31,7 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.BuyId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.PIMG;
 import static com.greeting.happycoin.MainActivity.Pamount;
@@ -40,6 +41,7 @@ import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
+import static com.greeting.happycoin.MainActivity.test;
 
 
 public class market extends AppCompatActivity {
@@ -78,52 +80,52 @@ public class market extends AppCompatActivity {
                 Connection con = DriverManager.getConnection(url, user, pass);
                 Statement st = con.createStatement();
                 CallableStatement cstmt = null;//因需多次使用故先設為null
-            if(function == 0) {//把所有商品資訊抓回來
-                try {
-                    clear();
-                    //建立查詢
-                    String result = "";
-                    ResultSet rs = st.executeQuery("select p.*, name from product p, vendor v where stock > 0 and vid = vendor");
+                if(function == 0) {//把所有商品資訊抓回來
+                    try {
+                        clear();
+                        //建立查詢
+                        String result = "";
+                        ResultSet rs = st.executeQuery("select p.*, name from product p, vendor v where stock > 0 and vid = vendor");
 
-                    while (rs.next()) {
-                        PID.add(rs.getString("sku"));
-                        Pname.add(rs.getString("productName"));
-                        Pprice.add(rs.getInt("price"));
-                        Pamount.add(rs.getInt("stock"));
-                        Vendor.add(rs.getString("name"));
-                        PIMG.add(rs.getString("picture"));
-                        Pdescribtion.add(rs.getString("description"));
+                        while (rs.next()) {
+                            PID.add(rs.getString("sku"));
+                            Pname.add(rs.getString("productName"));
+                            Pprice.add(rs.getInt("price"));
+                            Pamount.add(rs.getInt("stock"));
+                            Vendor.add(rs.getString("name"));
+                            PIMG.add(rs.getString("picture"));
+                            Pdescribtion.add(rs.getString("description"));
+                        }
+
+                        return PID.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        res = e.toString();
+                        Log.v("test","catch by query");
                     }
-
-                    return PID.size() + "";//回傳結果給onPostExecute==>取得輸出變數(位置)
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    res = e.toString();
-                    Log.v("test","catch by query");
+                    return res;
                 }
-                return res;
-            }
-            ////////////////////////////////////////////
-            else if(function == 1){//購買商品
-                try {
-                    cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
-                    cstmt.registerOutParameter(1, Types.VARCHAR);
-                    cstmt.setString(2,ProductId);
-                    cstmt.setInt(3,Amount);
-                    cstmt.setString(4,uuid);
-                    cstmt.setString(5,FirmId);
-                    cstmt.setString(6,"N/A");
-                    cstmt.executeUpdate();
-                    Log.v("test","result= "+ProductId+" "+Amount+" "+uuid+" "+FirmId);
-                    return cstmt.getString(1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    res = e.toString();
-                    Log.v("test","error found in function1");
+                ////////////////////////////////////////////
+                else if(function == 1){//購買商品
+                    try {
+                        cstmt = con.prepareCall("{? = call purchase(?,?,?,?,?)}");
+                        cstmt.registerOutParameter(1, Types.VARCHAR);
+                        cstmt.setString(2,ProductId);
+                        cstmt.setInt(3,Amount);
+                        cstmt.setString(4,uuid);
+                        cstmt.setString(5,FirmId);
+                        cstmt.setString(6,"N/A");
+                        cstmt.executeUpdate();
+                        Log.v("test","result= "+ProductId+" "+Amount+" "+uuid+" "+FirmId);
+                        return cstmt.getString(1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        res = e.toString();
+                        Log.v("test","error found in function1");
+                    }
+                    return res;
                 }
-                return res;
-            }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,7 +145,7 @@ public class market extends AppCompatActivity {
                         clear();
                         recreate();//重新繪製本頁面並更新商品資料
                     }
-                   popup(getApplicationContext(),result);//提示交易結果
+                    popup(getApplicationContext(),result);//提示交易結果
                 }
                 else{
                     popup(getApplicationContext(),result);//提示交易結果
@@ -168,9 +170,11 @@ public class market extends AppCompatActivity {
     public void add(final int ID){
         //商品卡片
         LinearLayout frame = new LinearLayout(this);//新增LinearLayout(商品卡母容器)
+        frame.setMinimumHeight(DP(150));
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                 LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
-                DP(150) //設定商品卡高度
+//                DP(160) //設定商品卡高度
+                DP(test)
 
         );//LinearLayout 參數設定
 
@@ -183,7 +187,7 @@ public class market extends AppCompatActivity {
 
         //圖片&價格區
         LinearLayout picpri = new LinearLayout(this);
-        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(120));
+        LinearLayout.LayoutParams picprip = new LinearLayout.LayoutParams(DP(120),DP(200));
         picprip.setMargins(0,0,DP(5),0);
         picpri.setOrientation(LinearLayout.VERTICAL);
         picpri.setLayoutParams(picprip);
@@ -220,7 +224,7 @@ public class market extends AppCompatActivity {
         TextView price = new TextView(this);
         LinearLayout.LayoutParams pricep = new LinearLayout.LayoutParams(DP(120),DP(30));
         price.setText("價格: $"+Pprice.get(ID));
-        price.setTextSize(18f);
+        price.setTextSize(FONTsize);
         price.setLayoutParams(picprip);
 
         //商品訊息區
@@ -239,7 +243,7 @@ public class market extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         proname.setText(Pname.get(ID));
-        proname.setTextSize(18f);
+        proname.setTextSize(FONTsize);
         proname.setClickable(true);
         proname.setLayoutParams(pronamep);
         proname.setId(5*ID+1);
@@ -260,7 +264,7 @@ public class market extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         amount_label.setText("數量：");
-        amount_label.setTextSize(18f);
+        amount_label.setTextSize(FONTsize);
         amount_label.setLayoutParams(amount_labelp);
 
         //按鈕箱
@@ -280,7 +284,7 @@ public class market extends AppCompatActivity {
         );
         detailp.setMarginEnd(20);
         detail.setText("詳情");
-        detail.setTextSize(18f);
+        detail.setTextSize(FONTsize);
         detail.setLayoutParams(detailp);
         detail.setId(5*ID+3);
         detail.setTextColor(Color.parseColor("#FFFFFF"));
@@ -302,7 +306,7 @@ public class market extends AppCompatActivity {
         buybtn.setBackgroundResource(R.drawable.rounded_button_green);
         buybtn.setTextColor(Color.parseColor("#FFFFFF"));
         buybtn.setText("訂購");
-        buybtn.setTextSize(18f);
+        buybtn.setTextSize(FONTsize);
         buybtn.setLayoutParams(buybtnp);
         buybtn.setId(5*ID+4);
         buybtn.setOnClickListener(v -> {
@@ -373,33 +377,33 @@ public class market extends AppCompatActivity {
             }
         }
     }
-public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
-    try{
+    public Bitmap ConvertToBitmap(int ID){ //將Base64轉換為點陣圖
+        try{
 //            Log.v("test",PIMG.get(ID));
-        byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
-        Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);//轉換後的圖片
-        int w = proimg.getWidth();//取得寬度
-        int h = proimg.getHeight();//取得高度
-        Log.v("test","pic"+ID+" original = "+w+"*"+h);
-        //圖片大小設定
-        int scale = 1;
-        if(w>h && (w/DP(120))>1 || h==w && (w/DP(120))>1){
-            scale = w/DP(120);
-            w = w/scale;
-            h = h/scale;
-        }else if(h>w && (h/DP(120))>1){
-            scale = h/DP(120);
-            w = w/scale;
-            h = h/scale;
+            byte[] imageBytes = Base64.decode(PIMG.get(ID), Base64.DEFAULT);
+            Bitmap proimg = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);//轉換後的圖片
+            int w = proimg.getWidth();//取得寬度
+            int h = proimg.getHeight();//取得高度
+            Log.v("test","pic"+ID+" original = "+w+"*"+h);
+            //圖片大小設定
+            int scale = 1;
+            if(w>h && (w/DP(120))>1 || h==w && (w/DP(120))>1){
+                scale = w/DP(120);
+                w = w/scale;
+                h = h/scale;
+            }else if(h>w && (h/DP(120))>1){
+                scale = h/DP(120);
+                w = w/scale;
+                h = h/scale;
+            }
+            Log.v("test","pic"+ID+" resized = "+w+"*"+h);
+            proimg = Bitmap.createScaledBitmap(proimg, w, h, false);//建立固定大小的圖片
+            return proimg;//傳回轉換後的圖片
+        }catch (Exception e){
+            Log.v("test","error = "+e.toString());
+            return null;
         }
-        Log.v("test","pic"+ID+" resized = "+w+"*"+h);
-        proimg = Bitmap.createScaledBitmap(proimg, w, h, false);//建立固定大小的圖片
-        return proimg;//傳回轉換後的圖片
-    }catch (Exception e){
-        Log.v("test","error = "+e.toString());
-        return null;
     }
-}
     public void onBackPressed() {//返回鈕動作
         Intent intent = new Intent(market.this,LoginAndRegister.class);//準備轉跳回首頁
         startActivity(intent);//轉跳
