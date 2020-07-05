@@ -41,7 +41,6 @@ import static com.greeting.happycoin.MainActivity.Pprice;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
-import static com.greeting.happycoin.MainActivity.test;
 
 
 public class market extends AppCompatActivity {
@@ -51,6 +50,7 @@ public class market extends AppCompatActivity {
     String ip = "111231123";//容納此裝置之外連IP***目前尚在開發中
     String ProductId, FirmId;//商品編號,公司id
     public static int Amount;//購買數量
+    int[] FS = {150, 151, 152, 153, 155, 156, 157, 158, 160, 161, 162, 164, 165, 170, 175, 177, 180, 185, 190, 190, 200, 200, 200, 200};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,7 +174,8 @@ public class market extends AppCompatActivity {
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                 LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
 //                DP(160) //設定商品卡高度
-                DP(test)
+//                DP(test)
+                DP(FS[FONTsize-12])
 
         );//LinearLayout 參數設定
 

@@ -24,10 +24,12 @@ import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
 import static com.greeting.happycoin.MainActivity.BuyId;
+import static com.greeting.happycoin.MainActivity.FONTsize;
 import static com.greeting.happycoin.MainActivity.PID;
 import static com.greeting.happycoin.MainActivity.Vendor;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
+
 
 public class productComment extends AppCompatActivity {
     LinearLayout ll;
@@ -98,13 +100,13 @@ public class productComment extends AppCompatActivity {
         //評價日期
         TextView rate_date = new TextView(getApplicationContext());
         rate_date.setText(RateDate.get(ID).toString().replace("-","/"));
-        rate_date.setTextSize(16f);
+        rate_date.setTextSize(14f);
         rate_date.setGravity(Gravity.CENTER_VERTICAL);
 
         //評價內容
         TextView rate_text = new TextView(getApplicationContext());
         rate_text.setText(content.get(ID));
-        rate_text.setTextSize(18f);
+        rate_text.setTextSize(FONTsize);
         LinearLayout.LayoutParams rate_text_pram = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 DP(100)

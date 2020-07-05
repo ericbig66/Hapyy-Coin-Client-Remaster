@@ -327,10 +327,10 @@ public class EventAttendRecord extends Fragment {
             frame.addView(actname);
             frame.addView(operate);
             frame.addView(date);
-            Log.v("test", "still alive before last one");
+            Log.v("test", "still alive before last one EVE");
             ll.addView(frame);
 //        loading.setVisibility(View.GONE);
-            Log.v("test", "card" + ID + "rendered");
+            Log.v("test", "card" + ID + "rendered EVE");
         }
 
         public int DP(float dp) {//寬度單位轉換器(設定值為DP)

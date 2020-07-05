@@ -40,11 +40,11 @@ import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.lv;
 import static com.greeting.happycoin.MainActivity.popup;
 import static com.greeting.happycoin.MainActivity.popupL;
-import static com.greeting.happycoin.MainActivity.test;
 
 
 public class activity_feedback extends Fragment {
     LinearLayout ll;
+    int[] FS = {136, 137, 138, 139, 140, 141, 143, 145, 147, 150, 155, 160, 165, 170, 175, 178, 182, 190, 192, 200, 210, 210, 215, 220};
     public activity_feedback() {
         // Required empty public constructor
     }
@@ -168,7 +168,8 @@ public class activity_feedback extends Fragment {
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(//商品卡本身
                 LinearLayout.LayoutParams.MATCH_PARENT, // 商品卡寬度
 //                DP((FONTsize*6)+15) //設定商品卡高度
-                DP(test)
+//                DP(test)
+                DP(FS[FONTsize-12])
         );//LinearLayout 參數設定
         frame.setPadding(DP(15),DP(15),DP(15),DP(15));
         framep.setMargins(0,0,0,DP(20));

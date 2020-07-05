@@ -79,6 +79,7 @@ public class RedEnvelopeDiary extends Fragment {
         //開始取得資料
         @Override
         protected String doInBackground(String... strings) {
+            lv("------------------------red-------------------");
             try {
                 Log.v("test",acc);
                 //連接資料庫
@@ -87,7 +88,7 @@ public class RedEnvelopeDiary extends Fragment {
                 //建立查詢
                 //String result = "對方帳戶\t交易\t金額\t餘額\n";
                 Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("select SndType, if(SndType = 'C',(select name from client where id = sender),(select name from vendor where vid = sender)) sender, if(SndType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = sender),null) sender_cid, recType, if (recType = 'C',(select name from client where id = receiver),(select name from vendor where vid = receiver)) receiver, if(recType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = receiver),null) receiver_cid, amount, receiveDate from redenvelope_record r, client c where (c.acc = '"+acc+"' and r.sender = c.ID and sndType = 'C') OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'C') ORDER BY receiveDate DESC");
+                ResultSet rs = st.executeQuery("select SndType, if(SndType = 'C',if( sender = (select id from client where acc='"+acc+"'),'"+acc+"',(select name from client where id = sender )), (select name from vendor where vid = sender )), if(SndType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = sender ),null), recType, if (recType = 'C',(select name from client where id = receiver),(select name from vendor where vid = receiver)), if(recType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = receiver),null), amount, receiveDate from redenvelope_record r, client c where (c.acc = '"+acc+"' and r.sender = c.ID and sndType = 'C') OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'C') ORDER BY receiveDate DESC");
 //                lv("select\n" +
 //                        "SndType,\n" +
 //                        "if(SndType = 'C',(select name from client where id = sender),(select name from vendor where vid = sender)) sender, if(SndType = 'C',(select CONCAT(SUBSTR(acc,1,3),SUBSTR(acc,-3)) from client where id = sender),null) sender_cid,\n" +
@@ -102,36 +103,37 @@ public class RedEnvelopeDiary extends Fragment {
 //                        "OR (c.acc = '"+acc+"' and r.receiver = c.ID and recType = 'C')");
                 //將查詢結果裝入陣列
                 while(rs.next()){
+                    lv("running");
                     //result += rs.getString("paccount")+"\t"+rs.getString("state")+"\t$"+rs.getString("amount")+"\t$"+rs.getString("moneyLeft")+"\n";
                     String snd, sndCid, sndType, rec, recCid, recType;
-                    snd = rs.getString("sender")==null?" ":rs.getString("sender");
-                    sndCid = rs.getString("sender_cid")==null?" ":rs.getString("sender_cid");
-                    sndType = rs.getString("sndType")==null?" ":rs.getString("sndType");
-                    rec = rs.getString("receiver")==null?" ":rs.getString("receiver");
-                    recCid = rs.getString("receiver_cid")==null?" ":rs.getString("receiver_cid");
-                    recType = rs.getString("recType")==null?" ":rs.getString("recType");
+                    snd = rs.getString(2)==null?" ":rs.getString(2);
+                    sndCid = rs.getString(3)==null?" ":rs.getString(3);
+                    sndType = rs.getString(1)==null?" ":rs.getString(1);
+                    rec = rs.getString(5)==null?" ":rs.getString(5);
+                    recCid = rs.getString(6)==null?" ":rs.getString(6);
+                    recType = rs.getString(4)==null?" ":rs.getString(4);
                     //交易方向判斷
                     if (sndType.equals("C")){//客戶送的
                         if (snd.equals(acc)){//我送人的
                             ioacc.add(rec.equals(" ")?recCid+" ":rec);
-                            trade.add("送出 ");
+                            trade.add("送出");
                         }else{//別人送的(我收的)
                             ioacc.add(snd.equals(" ")?sndCid+" ":snd);
-                            trade.add("接收 ");
+                            trade.add("接收");
                         }
                     }else if (sndType.equals("V")){//廠商送的
                         ioacc.add(snd+" ");
-                        trade.add("接收 ");
+                        trade.add("接收");
                     }
                     //將結果裝入陣列
-                    amount.add("$"+rs.getString("amount")+"  ");
-                    dealtTime.add(rs.getString("receiveDate")==null?" ":rs.getString("receiveDate").substring(0,16));
-                    lv("sndType= "+sndType+"　sender= "+snd+"　sender_cid= "+sndCid+"　recType= "+recType+"　receiver= "+rec+"　receiver_cid= "+recCid+"　amount= $"+rs.getString("amount")+"　receiveDate= "+rs.getString("receiveDate"));
+                    amount.add("$"+rs.getString(7));
+                    dealtTime.add(rs.getString(8)==null?" ":rs.getString(8).substring(0,16));
+//                    lv("sndType= "+sndType+"　sender= "+snd+"　sender_cid= "+sndCid+"　recType= "+recType+"　receiver= "+rec+"　receiver_cid= "+recCid+"　amount= $"+rs.getString("amount")+"　receiveDate= "+rs.getString("receiveDate"));
                 }
                 return ioacc.size()+"";//回傳陣列大小
             }catch (Exception e){
                 e.printStackTrace();
-                res = e.toString();
+                res = "ERROR:" + e.toString();
             }
             return res;
         }
@@ -139,6 +141,7 @@ public class RedEnvelopeDiary extends Fragment {
         @Override
         //完成查詢後
         protected void onPostExecute(String result) {
+            lv("onpsetExe");
             Log.v("test","size= "+result);
             //dt.setText(result);
             cardRenderer();//繪製商品卡
@@ -189,13 +192,13 @@ public class RedEnvelopeDiary extends Fragment {
             TextView direction = new TextView(getActivity());
             direction.setText("交易方向："+trade.get(ID));
             direction.setTextSize(18f);
-            if(trade.get(ID).equals("送出")){direction.setTextColor(Color.parseColor("ff0000"));}
+            if(trade.get(ID).equals("送出")){direction.setTextColor(Color.parseColor("#ff0000"));}
 
             //交易金額
             TextView price = new TextView(getActivity());
             price.setText("金額: " + amount.get(ID));
             price.setTextSize(18f);
-            if(trade.get(ID).equals("送出")){price.setTextColor(Color.parseColor("ff0000"));}
+            if(trade.get(ID).equals("送出")){price.setTextColor(Color.parseColor("#ff0000"));}
 
             //商品價格
             TextView date = new TextView(getActivity());
@@ -207,10 +210,10 @@ public class RedEnvelopeDiary extends Fragment {
             frame.addView(direction);
             frame.addView(price);
             frame.addView(date);
-            Log.v("test", "still alive before last one");
+            Log.v("test", "still alive before last one RED");
             ll.addView(frame);
 //        loading.setVisibility(View.GONE);
-            Log.v("test", "card" + ID + "rendered");
+            Log.v("test", "card" + ID + "rendered RED");
         }
 
         public int DP(float dp) {//寬度單位轉換器(設定值為DP)

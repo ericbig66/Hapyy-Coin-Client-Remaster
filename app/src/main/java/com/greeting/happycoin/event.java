@@ -48,7 +48,6 @@ import static com.greeting.happycoin.MainActivity.attended;
 import static com.greeting.happycoin.MainActivity.entryIsRecent;
 import static com.greeting.happycoin.MainActivity.hideKB;
 import static com.greeting.happycoin.MainActivity.popup;
-import static com.greeting.happycoin.MainActivity.test;
 
 
 public class event extends AppCompatActivity {
@@ -57,6 +56,7 @@ public class event extends AppCompatActivity {
     public static int cardCounter = 0;//活動數量
     String acc ;//使用者UUID供活動報名用
     String sql="";//當點選近期活動進來時給予SQL額外條件的指令存放處
+    int[] FS = {140, 141, 142, 143, 144, 145, 147, 148, 148, 149, 149, 150, 150, 177, 180, 192, 202, 205, 210, 220, 220, 225, 230, 235};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,7 +200,8 @@ public class event extends AppCompatActivity {
         LinearLayout.LayoutParams framep = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
 //                DP((FONTsize*6)+15)
-                DP(test)
+//                DP(test)
+                DP(FS[FONTsize-12])
         );
 
         frame.setBackgroundColor(Color.parseColor("#D1FFDE"));

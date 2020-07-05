@@ -129,7 +129,7 @@ public class activity_feedback_detail extends AppCompatActivity {
         //評價內容
         TextView rate_text = new TextView(getApplicationContext());
         rate_text.setText(content.get(ID));
-        rate_text.setTextSize(18f);
+        rate_text.setTextSize(FONTsize);
         LinearLayout.LayoutParams rate_text_pram = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 DP(100)

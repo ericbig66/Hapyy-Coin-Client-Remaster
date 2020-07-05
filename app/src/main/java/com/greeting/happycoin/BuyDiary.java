@@ -25,6 +25,7 @@ import static com.greeting.happycoin.LoginAndRegister.getUUID;
 import static com.greeting.happycoin.LoginAndRegister.pass;
 import static com.greeting.happycoin.LoginAndRegister.url;
 import static com.greeting.happycoin.LoginAndRegister.user;
+import static com.greeting.happycoin.MainActivity.lv;
 
 
 /**
@@ -100,7 +101,7 @@ public class BuyDiary extends Fragment {
                 ResultSet rs = st.executeQuery("SELECT productName, price, amount, price*amount, date from sell_record,client where client.id = sell_record.id and acc = '" + acc + "' order by date DESC;");
                 //將查詢結果裝入陣列
                 while (rs.next()) {
-                    //result += rs.getString("paccount")+"\t"+rs.getString("state")+"\t$"+rs.getString("amount")+"\t$"+rs.getString("moneyLeft")+"\n";
+                     lv(rs.getString(1)+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getString(5));
                     pname.add(rs.getString(1));
                     pprice.add("$" + rs.getString(2));
                     pamount.add(rs.getString(3));
@@ -120,7 +121,7 @@ public class BuyDiary extends Fragment {
         @Override
         //完成查詢後
         protected void onPostExecute(String result) {
-            Log.e("a", String.valueOf(pname.size()));
+            Log.v("test", String.valueOf(pname.size()));
             //dt.setText(result);
             cardRenderer();//繪製商品卡
         }
@@ -129,7 +130,7 @@ public class BuyDiary extends Fragment {
     //商品卡產生器
     public void cardRenderer() {
         for (int i = 0; i <pname.size(); i++) {//以迴圈產生商品卡
-            Log.e("test", "render card " + i);
+            Log.v("test", "render card " + i);
             add(i);//增加商品卡
         }
     }
@@ -182,10 +183,10 @@ public class BuyDiary extends Fragment {
         frame.addView(date);
 
 
-        Log.v("test", "still alive before last one");
+        Log.v("test", "still alive before last one BUY");
         ll.addView(frame);
 //        loading.setVisibility(View.GONE);
-        Log.v("test", "card" + ID + "rendered");
+        Log.v("test", "card" + ID + "rendered BUY");
     }
 
     public int DP(float dp) {//寬度單位轉換器(設定值為DP)
