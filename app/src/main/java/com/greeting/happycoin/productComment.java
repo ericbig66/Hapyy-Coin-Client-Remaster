@@ -156,8 +156,6 @@ public class productComment extends AppCompatActivity {
                     score.add(rs.getFloat(2));
                     content.add(rs.getString(3));
                 }
-                //取得活動資料
-                rs = st.executeQuery("");
                 //取得計算平均資料
                 for(int i = 0 ; i<5 ; i++){
                     rs = st.executeQuery("select count(rating) FROM sell_record WHERE rating = "+(i+1)+" AND PID = '"+PID.get(BuyId)+"' AND VID IN (select VID from vendor where name = '"+Vendor.get(BuyId)+"')");
